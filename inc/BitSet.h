@@ -36,9 +36,13 @@ namespace VecCore {
 
    private:
       friend Base_t;
+      using VariableData_t = VariableSizeObj<unsigned char>;
 
-      unsigned int                   fNbits; // Highest bit set + 1
-      VariableSizeObj<unsigned char> fData;
+      unsigned int    fNbits; // Highest bit set + 1
+      VariableData_t  fData;
+
+      // Required by VariableSizeObjectInterface
+      VariableData_t &GetVariableData() { return fData; }
 
       static inline size_t GetNbytes(size_t nbits) { return  (( (nbits ? nbits : 8) -1)/8) + 1; }
 
@@ -252,8 +256,10 @@ namespace VecCore {
          }
       }
 
-      inline size_t SizeOf() const
-      { return (sizeof(BitSet)+sizeof(*fData.fValues)*(fData.fN-1)); }
+      using Base_t::SizeOf;
+
+      size_t SizeOf() const
+      { return SizeOf( fData.fN ); }
 
       //----- bit manipulation
       //----- (note the difference with TObject's bit manipulations)
