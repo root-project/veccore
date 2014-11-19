@@ -24,29 +24,27 @@ namespace VecCore {
 
    template <typename V> class VariableSizeObj {
    public:
-      unsigned int  fN; // Number of elements.
-      V            *fValues; //[fN] array of values
-      V             fRealArray[1]; //! Beginning address of the array values.
+      bool               fSelfAlloc :  1; //! Record whether the memory is externally managed.
+      const unsigned int fN         : 31; // Number of elements.
+      V  * const         fValues;         //[fN] array of values
+      V                  fRealArray[1];   //! Beginning address of the array values.
 
-      VariableSizeObj(TRootIOCtor *) : fN(0), fValues(0) {}
+      VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0), fValues(0) {}
 
-      VariableSizeObj(unsigned int nvalues) : fN(nvalues), fValues(&fRealArray[1]) {}
+      VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues), fValues(&fRealArray[0]) {}
 
-      VariableSizeObj(const VariableSizeObj &other) : fN(other.fN), fValues(&fRealArray[1]) {
+      VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN), fValues(&fRealArray[0]) {
          if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
       }
 
-      VariableSizeObj(size_t new_size, const VariableSizeObj &other) : fN(new_size), fValues(&fRealArray[1]) {
+      VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size), fValues(&fRealArray[0]) {
          if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
       }
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
-   private:
-      bool          fSelfAlloc : 1; // Record whether the memory is externally managed.
-
    public:
-      VariableSizeObjectInterface() : fSelfAlloc(false) {}
+      VariableSizeObjectInterface() = default;
 
       // The static maker to be used to create an instance of the variable size object.
 
@@ -60,7 +58,7 @@ namespace VecCore {
          char *ptr = new char[ needed ];
          if (!ptr) return 0;
          Cont *obj = new (ptr) Cont(nvalues, params...);
-         obj->fSelfAlloc = true;
+         obj->GetVariableData().fSelfAlloc = true;
          return obj;
       }
 
@@ -73,7 +71,7 @@ namespace VecCore {
             return MakeInstance(nvalues, params...);
          } else {
             Cont *obj = new (addr) Cont(nvalues, params...);
-            obj->fSelfAlloc = false;
+            obj->GetVariableData().fSelfAlloc = false;
             return obj;
          }
       }
@@ -83,11 +81,11 @@ namespace VecCore {
       {
          // Make a copy of a the variable size array and its container.
 
-         size_t needed = SizeOf(other.fData.fN);
+         size_t needed = SizeOf(other.GetVariableData().fN);
          char *ptr = new char[ needed ];
          if (!ptr) return 0;
          Cont *copy = new (ptr) Cont(other);
-         copy->fSelfAlloc = true;
+         copy->GetVariableData().fSelfAlloc = true;
          return copy;
       }
 
@@ -97,7 +95,7 @@ namespace VecCore {
          // Make a copy of a the variable size array and its container at the location (if indicated)
          if (addr) {
             Cont *copy = new (addr) Cont(other);
-            copy->fSelfAlloc = false;
+            copy->GetVariableData().fSelfAlloc = false;
             return copy;
          } else {
             return MakeCopy(other);
@@ -113,7 +111,7 @@ namespace VecCore {
          char *ptr = new char[ needed ];
          if (!ptr) return 0;
          Cont *copy = new (ptr) Cont(new_size,other);
-         copy->fSelfAlloc = true;
+         copy->GetVariableData().fSelfAlloc = true;
          return copy;
       }
 
