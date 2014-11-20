@@ -24,22 +24,30 @@ namespace VecCore {
 
    template <typename V> class VariableSizeObj {
    public:
-      bool               fSelfAlloc :  1; //! Record whether the memory is externally managed.
-      const unsigned int fN         : 31; // Number of elements.
-      V  * const         fValues;         //[fN] array of values
-      V                  fRealArray[1];   //! Beginning address of the array values.
+      using Index_t = unsigned int;
 
-      VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0), fValues(0) {}
+      bool           fSelfAlloc :  1; //! Record whether the memory is externally managed.
+      const Index_t  fN         : 31; // Number of elements.
+      V              fRealArray[1];   //! Beginning address of the array values -- real size: [fN]
 
-      VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues), fValues(&fRealArray[0]) {}
+      VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0) {}
 
-      VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN), fValues(&fRealArray[0]) {
-         if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
+      VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues) {}
+
+      VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN) {
+         if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
-      VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size), fValues(&fRealArray[0]) {
-         if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
+      VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size) {
+         if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
+
+      VECGEOM_INLINE V *GetValues() { return &fRealArray[0]; }
+      VECGEOM_INLINE const V *GetValues() const { return &fRealArray[0]; }
+
+      VECGEOM_INLINE V &operator[](Index_t index) { return GetValues()[index]; };
+      VECGEOM_INLINE const V &operator[](Index_t index) const { return GetValues()[index]; };
+
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
