@@ -45,6 +45,7 @@ namespace VecCore {
    template <typename Cont, typename V> class VariableSizeObjectInterface {
    public:
       VariableSizeObjectInterface() = default;
+      virtual ~VariableSizeObjectInterface() = default;
 
       // The static maker to be used to create an instance of the variable size object.
 
@@ -77,7 +78,7 @@ namespace VecCore {
       }
 
       // The equivalent of the copy constructor
-      static Cont *MakeCopy(const Cont &other)
+      static Cont *MakeCopy(Cont &other)
       {
          // Make a copy of a the variable size array and its container.
 
@@ -90,7 +91,7 @@ namespace VecCore {
       }
 
       // The equivalent of the copy constructor
-      static Cont *MakeCopyAt(const Cont &other, void *addr)
+      static Cont *MakeCopyAt(Cont &other, void *addr)
       {
          // Make a copy of a the variable size array and its container at the location (if indicated)
          if (addr) {
@@ -102,7 +103,7 @@ namespace VecCore {
          }
       }
 
-      static Cont *MakeCopy(size_t new_size, const Cont &other)
+      static Cont *MakeCopy(size_t new_size, Cont &other)
       {
          // Make a copy of a the variable size array and its container with
          // a new_size of the content.
