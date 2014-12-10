@@ -226,6 +226,10 @@ namespace VecCore {
          return *this;
       }
 
+      static size_t SizeOfInstance(size_t nbits) {
+         return SizeOf( GetNbytes(nbits) );
+      }
+
       static BitSet *MakeInstance(size_t nbits) {
          size_t nvalues = GetNbytes(nbits);
          return Base_t::MakeInstance(nvalues, nbits);
