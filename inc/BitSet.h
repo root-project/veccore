@@ -30,7 +30,7 @@ namespace VecCore {
  *          
  */
 
-   class BitSet : public VariableSizeObjectInterface<BitSet, unsigned char> {
+   class BitSet : protected VariableSizeObjectInterface<BitSet, unsigned char> {
    public:
       using Base_t = VariableSizeObjectInterface<BitSet, unsigned char>;
 
@@ -205,6 +205,14 @@ namespace VecCore {
          // For val = b[i];
          operator bool() const { return (fBit & (1<<fPos)) != 0; };
       };
+
+      
+      // Enumerate the part of the private interface, we want to expose.
+      using Base_t::MakeCopy;
+      using Base_t::MakeCopyAt;
+      using Base_t::MakeInstance;
+      using Base_t::MakeInstanceAt;
+      using Base_t::ReleaseInstance;
 
       // This replaces the dummy constructor to make sure that I/O can be
       // performed while the user is only allowed to use the static maker
