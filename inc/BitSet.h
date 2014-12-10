@@ -216,15 +216,9 @@ namespace VecCore {
 
          if (this != &rhs) {
             fNbits   = rhs.fNbits;
-            if (rhs.GetNbytes() == GetNbytes()) {
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),rhs.GetNbytes());
-            } else if (rhs.GetNbytes() < GetNbytes()) {
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),rhs.GetNbytes());
-               memset(fData.GetValues()+rhs.GetNbytes(),0,GetNbytes()-rhs.GetNbytes());
-            } else {
-               // Truncation!
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),GetNbytes());
-            }
+            // Default operator= does memcpy.
+            // Potential trucation if this is smaller than rhs.
+            fData    = rhs.fData;
          }
          return *this;
       }

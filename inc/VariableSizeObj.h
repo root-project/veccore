@@ -48,6 +48,23 @@ namespace VecCore {
       VECGEOM_INLINE V &operator[](Index_t index) { return GetValues()[index]; };
       VECGEOM_INLINE const V &operator[](Index_t index) const { return GetValues()[index]; };
 
+      VariableSizeObj& operator=(const VariableSizeObj&rhs) {
+         // Copy data content using memcpy, limited by the respective size
+         // of the the object.  If this is smaller there is data truncation,
+         // if this is larger the extra datum are zero to zero.
+
+         if (rhs.fN == fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+         } else if (rhs.fN < fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+            memset(GetValues()+rhs.fN,0, (fN-rhs.fN) * sizeof(V) );
+         } else {
+            // Truncation!
+            memcpy(GetValues(),rhs.GetValues(), fN * sizeof(V) );
+         }
+         return *this;
+      }
+
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
