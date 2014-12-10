@@ -68,10 +68,11 @@ namespace VecCore {
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
-   public:
+   protected:
       VariableSizeObjectInterface() = default;
       virtual ~VariableSizeObjectInterface() = default;
 
+   public:
       // The static maker to be used to create an instance of the variable size object.
 
       template <typename... T>
