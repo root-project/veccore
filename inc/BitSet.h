@@ -44,6 +44,9 @@ namespace VecCore {
       // Required by VariableSizeObjectInterface
       VariableData_t &GetVariableData() { return fData; }
 
+      // Required by VariableSizeObjectInterface
+      VariableData_t const &GetVariableData() const { return fData; }
+
       static inline size_t GetNbytes(size_t nbits) { return  (( (nbits ? nbits : 8) -1)/8) + 1; }
 
       BitSet(const BitSet &other) : fNbits(other.fNbits), fData(other.fData) {
