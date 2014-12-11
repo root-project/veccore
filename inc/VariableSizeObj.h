@@ -32,21 +32,27 @@ namespace VecCore {
 
       VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0) {}
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues) {}
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN) {
          if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size) {
          if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
-      VECGEOM_INLINE V *GetValues() { return &fRealArray[0]; }
-      VECGEOM_INLINE const V *GetValues() const { return &fRealArray[0]; }
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V *GetValues() { return &fRealArray[0]; }
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V *GetValues() const { return &fRealArray[0]; }
 
-      VECGEOM_INLINE V &operator[](Index_t index) { return GetValues()[index]; };
-      VECGEOM_INLINE const V &operator[](Index_t index) const { return GetValues()[index]; };
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V &operator[](Index_t index) { return GetValues()[index]; };
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V &operator[](Index_t index) const { return GetValues()[index]; };
 
       VariableSizeObj& operator=(const VariableSizeObj&rhs) {
          // Copy data content using memcpy, limited by the respective size
@@ -143,7 +149,7 @@ namespace VecCore {
       }
 
       // The equivalent of the destructor
-      static void    ReleaseInstance(Cont *obj)
+      static void ReleaseInstance(Cont *obj)
       {
          // Releases the space allocated for the object
          obj->~Cont();
