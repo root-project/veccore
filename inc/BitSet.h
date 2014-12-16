@@ -22,6 +22,17 @@
 
 class TRootIOCtor;
 
+// gcc 4.8.2's -Wnon-virtual-dtor is broken and turned on by -Weffc++, we
+// need to disable it for SOA3D
+
+#if __GNUC__ < 3 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Weffc++"
+#define GCC_DIAG_POP_NEEDED
+#endif
+
 namespace VecCore {
 
 /**
@@ -30,7 +41,7 @@ namespace VecCore {
  *          
  */
 
-   class BitSet : public VariableSizeObjectInterface<BitSet, unsigned char> {
+   class BitSet : protected VariableSizeObjectInterface<BitSet, unsigned char> {
    public:
       using Base_t = VariableSizeObjectInterface<BitSet, unsigned char>;
 
@@ -43,6 +54,9 @@ namespace VecCore {
 
       // Required by VariableSizeObjectInterface
       VariableData_t &GetVariableData() { return fData; }
+
+      // Required by VariableSizeObjectInterface
+      VariableData_t const &GetVariableData() const { return fData; }
 
       static inline size_t GetNbytes(size_t nbits) { return  (( (nbits ? nbits : 8) -1)/8) + 1; }
 
@@ -203,6 +217,14 @@ namespace VecCore {
          operator bool() const { return (fBit & (1<<fPos)) != 0; };
       };
 
+      
+      // Enumerate the part of the private interface, we want to expose.
+      using Base_t::MakeCopy;
+      using Base_t::MakeCopyAt;
+      using Base_t::MakeInstance;
+      using Base_t::MakeInstanceAt;
+      using Base_t::ReleaseInstance;
+
       // This replaces the dummy constructor to make sure that I/O can be
       // performed while the user is only allowed to use the static maker
       BitSet(TRootIOCtor *marker) : fNbits(0), fData(marker) {}
@@ -213,17 +235,15 @@ namespace VecCore {
 
          if (this != &rhs) {
             fNbits   = rhs.fNbits;
-            if (rhs.GetNbytes() == GetNbytes()) {
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),rhs.GetNbytes());
-            } else if (rhs.GetNbytes() < GetNbytes()) {
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),rhs.GetNbytes());
-               memset(fData.GetValues()+rhs.GetNbytes(),0,GetNbytes()-rhs.GetNbytes());
-            } else {
-               // Truncation!
-               memcpy(fData.GetValues(),rhs.fData.GetValues(),GetNbytes());
-            }
+            // Default operator= does memcpy.
+            // Potential trucation if this is smaller than rhs.
+            fData    = rhs.fData;
          }
          return *this;
+      }
+
+      static size_t SizeOfInstance(size_t nbits) {
+         return SizeOf( GetNbytes(nbits) );
       }
 
       static BitSet *MakeInstance(size_t nbits) {
@@ -769,5 +789,12 @@ namespace VecCore {
    }
 
 }
+
+#if defined(GCC_DIAG_POP_NEEDED)
+
+#pragma GCC diagnostic pop
+#undef GCC_DIAG_POP_NEEDED
+
+#endif
 
 #endif

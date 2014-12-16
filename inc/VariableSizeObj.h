@@ -32,28 +32,53 @@ namespace VecCore {
 
       VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0) {}
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues) {}
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN) {
          if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size) {
          if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
-      VECGEOM_INLINE V *GetValues() { return &fRealArray[0]; }
-      VECGEOM_INLINE const V *GetValues() const { return &fRealArray[0]; }
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V *GetValues() { return &fRealArray[0]; }
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V *GetValues() const { return &fRealArray[0]; }
 
-      VECGEOM_INLINE V &operator[](Index_t index) { return GetValues()[index]; };
-      VECGEOM_INLINE const V &operator[](Index_t index) const { return GetValues()[index]; };
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V &operator[](Index_t index) { return GetValues()[index]; };
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V &operator[](Index_t index) const { return GetValues()[index]; };
+
+      VariableSizeObj& operator=(const VariableSizeObj&rhs) {
+         // Copy data content using memcpy, limited by the respective size
+         // of the the object.  If this is smaller there is data truncation,
+         // if this is larger the extra datum are zero to zero.
+
+         if (rhs.fN == fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+         } else if (rhs.fN < fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+            memset(GetValues()+rhs.fN,0, (fN-rhs.fN) * sizeof(V) );
+         } else {
+            // Truncation!
+            memcpy(GetValues(),rhs.GetValues(), fN * sizeof(V) );
+         }
+         return *this;
+      }
 
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
-   public:
+   protected:
       VariableSizeObjectInterface() = default;
+      ~VariableSizeObjectInterface() = default;
 
+   public:
       // The static maker to be used to create an instance of the variable size object.
 
       template <typename... T>
@@ -124,11 +149,11 @@ namespace VecCore {
       }
 
       // The equivalent of the destructor
-      static void    ReleaseInstance(Cont *obj)
+      static void ReleaseInstance(Cont *obj)
       {
          // Releases the space allocated for the object
          obj->~Cont();
-         if (obj->fSelfAlloc) delete [] (char*)obj;
+         if (obj->GetVariableData().fSelfAlloc) delete [] (char*)obj;
       }
 
       // Equivalent of sizeof function
