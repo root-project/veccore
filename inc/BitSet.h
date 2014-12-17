@@ -221,9 +221,8 @@ namespace VecCore {
       // Enumerate the part of the private interface, we want to expose.
       using Base_t::MakeCopy;
       using Base_t::MakeCopyAt;
-      using Base_t::MakeInstance;
-      using Base_t::MakeInstanceAt;
       using Base_t::ReleaseInstance;
+      using Base_t::SizeOf;
 
       // This replaces the dummy constructor to make sure that I/O can be
       // performed while the user is only allowed to use the static maker
@@ -275,8 +274,6 @@ namespace VecCore {
             return &other;
          }
       }
-
-      using Base_t::SizeOf;
 
       size_t SizeOf() const
       { return SizeOf( fData.fN ); }
