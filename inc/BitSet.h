@@ -22,6 +22,17 @@
 
 class TRootIOCtor;
 
+// gcc 4.8.2's -Wnon-virtual-dtor is broken and turned on by -Weffc++, we
+// need to disable it for SOA3D
+
+#if __GNUC__ < 3 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Weffc++"
+#define GCC_DIAG_POP_NEEDED
+#endif
+
 namespace VecCore {
 
 /**
@@ -30,7 +41,7 @@ namespace VecCore {
  *          
  */
 
-   class BitSet : public VariableSizeObjectInterface<BitSet, unsigned char> {
+   class BitSet : protected VariableSizeObjectInterface<BitSet, unsigned char> {
    public:
       using Base_t = VariableSizeObjectInterface<BitSet, unsigned char>;
 
@@ -44,11 +55,14 @@ namespace VecCore {
       // Required by VariableSizeObjectInterface
       VariableData_t &GetVariableData() { return fData; }
 
+      // Required by VariableSizeObjectInterface
+      VariableData_t const &GetVariableData() const { return fData; }
+
       static inline size_t GetNbytes(size_t nbits) { return  (( (nbits ? nbits : 8) -1)/8) + 1; }
 
       BitSet(const BitSet &other) : fNbits(other.fNbits), fData(other.fData) {
          // We assume that the memory allocated and use is large enough to
-         // hold the full values (i.e. Sizeof(other.fValues.fN) )
+         // hold the full values (i.e. Sizeof(other.fData.fN) )
       }
 
       BitSet(size_t new_size, const BitSet &other) : fNbits(other.fNbits), fData(new_size, other.fData) {
@@ -61,12 +75,12 @@ namespace VecCore {
              fNbits = 8*new_size;
          }
          if (new_size > other.fData.fN) {
-            memset(fData.fValues+other.fData.fN,0,new_size - other.fData.fN);
+            memset(fData.GetValues()+other.fData.fN,0,new_size - other.fData.fN);
          }
       }
 
       BitSet(size_t nvalues, size_t nbits) : fNbits(nbits), fData( nvalues ) {
-         memset(fData.fValues,0,GetNbytes());
+         memset(fData.GetValues(),0,GetNbytes());
       }
 
       void DoAndEqual(const BitSet& rhs)
@@ -77,10 +91,10 @@ namespace VecCore {
 
          size_t min = (GetNbytes()<rhs.GetNbytes()) ? GetNbytes() : rhs.GetNbytes();
          for(size_t i=0; i<min; ++i) {
-            fData.fValues[i] &= rhs.fData.fValues[i];
+            fData[i] &= rhs.fData[i];
          }
          if (GetNbytes()>min) {
-            memset(&(fData.fValues[min]),0,GetNbytes()-min);
+            memset(&(fData[min]),0,GetNbytes()-min);
          }
       }
 
@@ -92,7 +106,7 @@ namespace VecCore {
 
          size_t min = (GetNbytes()<rhs.GetNbytes()) ? GetNbytes() : rhs.GetNbytes();
          for(size_t i=0; i<min; ++i) {
-            fData.fValues[i] |= rhs.fData.fValues[i];
+            fData[i] |= rhs.fData[i];
          }
       }
 
@@ -104,7 +118,7 @@ namespace VecCore {
 
          size_t min = (GetNbytes()<rhs.GetNbytes()) ? GetNbytes() : rhs.GetNbytes();
          for(size_t i=0; i<min; ++i) {
-            fData.fValues[i] ^= rhs.fData.fValues[i];
+            fData[i] ^= rhs.fData[i];
          }
       }
 
@@ -117,17 +131,17 @@ namespace VecCore {
          const size_t offset = shift % 8;
          if (offset==0) {
             for(size_t n = GetNbytes() - 1; n >= wordshift; --n) {
-               fData.fValues[n] = fData.fValues[ n - wordshift ];
+               fData[n] = fData[ n - wordshift ];
             }
          } else {
             const size_t sub_offset = 8 - offset;
             for(size_t n = GetNbytes() - 1; n > wordshift; --n) {
-               fData.fValues[n] = (fData.fValues[n - wordshift] << offset) |
-            (fData.fValues[n - wordshift - 1] >> sub_offset);
+               fData[n] = (fData[n - wordshift] << offset) |
+            (fData[n - wordshift - 1] >> sub_offset);
             }
-            fData.fValues[wordshift] = fData.fValues[0] << offset;
+            fData[wordshift] = fData[0] << offset;
          }
-         memset(fData.fValues,0,wordshift);
+         memset(fData.GetValues(),0,wordshift);
       }
 
       void DoRightShift(size_t shift)
@@ -141,17 +155,17 @@ namespace VecCore {
 
          if (offset == 0)
             for (size_t n = 0; n <= limit; ++n)
-               fData.fValues[n] = fData.fValues[n + wordshift];
+               fData[n] = fData[n + wordshift];
          else
             {
                const size_t sub_offset = 8 - offset;
                for (size_t n = 0; n < limit; ++n)
-                  fData.fValues[n] = (fData.fValues[n + wordshift] >> offset) |
-                     (fData.fValues[n + wordshift + 1] << sub_offset);
-               fData.fValues[limit] = fData.fValues[GetNbytes()-1] >> offset;
+                  fData[n] = (fData[n + wordshift] >> offset) |
+                     (fData[n + wordshift + 1] << sub_offset);
+               fData[limit] = fData[GetNbytes()-1] >> offset;
             }
 
-         memset(&(fData.fValues[limit + 1]),0, GetNbytes() - limit - 1);
+         memset(&(fData[limit + 1]),0, GetNbytes() - limit - 1);
       }
 
       void DoFlip()
@@ -159,7 +173,7 @@ namespace VecCore {
          // Execute ~(*this)
 
          for(size_t i=0; i<GetNbytes(); ++i) {
-            fData.fValues[i] = ~fData.fValues[i];
+            fData[i] = ~fData[i];
          }
          // NOTE: out-of-bounds bit were also flipped!
       }
@@ -203,6 +217,13 @@ namespace VecCore {
          operator bool() const { return (fBit & (1<<fPos)) != 0; };
       };
 
+      
+      // Enumerate the part of the private interface, we want to expose.
+      using Base_t::MakeCopy;
+      using Base_t::MakeCopyAt;
+      using Base_t::ReleaseInstance;
+      using Base_t::SizeOf;
+
       // This replaces the dummy constructor to make sure that I/O can be
       // performed while the user is only allowed to use the static maker
       BitSet(TRootIOCtor *marker) : fNbits(0), fData(marker) {}
@@ -213,17 +234,15 @@ namespace VecCore {
 
          if (this != &rhs) {
             fNbits   = rhs.fNbits;
-            if (rhs.GetNbytes() == GetNbytes()) {
-               memcpy(fData.fValues,rhs.fData.fValues,rhs.GetNbytes());
-            } else if (rhs.GetNbytes() < GetNbytes()) {
-               memcpy(fData.fValues,rhs.fData.fValues,rhs.GetNbytes());
-               memset(fData.fValues+rhs.GetNbytes(),0,GetNbytes()-rhs.GetNbytes());
-            } else {
-               // Truncation!
-               memcpy(fData.fValues,rhs.fData.fValues,GetNbytes());
-            }
+            // Default operator= does memcpy.
+            // Potential trucation if this is smaller than rhs.
+            fData    = rhs.fData;
          }
          return *this;
+      }
+
+      static size_t SizeOfInstance(size_t nbits) {
+         return SizeOf( GetNbytes(nbits) );
       }
 
       static BitSet *MakeInstance(size_t nbits) {
@@ -246,7 +265,7 @@ namespace VecCore {
 
          size_t needed;
          for(needed=other.GetNbytes()-1;
-             needed > 0 && other.fData.fValues[needed]==0; ) { needed--; };
+             needed > 0 && other.fData[needed]==0; ) { needed--; };
          needed++;
 
          if (needed!=other.GetNbytes()) {
@@ -255,8 +274,6 @@ namespace VecCore {
             return &other;
          }
       }
-
-      using Base_t::SizeOf;
 
       size_t SizeOf() const
       { return SizeOf( fData.fN ); }
@@ -268,7 +285,7 @@ namespace VecCore {
          // Reset all bits to 0 (false).
          // if value=1 set all bits to 1
 
-         if (fData.fValues) memset(fData.fValues,value ? 1 : 0,GetNbytes());
+         if (fData.GetValues()) memset(fData.GetValues(),value ? 1 : 0,GetNbytes());
       }
       void   ResetBitNumber(size_t bitnumber)
       {
@@ -289,9 +306,9 @@ namespace VecCore {
          size_t  loc = bitnumber/8;
          unsigned char bit = bitnumber%8;
          if (value)
-            fData.fValues[loc] |= (1<<bit);
+            fData[loc] |= (1<<bit);
          else
-            fData.fValues[loc] &= (0xFF ^ (1<<bit));
+            fData[loc] &= (0xFF ^ (1<<bit));
          return true;
       }
       bool TestBitNumber(size_t bitnumber) const
@@ -300,7 +317,7 @@ namespace VecCore {
 
          if (bitnumber >= fNbits) return false;
          size_t  loc = bitnumber/8;
-         unsigned char value = fData.fValues[loc];
+         unsigned char value = fData[loc];
          unsigned char bit = bitnumber%8;
          bool result = (value & (1<<bit)) != 0;
          return result;
@@ -312,7 +329,7 @@ namespace VecCore {
          if (bitnumber >= fNbits) return reference();
          size_t  loc = bitnumber/8;
          unsigned char bit = bitnumber%8;
-         return reference(fData.fValues[loc],bit);
+         return reference(fData[loc],bit);
       }
       bool operator[](size_t bitnumber) const
       {
@@ -341,7 +358,7 @@ namespace VecCore {
          if (nbytes > GetNbytes()) return false;
 
          fNbits=nbits;
-         memcpy(fData.fValues, array, nbytes);
+         memcpy(fData.GetValues(), array, nbytes);
          return true;
       }
       bool   Set(size_t nbits, const unsigned char *array) { return Set(nbits, (const char*)array); }
@@ -375,8 +392,8 @@ namespace VecCore {
 
          const unsigned char *cArray = (const unsigned char*)array;
          for (size_t i=0; i<nbytes; i+=2) {
-            fData.fValues[i] = cArray[i+1];
-            fData.fValues[i+1] = cArray[i];
+            fData[i] = cArray[i+1];
+            fData[i+1] = cArray[i];
          }
          return true;
       }
@@ -392,10 +409,10 @@ namespace VecCore {
 
          const unsigned char *cArray = (const unsigned char*)array;
          for (size_t i=0; i<nbytes; i+=4) {
-            fData.fValues[i] = cArray[i+3];
-            fData.fValues[i+1] = cArray[i+2];
-            fData.fValues[i+2] = cArray[i+1];
-            fData.fValues[i+3] = cArray[i];
+            fData[i] = cArray[i+3];
+            fData[i+1] = cArray[i+2];
+            fData[i+2] = cArray[i+1];
+            fData[i+3] = cArray[i];
          }
          return true;
       }
@@ -411,14 +428,14 @@ namespace VecCore {
 
          const unsigned char *cArray = (const unsigned char*)array;
          for (size_t i=0; i<nbytes; i+=8) {
-            fData.fValues[i] = cArray[i+7];
-            fData.fValues[i+1] = cArray[i+6];
-            fData.fValues[i+2] = cArray[i+5];
-            fData.fValues[i+3] = cArray[i+4];
-            fData.fValues[i+4] = cArray[i+3];
-            fData.fValues[i+5] = cArray[i+2];
-            fData.fValues[i+6] = cArray[i+1];
-            fData.fValues[i+7] = cArray[i];
+            fData[i] = cArray[i+7];
+            fData[i+1] = cArray[i+6];
+            fData[i+2] = cArray[i+5];
+            fData[i+3] = cArray[i+4];
+            fData[i+4] = cArray[i+3];
+            fData[i+5] = cArray[i+2];
+            fData[i+6] = cArray[i+1];
+            fData[i+7] = cArray[i];
          }
          return true;
       }
@@ -438,7 +455,7 @@ namespace VecCore {
       {
          // Copy all the byes.
 
-         memcpy(array, fData.fValues, (fNbits+7)>>3);
+         memcpy(array, fData.GetValues(), (fNbits+7)>>3);
       }
       void   Get(unsigned char *array) const { Get((char*)array); }
       void   Get(unsigned short *array) const { Get((short*)array); }
@@ -467,12 +484,12 @@ namespace VecCore {
 
          unsigned char *cArray=(unsigned char*)array;
          for (size_t i=0; i<nSafeBytes; i+=2) {
-            cArray[i] = fData.fValues[i+1];
-            cArray[i+1] = fData.fValues[i];
+            cArray[i] = fData[i+1];
+            cArray[i+1] = fData[i];
          }
 
          if (nBytes>nSafeBytes) {
-            cArray[nSafeBytes+1] = fData.fValues[nSafeBytes];
+            cArray[nSafeBytes+1] = fData[nSafeBytes];
          }
       }
 
@@ -486,14 +503,14 @@ namespace VecCore {
          unsigned char *cArray=(unsigned char*)array;
          size_t i;
          for (i=0; i<nSafeBytes; i+=4) {
-            cArray[i] = fData.fValues[i+3];
-            cArray[i+1] = fData.fValues[i+2];
-            cArray[i+2] = fData.fValues[i+1];
-            cArray[i+3] = fData.fValues[i];
+            cArray[i] = fData[i+3];
+            cArray[i+1] = fData[i+2];
+            cArray[i+2] = fData[i+1];
+            cArray[i+3] = fData[i];
          }
 
          for (i=0; i<nBytes-nSafeBytes; ++i) {
-            cArray[nSafeBytes + (3 - i)] = fData.fValues[nSafeBytes + i];
+            cArray[nSafeBytes + (3 - i)] = fData[nSafeBytes + i];
          }
       }
 
@@ -507,18 +524,18 @@ namespace VecCore {
          unsigned char *cArray=(unsigned char*)array;
          size_t i;
          for (i=0; i<nSafeBytes; i+=8) {
-            cArray[i] = fData.fValues[i+7];
-            cArray[i+1] = fData.fValues[i+6];
-            cArray[i+2] = fData.fValues[i+5];
-            cArray[i+3] = fData.fValues[i+4];
-            cArray[i+4] = fData.fValues[i+3];
-            cArray[i+5] = fData.fValues[i+2];
-            cArray[i+6] = fData.fValues[i+1];
-            cArray[i+7] = fData.fValues[i];
+            cArray[i] = fData[i+7];
+            cArray[i+1] = fData[i+6];
+            cArray[i+2] = fData[i+5];
+            cArray[i+3] = fData[i+4];
+            cArray[i+4] = fData[i+3];
+            cArray[i+5] = fData[i+2];
+            cArray[i+6] = fData[i+1];
+            cArray[i+7] = fData[i];
          }
 
          for (i=0; i<nBytes-nSafeBytes; ++i) {
-            cArray[nSafeBytes + (7 - i)] = fData.fValues[nSafeBytes + i];
+            cArray[nSafeBytes + (7 - i)] = fData[nSafeBytes + i];
          }
       }
 
@@ -527,7 +544,7 @@ namespace VecCore {
       //----- Utilities
       void    Clear() {
          fNbits = 0;
-         memset(&(fData.fValues[0]),0,GetNbytes());
+         memset(&(fData[0]),0,GetNbytes());
       }
       size_t  CountBits(size_t startBit=0)     const
       {
@@ -554,7 +571,7 @@ namespace VecCore {
          size_t i,count = 0;
          if (startBit == 0) {
             for(i=0; i<GetNbytes(); i++) {
-               count += nbits[fData.fValues[i]];
+               count += nbits[fData[i]];
             }
             return count;
          }
@@ -563,12 +580,12 @@ namespace VecCore {
          size_t ibit = startBit%8;
          if (ibit) {
             for (i=ibit;i<8;i++) {
-               if (fData.fValues[startByte] & (1<<ibit)) count++;
+               if (fData[startByte] & (1<<ibit)) count++;
             }
             startByte++;
          }
          for(i=startByte; i<GetNbytes(); i++) {
-            count += nbits[fData.fValues[i]];
+            count += nbits[fData[i]];
          }
          return count;
       }
@@ -598,7 +615,7 @@ namespace VecCore {
          size_t i;
          if (startBit == 0) {
             for(i=0; i<GetNbytes(); i++) {
-               if (fData.fValues[i] != 255) return 8*i + fbits[fData.fValues[i]];
+               if (fData[i] != 255) return 8*i + fbits[fData[i]];
             }
             return fNbits;
          }
@@ -607,12 +624,12 @@ namespace VecCore {
          size_t ibit = startBit%8;
          if (ibit) {
             for (i=ibit;i<8;i++) {
-               if ((fData.fValues[startByte] & (1<<i)) == 0) return 8*startByte+i;
+               if ((fData[startByte] & (1<<i)) == 0) return 8*startByte+i;
             }
             startByte++;
          }
          for(i=startByte; i<GetNbytes(); i++) {
-            if (fData.fValues[i] != 255) return 8*i + fbits[fData.fValues[i]];
+            if (fData[i] != 255) return 8*i + fbits[fData[i]];
          }
          return fNbits;
       }
@@ -641,7 +658,7 @@ namespace VecCore {
          size_t i;
          if (startBit == 0) {
             for(i=0; i<GetNbytes(); i++) {
-               if (fData.fValues[i] != 0) return 8*i + fbits[fData.fValues[i]];
+               if (fData[i] != 0) return 8*i + fbits[fData[i]];
             }
             return fNbits;
          }
@@ -650,12 +667,12 @@ namespace VecCore {
          size_t ibit = startBit%8;
          if (ibit) {
             for (i=ibit;i<8;i++) {
-               if ((fData.fValues[startByte] & (1<<i)) != 0) return 8*startByte+i;
+               if ((fData[startByte] & (1<<i)) != 0) return 8*startByte+i;
             }
             startByte++;
          }
          for(i=startByte; i<GetNbytes(); i++) {
-            if (fData.fValues[i] != 0) return 8*i + fbits[fData.fValues[i]];
+            if (fData[i] != 0) return 8*i + fbits[fData[i]];
          }
          return fNbits;
       }
@@ -688,12 +705,12 @@ namespace VecCore {
          size_t ibit = startBit%8;
          if (ibit<7) {
             for (i=ibit+1;i>0;i--) {
-               if ((fData.fValues[startByte] & (1<<(i-1))) == 0) return 8*startByte+i-1;
+               if ((fData[startByte] & (1<<(i-1))) == 0) return 8*startByte+i-1;
             }
             startByte--;
          }
          for(i=startByte+1; i>0; i--) {
-            if (fData.fValues[i-1] != 255) return 8*(i-1) + fbits[fData.fValues[i-1]];
+            if (fData[i-1] != 255) return 8*(i-1) + fbits[fData[i-1]];
          }
          return fNbits;
       }
@@ -726,12 +743,12 @@ namespace VecCore {
          size_t ibit = startBit%8;
          if (ibit<7) {
             for (i=ibit+1;i>0;i--) {
-               if ((fData.fValues[startByte] & (1<<(i-1))) != 0) return 8*startByte+i-1;
+               if ((fData[startByte] & (1<<(i-1))) != 0) return 8*startByte+i-1;
             }
             startByte--;
          }
          for(i=startByte+1; i>0; i--) {
-            if (fData.fValues[i-1] != 0) return 8*(i-1) + fbits[fData.fValues[i-1]];
+            if (fData[i-1] != 0) return 8*(i-1) + fbits[fData[i-1]];
          }
          return fNbits;
       }
@@ -743,11 +760,11 @@ namespace VecCore {
          // Compare object.
 
          if (fNbits == other.fNbits) {
-            return !memcmp(fData.fValues, other.fData.fValues, (fNbits+7)>>3);
+            return !memcmp(fData.GetValues(), other.fData.GetValues(), (fNbits+7)>>3);
          } else if (fNbits <  other.fNbits) {
-            return !memcmp(fData.fValues, other.fData.fValues, (fNbits+7)>>3) && other.FirstSetBit(fNbits) == other.fNbits;
+            return !memcmp(fData.GetValues(), other.fData.GetValues(), (fNbits+7)>>3) && other.FirstSetBit(fNbits) == other.fNbits;
          } else {
-            return !memcmp(fData.fValues, other.fData.fValues, (other.fNbits+7)>>3) && FirstSetBit(other.fNbits) == fNbits;
+            return !memcmp(fData.GetValues(), other.fData.GetValues(), (other.fNbits+7)>>3) && FirstSetBit(other.fNbits) == fNbits;
          }
       }
       bool  operator!=(const BitSet &other) const { return !(*this==other); }
@@ -769,5 +786,12 @@ namespace VecCore {
    }
 
 }
+
+#if defined(GCC_DIAG_POP_NEEDED)
+
+#pragma GCC diagnostic pop
+#undef GCC_DIAG_POP_NEEDED
+
+#endif
 
 #endif

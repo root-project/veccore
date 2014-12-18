@@ -24,29 +24,61 @@ namespace VecCore {
 
    template <typename V> class VariableSizeObj {
    public:
-      bool               fSelfAlloc :  1; //! Record whether the memory is externally managed.
-      const unsigned int fN         : 31; // Number of elements.
-      V  * const         fValues;         //[fN] array of values
-      V                  fRealArray[1];   //! Beginning address of the array values.
+      using Index_t = unsigned int;
 
-      VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0), fValues(0) {}
+      bool           fSelfAlloc :  1; //! Record whether the memory is externally managed.
+      const Index_t  fN         : 31; // Number of elements.
+      V              fRealArray[1];   //! Beginning address of the array values -- real size: [fN]
 
-      VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues), fValues(&fRealArray[0]) {}
+      VariableSizeObj(TRootIOCtor *) : fSelfAlloc(false), fN(0) {}
 
-      VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN), fValues(&fRealArray[0]) {
-         if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
+      VariableSizeObj(unsigned int nvalues) : fSelfAlloc(false), fN(nvalues) {}
+
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
+      VariableSizeObj(const VariableSizeObj &other) :  fSelfAlloc(false), fN(other.fN) {
+         if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
 
-      VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size), fValues(&fRealArray[0]) {
-         if (other.fN) memcpy(fValues, other.fValues, (other.fN)*sizeof(V));
+      VECGEOM_INLINE
+      VECGEOM_CUDA_HEADER_BOTH
+      VariableSizeObj(size_t new_size, const VariableSizeObj &other) :  fSelfAlloc(false), fN(new_size) {
+         if (other.fN) memcpy(GetValues(), other.GetValues(), (other.fN)*sizeof(V));
       }
+
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V *GetValues() { return &fRealArray[0]; }
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V *GetValues() const { return &fRealArray[0]; }
+
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V &operator[](Index_t index) { return GetValues()[index]; };
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V &operator[](Index_t index) const { return GetValues()[index]; };
+
+      VariableSizeObj& operator=(const VariableSizeObj&rhs) {
+         // Copy data content using memcpy, limited by the respective size
+         // of the the object.  If this is smaller there is data truncation,
+         // if this is larger the extra datum are zero to zero.
+
+         if (rhs.fN == fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+         } else if (rhs.fN < fN) {
+            memcpy(GetValues(),rhs.GetValues(), rhs.fN * sizeof(V) );
+            memset(GetValues()+rhs.fN,0, (fN-rhs.fN) * sizeof(V) );
+         } else {
+            // Truncation!
+            memcpy(GetValues(),rhs.GetValues(), fN * sizeof(V) );
+         }
+         return *this;
+      }
+
    };
 
    template <typename Cont, typename V> class VariableSizeObjectInterface {
-   public:
+   protected:
       VariableSizeObjectInterface() = default;
-      virtual ~VariableSizeObjectInterface() = default;
+      ~VariableSizeObjectInterface() = default;
 
+   public:
       // The static maker to be used to create an instance of the variable size object.
 
       template <typename... T>
@@ -78,7 +110,7 @@ namespace VecCore {
       }
 
       // The equivalent of the copy constructor
-      static Cont *MakeCopy(Cont &other)
+      static Cont *MakeCopy(const Cont &other)
       {
          // Make a copy of a the variable size array and its container.
 
@@ -91,7 +123,7 @@ namespace VecCore {
       }
 
       // The equivalent of the copy constructor
-      static Cont *MakeCopyAt(Cont &other, void *addr)
+      static Cont *MakeCopyAt(const Cont &other, void *addr)
       {
          // Make a copy of a the variable size array and its container at the location (if indicated)
          if (addr) {
@@ -103,7 +135,7 @@ namespace VecCore {
          }
       }
 
-      static Cont *MakeCopy(size_t new_size, Cont &other)
+      static Cont *MakeCopy(size_t new_size, const Cont &other)
       {
          // Make a copy of a the variable size array and its container with
          // a new_size of the content.
@@ -117,7 +149,7 @@ namespace VecCore {
       }
 
       // The equivalent of the destructor
-      static void    ReleaseInstance(Cont *obj)
+      static void ReleaseInstance(Cont *obj)
       {
          // Releases the space allocated for the object
          obj->~Cont();
