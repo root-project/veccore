@@ -157,6 +157,7 @@ namespace VecCore {
       }
 
       // Equivalent of sizeof function
+      VECGEOM_CUDA_HEADER_BOTH
       static size_t SizeOf(size_t nvalues)
       { return (sizeof(Cont)+sizeof(V)*(nvalues-1)); }
 
