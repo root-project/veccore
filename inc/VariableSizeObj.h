@@ -54,6 +54,7 @@ namespace VecCore {
       VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH V &operator[](Index_t index) { return GetValues()[index]; };
       VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH const V &operator[](Index_t index) const { return GetValues()[index]; };
 
+      VECGEOM_INLINE VECGEOM_CUDA_HEADER_BOTH
       VariableSizeObj& operator=(const VariableSizeObj&rhs) {
          // Copy data content using memcpy, limited by the respective size
          // of the the object.  If this is smaller there is data truncation,
