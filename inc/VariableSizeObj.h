@@ -83,6 +83,7 @@ namespace VecCore {
       // The static maker to be used to create an instance of the variable size object.
 
       template <typename... T>
+      VECGEOM_CUDA_HEADER_DEVICE
       static  Cont *MakeInstance(size_t nvalues, const T&... params) {
          // Make an instance of the class which allocates the node array. To be
          // released using ReleaseInstance. If addr is non-zero, the user promised that
@@ -150,6 +151,7 @@ namespace VecCore {
       }
 
       // The equivalent of the destructor
+      VECGEOM_CUDA_HEADER_DEVICE
       static void ReleaseInstance(Cont *obj)
       {
          // Releases the space allocated for the object
