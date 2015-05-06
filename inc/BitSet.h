@@ -1,6 +1,6 @@
 /// \file VecCore/BitSet.h
 /// \author Philippe Canal (pcanal@fnal.gov)
-/// \author Exported from the original verison in ROOT (root.cern.ch).
+/// \author Exported from the original version in ROOT (root.cern.ch).
 
 #ifndef VECCORE_BITSET_H
 #define VECCORE_BITSET_H
@@ -73,7 +73,7 @@ namespace VecCore {
       BitSet(size_t new_size, const BitSet &other) : fNbits(other.fNbits), fData(new_size, other.fData) {
          // We assume that the memory allocated and use is large enough to
          // hold the full values (i.e. Sizeof(new_size) )
-         // If new_size is smaller than the size of 'other' then the copy is trucated.
+         // If new_size is smaller than the size of 'other' then the copy is truncated.
          // if new_size is greater than the size of 'other' the value are zero initialized.
 
          if (fNbits*8 > new_size) {

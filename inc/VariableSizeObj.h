@@ -86,9 +86,7 @@ namespace VecCore {
       VECGEOM_CUDA_HEADER_BOTH
       static  Cont *MakeInstance(size_t nvalues, const T&... params) {
          // Make an instance of the class which allocates the node array. To be
-         // released using ReleaseInstance. If addr is non-zero, the user promised that
-         // addr contains at least that many bytes:  size_t needed = SizeOf(nvalues);
-
+         // released using ReleaseInstance.
          size_t needed = SizeOf(nvalues);
          char *ptr = new char[ needed ];
          if (!ptr) return 0;
@@ -114,7 +112,7 @@ namespace VecCore {
       // The equivalent of the copy constructor
       static Cont *MakeCopy(const Cont &other)
       {
-         // Make a copy of a the variable size array and its container.
+         // Make a copy of the variable size array and its container.
 
          size_t needed = SizeOf(other.GetVariableData().fN);
          char *ptr = new char[ needed ];
