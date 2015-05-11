@@ -3,8 +3,8 @@
 #ifndef VECCORE_BACKEND_VCBACKEND_H_
 #define VECCORE_BACKEND_VCBACKEND_H_
 
-#include "VecCoreGlobal.h"
-#include "backend/scalar/Backend.h"
+//#include "VecCoreGlobal.h"
+//#include "backend/scalar/Backend.h"
 
 #include <Vc/Vc>
 
@@ -14,33 +14,34 @@ namespace Backend {
 
 namespace Vector {
 
-inline namespace VECGEOM_IMPL_NAMESPACE {
+//inline namespace VECGEOM_IMPL_NAMESPACE {
 
-
-template< typename Real_t = VecCore::DefaultPrecision_t >
+#define VECGEOM_INLINE
+template< typename RealInput_t = double >
 struct kVc {
   // The convention for type names is
   // _t is a type but it should be a primitive or otherwise scalar type
   // _v means that this type could potentially be a vector type ( but not necessarily )
 
   // define the base primitive type
-  typedef Real_t                      Real_t;
+  typedef RealInput_t                 Real_t;
   // we could define the other base primitive types
   typedef double                      Double_t;
   typedef double                      Float_t;
 
   // define vector types for wanted precision
-  typedef Vc::Vector<Real_t>          Real_v;
-  typedef Vc::Vector<Real_t>::Mask    Bool_v; // ( should we call this RealBool )
+  typedef typename Vc::Vector<Real_t>          Real_v;
+  typedef typename Vc::Vector<Real_t>::Mask    Bool_v; // ( should we call this RealBool )
 
   // define vector types for standard double + float types
-  typedef Vc::Vector<double>          Double_v;
-  typedef Vc::Vector<float>           Float_v;
-  typedef Vc::Vector<double>::Mask    DoubleBool_v;
-  typedef Vc::Vector<float>::Mask     FloatBool_v;
+  typedef typename Vc::Vector<double>          Double_v;
+  typedef typename Vc::Vector<float>           Float_v;
+  typedef typename Vc::Vector<double>::Mask    DoubleBool_v;
+  typedef typename Vc::Vector<float>::Mask     FloatBool_v;
 
-  typedef Vc::int_v                   Int_v;
+  typedef typename Vc::int_v                   Int_v;
   typedef Int_v                       Inside_v;
+  typedef typename Vc::int_v::Mask             IntBool_v;
 
   // alternative typedefs ( might supercede above typedefs )
   // We can no longer define Double_t like this this !!
@@ -50,6 +51,7 @@ struct kVc {
   typedef Vc::Vector<Real_t>          Index_t;
 
   // numeric constants of this backend
+  // can they be made constexpr ?
   const static Real_v kOne;
   const static Real_v kZero;
   const static Bool_v kTrue;
@@ -57,29 +59,63 @@ struct kVc {
 
   // what about numeric constants for Double_v or Float_v
   // could by like
-  const static Double_v kDoubleOne;
-  const static Double_v kDoubleZero;
-  const static DoubleBool_v kDoubleTrue;
-  const static DoubleBool_v kDoubleFalse;
+  static Double_v kDoubleOne;
+  static Double_v kDoubleZero;
+  static DoubleBool_v kDoubleTrue;
+  static DoubleBool_v kDoubleFalse;
 
   // other properties of this backend
   constexpr static bool early_returns = false;
 
   // the VectorSizes
-  constexpr int kRealVectorSize = Real_v::Size;
-  constexpr int kDoubleVectorSize = Double_v::Size;
-  constexpr int kFloatVectorSize = Float_v::Size;
+  constexpr static int kRealVectorSize = Real_v::Size;
+  constexpr static int kDoubleVectorSize = Double_v::Size;
+  constexpr static int kFloatVectorSize = Float_v::Size;
   // ... in principle also kIntVectorSize ...
 };
 
-// these have to be replace by something like BackendInt, BackendReal, ...
-typedef kVc::int_v       VcInt;
-typedef kVc::precision_v VcPrecision;
-typedef kVc::bool_v      VcBool;
-typedef kVc::inside_v    VcInside;
+// Functions to extract individual components of vectors
+// meant to provide a homogeneous way to provide operator[]
+// to both complex and primitive types
+// (since operator[] does not exist for primitive double, float, ... )
+// function gives back component index of x and this component
+// x can be modified
+
+// Alternative Names: Operator[]
+template <typename Type>
+VECGEOM_INLINE
+static
+void
+ComponentAssign( int index, typename Vc::Vector<Type>::EntryType what, typename Vc::Vector<Type> & to ) {
+    to[index]=what;
+}
+
 
 template <typename Type>
 VECGEOM_INLINE
+static
+typename Vc::Vector<Type>::EntryType const
+GetComponent( typename Vc::Vector<Type> const & x, int index ) {
+    return x[index];
+}
+
+
+// same for Mask
+template <typename Type>
+VECGEOM_INLINE
+static
+bool &
+GetWritableComponent( typename Vc::Vector<Type>::Mask & x, int index ) {
+    return x(index);
+}
+
+// might need to abstract on other things
+// LoadFromArray; StoreToArray
+
+
+template <typename Type>
+VECGEOM_INLINE
+static
 void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
                 Vc::Vector<Type> const &thenval,
                 Vc::Vector<Type> const &elseval,
@@ -114,104 +150,109 @@ void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
   (*output)(cond) = thenval;
 }
 
-// VECGEOM_INLINE
-// void MaskedAssign(VcBool const &cond,
-//                   const kScalar::int_v thenval,
-//                   VcInt *const output) {
-//   (*output)(VcInt::Mask(cond)) = thenval;
-// }
+// special version of MaskedAssignment when output
+// is of type int_v
+//VECGEOM_INLINE
+//void MaskedAssign(VcBool const &cond,
+//                  const Inside_t thenval,
+//                  VcInside *const output) {
+//  (*output)(VcInside::Mask(cond)) = thenval;
+//}
 
+// returns if all lanes/slots in (vector) condition are true
+template <typename Type>
 VECGEOM_INLINE
-void MaskedAssign(VcBool const &cond,
-                  const Inside_t thenval,
-                  VcInside *const output) {
-  (*output)(VcInside::Mask(cond)) = thenval;
-}
-
-
-VECGEOM_INLINE
-bool IsFull(VcBool const &cond) {
+bool IsFull(typename Vc::Vector<Type>::Mask const &cond) {
   return cond.isFull();
 }
 
+// returns if any lane/slot in (vector) condition is true
+template <typename Type>
 VECGEOM_INLINE
-bool Any(VcBool const &cond) {
+bool Any(typename Vc::Vector<Type>::Mask const &cond) {
   return !cond.isEmpty();
 }
 
+// returns if all lanes/slots in (vector) condition are false
+template <typename Type>
 VECGEOM_INLINE
-bool IsEmpty(VcBool const &cond) {
+bool IsEmpty(typename Vc::Vector<Type>::Mask const &cond) {
   return cond.isEmpty();
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision Abs(VcPrecision const &val) {
+typename Vc::Vector<Type> Abs(typename Vc::Vector<Type> const &val) {
   return Vc::abs(val);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision Sqrt(VcPrecision const &val) {
+typename Vc::Vector<Type> Sqrt(typename Vc::Vector<Type> const &val) {
   return Vc::sqrt(val);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision ATan2(VcPrecision const &y, VcPrecision const &x) {
+typename Vc::Vector<Type> ATan2(typename Vc::Vector<Type> const &y,
+                  typename Vc::Vector<Type> const &x) {
   return Vc::atan2(y, x);
 }
 
-
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision sin(VcPrecision const &x) {
+typename Vc::Vector<Type> sin(typename Vc::Vector<Type> const &x) {
   return Vc::sin(x);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision cos(VcPrecision const &x) {
+typename Vc::Vector<Type> cos(typename Vc::Vector<Type> const &x) {
   return Vc::cos(x);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision tan(VcPrecision const &radians) {
+typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
   // apparently Vc does not have a tan function
-  //  return Vc::tan(radians);
+  // return Vc::tan(radians);
   // emulating it for the moment
-  VcPrecision s,c;
+  typename Vc::Vector<Type> s,c;
   Vc::sincos(radians,&s,&c);
   return s/c;
 }
 
+// ??????
+template <typename Type>
 VECGEOM_INLINE
-Precision Pow(Precision const &x, Precision arg) {
-   return std::pow(x,arg);
+typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
+                              typename Vc::Vector<Type> & arg) {
+    // What about a Vc version ?
+    return std::pow(x,arg);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision Min(VcPrecision const &val1, VcPrecision const &val2) {
+typename Vc::Vector<Type> Min(typename Vc::Vector<Type> const &val1,
+                              typename Vc::Vector<Type> const &val2) {
   return Vc::min(val1, val2);
 }
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision Max(VcPrecision const &val1, VcPrecision const &val2) {
-  return Vc::max(val1, val2);
-}
-
-VECGEOM_INLINE
-VcInt Min(VcInt const &val1, VcInt const &val2) {
-  return Vc::min(val1, val2);
-}
-
-VECGEOM_INLINE
-VcInt Max(VcInt const &val1, VcInt const &val2) {
+typename Vc::Vector<Type> Max(typename Vc::Vector<Type> const &val1,
+                              typename Vc::Vector<Type> const &val2) {
   return Vc::max(val1, val2);
 }
 
 
+template <typename Type>
 VECGEOM_INLINE
-VcPrecision Floor( VcPrecision const &val ){
+typename Vc::Vector<Type> Floor( typename Vc::Vector<Type> const &val ){
   return Vc::floor( val );
 }
 
-} // End inline namespace
+//} // End inline namespace
 
 } // end Vector namespace
 
