@@ -65,6 +65,8 @@ struct kVc {
   static DoubleBool_v kDoubleFalse;
 
   // other properties of this backend
+  // this is to be benchmarked ... could also make it a
+  // configurable template parameter of this trait
   constexpr static bool early_returns = false;
 
   // the VectorSizes

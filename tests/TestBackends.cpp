@@ -8,13 +8,14 @@
 // file meant to systematically test the backend api
 
 #include "backend/Vc/Backend.h"
-//#include "backend/scalar/Backend.h"
+#include "backend/scalar/Backend.h"
 #undef NDEBUG
 #include <cassert>
 
 using VecCore::Backend::Vector::GetComponent;
 using VecCore::Backend::Vector::ComponentAssign;
-
+using VecCore::Backend::Scalar::GetComponent;
+using VecCore::Backend::Scalar::ComponentAssign;
 
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
@@ -194,6 +195,13 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
 }
 
+// template alias to set default backends
+template<typename T>
+   using DefaultVectorBackend = typename VecCore::Backend::Vector::kVc<T>;
+
+template<typename T>
+   using DefaultScalarBackend = typename VecCore::Backend::Scalar::kScalar<T>;
+
 int main(){
     typename VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
     typename VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
@@ -201,6 +209,11 @@ int main(){
 
     TestBackends<VecCore::Backend::Vector::kVc<float> >( input1 );
     TestBackends<VecCore::Backend::Vector::kVc<double> >( input2 );
+
+    TestBackends<DefaultVectorBackend<float> >( input1 );
+
+    DefaultScalarBackend<float>::Real_v sinput1(1.);
+    TestBackends<DefaultScalarBackend<float> >(sinput1);
 
     // test a scalar API
     // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );
