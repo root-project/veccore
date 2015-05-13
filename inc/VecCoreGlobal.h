@@ -13,7 +13,6 @@
 #include <limits>
 #include <memory>
 #include <cstdio>
-#include <cstdlib>
 
 #define VECCORE
 
@@ -229,44 +228,45 @@ VECCORE_GLOBAL int kAlignmentBoundary = 64;
 VECCORE_GLOBAL int kAlignmentBoundary = 32;
 #endif
 
-// CHOOSE THE DEFAULT BACKENDS HERE:
-using DefaultScalarBackend = ;
-using DefaultVectorBackend = ;
+// CHOOSE THE DEFAULT BACKENDS IN FUTURE HERE:
+//
+// template <typename T> using DefaultScalarBackend = VecCore::Backends::Scalar::kScalar<T>;
+// using DefaultVectorBackend = ;
 
 // TODO: I think we want to have
 // VecCore::Numeric_Constants< type > in the future
 
-VECCORE_GLOBAL Precision kPi = 3.14159265358979323846;
-VECCORE_GLOBAL Precision kTwoPi = 2.*kPi;
-VECCORE_GLOBAL Precision kTwoPiInv = 1./kTwoPi;
-VECCORE_GLOBAL Precision kDegToRad = kPi/180.;
-VECCORE_GLOBAL Precision kRadToDeg = 180./kPi;
-VECCORE_GLOBAL Precision kInfinity =
+VECCORE_GLOBAL DefaultPrecision_t kPi = 3.14159265358979323846;
+VECCORE_GLOBAL DefaultPrecision_t kTwoPi = 2.*kPi;
+VECCORE_GLOBAL DefaultPrecision_t kTwoPiInv = 1./kTwoPi;
+VECCORE_GLOBAL DefaultPrecision_t kDegToRad = kPi/180.;
+VECCORE_GLOBAL DefaultPrecision_t kRadToDeg = 180./kPi;
+VECCORE_GLOBAL DefaultPrecision_t kInfinity =
 
 #ifndef VECCORE_NVCC
-    std::numeric_limits<Precision>::infinity();
+    std::numeric_limits<DefaultPrecision_t>::infinity();
 #else
     INFINITY;
 #endif
-VECCORE_GLOBAL Precision kEpsilon =
+VECCORE_GLOBAL DefaultPrecision_t kEpsilon =
 #ifndef VECCORE_NVCC
-    std::numeric_limits<Precision>::epsilon();
+    std::numeric_limits<DefaultPrecision_t>::epsilon();
 #elif VECCORE_FLOAT_PRECISION
     FLT_EPSILON;
 #else
     DBL_EPSILON;
 #endif
-VECCORE_GLOBAL Precision kMinimum =
+VECCORE_GLOBAL DefaultPrecision_t kMinimum =
 #ifndef VECCORE_NVCC
-    std::numeric_limits<Precision>::min();
+    std::numeric_limits<DefaultPrecision_t>::min();
 #elif VECCORE_FLOAT_PRECISION
     FLT_MIN;
 #else
     DBL_MIN;
 #endif
-VECCORE_GLOBAL Precision kMaximum =
+VECCORE_GLOBAL DefaultPrecision_t kMaximum =
 #ifndef VECCORE_NVCC
-    std::numeric_limits<Precision>::max();
+    std::numeric_limits<DefaultPrecision_t>::max();
 #elif VECCORE_FLOAT_PRECISION
     FLT_MAX;
 #else
