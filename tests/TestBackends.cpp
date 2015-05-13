@@ -16,10 +16,19 @@ using VecCore::Backend::Vector::GetComponent;
 using VecCore::Backend::Vector::ComponentAssign;
 using VecCore::Backend::Scalar::GetComponent;
 using VecCore::Backend::Scalar::ComponentAssign;
+using VecCore::Backend::Scalar::CondAssign;
+using VecCore::Backend::Vector::CondAssign;
+using VecCore::Backend::Scalar::GetMaskComponent;
+using VecCore::Backend::Vector::GetMaskComponent;
 
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
-// At least one test for all backendfunctions
+    // some typedefs
+    typedef typename Backend::Real_v Real_v;
+    typedef typename Backend::Real_t Real_t;
+
+    std::cout << " START OF TESTING BACKEND FUNCTION\n";
+    // At least one test for all backendfunctions
 
     // get all components/lanes of input
     for( int i=0; i<Backend::kRealVectorSize; ++i )
@@ -27,11 +36,32 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
     typename Backend::Real_v copy = input;
 
+    // check ComponentAssign
     for( int i=0; i<Backend::kRealVectorSize; ++i )
         ComponentAssign( i , typename Backend::Real_t(i), copy );
 
     for( int i=0; i<Backend::kRealVectorSize; ++i )
         std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+
+    // check ConditionalAssign
+    std::cout << "-- CONDITIONAL ASSIGN + MaskComponent --\n";
+    typename Backend::Bool_v condition = copy > input;
+
+    CondAssign( condition, Real_v(-10.), Real_v(10.), &copy );
+    for( int i=0; i<Backend::kRealVectorSize; ++i ){
+        std::cout << " condition[" << i << "] " << GetMaskComponent(condition,i) << "\n";
+        std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+    }
+
+    // check ConditionalAssign with primitives
+    std::cout << "-- CONDITIONAL ASSIGN  WITH primitives--\n";
+    condition = copy > input;
+    CondAssign( condition, Real_t(-10.), Real_t(10.), &copy );
+    for( int i=0; i<Backend::kRealVectorSize; ++i )
+          std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+
+    // check Loads and Stores from Array
+    std::cout << "-- Testing abstraction for loads/stores --\n";
 
     /*
     typename Vc::Vector<Type>::EntryType &
@@ -203,14 +233,11 @@ template<typename T>
    using DefaultScalarBackend = typename VecCore::Backend::Scalar::kScalar<T>;
 
 int main(){
-    typename VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
-    typename VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
-
-
-    TestBackends<VecCore::Backend::Vector::kVc<float> >( input1 );
-    TestBackends<VecCore::Backend::Vector::kVc<double> >( input2 );
+    VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
+    VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
 
     TestBackends<DefaultVectorBackend<float> >( input1 );
+    TestBackends<DefaultVectorBackend<double> >( input2 );
 
     DefaultScalarBackend<float>::Real_v sinput1(1.);
     TestBackends<DefaultScalarBackend<float> >(sinput1);

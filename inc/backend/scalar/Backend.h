@@ -3,7 +3,7 @@
 #ifndef VECCORE_BACKEND_SCALARBACKEND_H_
 #define VECCORE_BACKEND_SCALARBACKEND_H_
 
-//#include "VecCoreGlobal.h"
+#include "VecCoreGlobal.h"
 
 #include <algorithm>
 #include <cstring>
@@ -15,9 +15,8 @@ namespace Backend {
 
 namespace Scalar {
 
-//inline namespace VECCORE_IMPL_NAMESPACE {
+inline namespace VECCORE_IMPL_NAMESPACE {
 
-#define VECCORE_INLINE
 template< typename RealInput_t = double  >
 struct kScalar {
   // define the base primitive type
@@ -99,21 +98,31 @@ GetComponent( T const & x, int index ) {
     return x;
 }
 
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//void CondAssign(const bool cond,
-//                Type const &thenval, Type const &elseval, Type *const output) {
-//  *output = (cond) ? thenval : elseval;
-//}
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//void MaskedAssign(const bool cond,
-//                  Type const &thenval, Type *const output) {
-//  *output = (cond) ? thenval : *output;
-//}
+// same for Mask
+VECCORE_INLINE
+static
+bool const
+GetMaskComponent( bool const x, int index ) {
+    assert(index == 0);
+    return x;
+}
+
+template <typename Type>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+void CondAssign(const bool cond,
+                Type const &thenval, Type const &elseval, Type *const output) {
+  *output = (cond) ? thenval : elseval;
+}
+
+template <typename Type>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+void MaskedAssign(const bool cond,
+                  Type const &thenval, Type *const output) {
+  *output = (cond) ? thenval : *output;
+}
+
 //
 //VECCORE_CUDA_HEADER_BOTH
 //VECCORE_INLINE
@@ -335,7 +344,7 @@ GetComponent( T const & x, int index ) {
 //#endif
 //}
 
-//} // End inline namespace
+} // End inline namespace
 
 } // End scalar namespace
 

@@ -3,8 +3,7 @@
 #ifndef VECCORE_BACKEND_VCBACKEND_H_
 #define VECCORE_BACKEND_VCBACKEND_H_
 
-//#include "VecCoreGlobal.h"
-//#include "backend/scalar/Backend.h"
+#include "VecCoreGlobal.h"
 
 #include <Vc/Vc>
 
@@ -14,9 +13,8 @@ namespace Backend {
 
 namespace Vector {
 
-//inline namespace VECGEOM_IMPL_NAMESPACE {
+inline namespace VECCORE_IMPL_NAMESPACE {
 
-#define VECGEOM_INLINE
 template< typename RealInput_t = double >
 struct kVc {
   // The convention for type names is
@@ -85,16 +83,17 @@ struct kVc {
 
 // Alternative Names: Operator[]
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 static
 void
-ComponentAssign( int index, typename Vc::Vector<Type>::EntryType what, typename Vc::Vector<Type> & to ) {
+ComponentAssign( int index, typename Vc::Vector<Type>::EntryType what,
+                 typename Vc::Vector<Type> & to ) {
     to[index]=what;
 }
 
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 static
 typename Vc::Vector<Type>::EntryType const
 GetComponent( typename Vc::Vector<Type> const & x, int index ) {
@@ -102,21 +101,28 @@ GetComponent( typename Vc::Vector<Type> const & x, int index ) {
 }
 
 
-// same for Mask
-template <typename Type>
-VECGEOM_INLINE
+// acces components of a "mask" -- template on type does not work here;
+// the compiler was not able to deduce the type correctly
+VECCORE_INLINE
 static
-bool &
-GetWritableComponent( typename Vc::Vector<Type>::Mask & x, int index ) {
-    return x(index);
+bool const
+GetMaskComponent( typename Vc::Vector<float>::Mask const & x, int index ) {
+    return x[index];
 }
+VECCORE_INLINE
+static
+bool const
+GetMaskComponent( typename Vc::Vector<double>::Mask const & x, int index ) {
+    return x[index];
+}
+
 
 // might need to abstract on other things
 // LoadFromArray; StoreToArray
 
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 static
 void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
                 Vc::Vector<Type> const &thenval,
@@ -127,7 +133,7 @@ void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
                 Type const &thenval,
                 Type const &elseval,
@@ -137,7 +143,7 @@ void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
                   Vc::Vector<Type> const &thenval,
                   Vc::Vector<Type> *const output) {
@@ -145,7 +151,7 @@ void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
                   Type const &thenval,
                   Vc::Vector<Type> *const output) {
@@ -154,7 +160,7 @@ void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
 
 // special version of MaskedAssignment when output
 // is of type int_v
-//VECGEOM_INLINE
+//VECCORE_INLINE
 //void MaskedAssign(VcBool const &cond,
 //                  const Inside_t thenval,
 //                  VcInside *const output) {
@@ -163,58 +169,58 @@ void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
 
 // returns if all lanes/slots in (vector) condition are true
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 bool IsFull(typename Vc::Vector<Type>::Mask const &cond) {
   return cond.isFull();
 }
 
 // returns if any lane/slot in (vector) condition is true
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 bool Any(typename Vc::Vector<Type>::Mask const &cond) {
   return !cond.isEmpty();
 }
 
 // returns if all lanes/slots in (vector) condition are false
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 bool IsEmpty(typename Vc::Vector<Type>::Mask const &cond) {
   return cond.isEmpty();
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Abs(typename Vc::Vector<Type> const &val) {
   return Vc::abs(val);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Sqrt(typename Vc::Vector<Type> const &val) {
   return Vc::sqrt(val);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> ATan2(typename Vc::Vector<Type> const &y,
                   typename Vc::Vector<Type> const &x) {
   return Vc::atan2(y, x);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> sin(typename Vc::Vector<Type> const &x) {
   return Vc::sin(x);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> cos(typename Vc::Vector<Type> const &x) {
   return Vc::cos(x);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
   // apparently Vc does not have a tan function
   // return Vc::tan(radians);
@@ -226,7 +232,7 @@ typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
 
 // ??????
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
                               typename Vc::Vector<Type> & arg) {
     // What about a Vc version ?
@@ -234,14 +240,14 @@ typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Min(typename Vc::Vector<Type> const &val1,
                               typename Vc::Vector<Type> const &val2) {
   return Vc::min(val1, val2);
 }
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Max(typename Vc::Vector<Type> const &val1,
                               typename Vc::Vector<Type> const &val2) {
   return Vc::max(val1, val2);
@@ -249,12 +255,12 @@ typename Vc::Vector<Type> Max(typename Vc::Vector<Type> const &val1,
 
 
 template <typename Type>
-VECGEOM_INLINE
+VECCORE_INLINE
 typename Vc::Vector<Type> Floor( typename Vc::Vector<Type> const &val ){
   return Vc::floor( val );
 }
 
-//} // End inline namespace
+} // End inline namespace
 
 } // end Vector namespace
 
