@@ -77,6 +77,7 @@ void TestBackends( typename Backend::Real_v const & input ) {
     CondAssign( condition, Real_t(-10.), Real_t(10.), &copy );
     for( int i=0; i<Backend::kRealVectorSize; ++i )
           std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+    condition = copy > input;
 
     std::cout << "-- TESTING AVAILABILITY OF ISFULL, ANY, ISEMPTY --\n";
     if( IsFull(condition) ){
@@ -85,7 +86,6 @@ void TestBackends( typename Backend::Real_v const & input ) {
         for( int i=0; i<Backend::kRealVectorSize; ++i ) {
            assert( GetMaskComponent( condition, i) == true && "Problem in IsFull");
         }
-
     }
     if( Any(condition) ){
            std::cout << "Some lane in condition " << condition << " satisfied\n";
@@ -97,7 +97,7 @@ void TestBackends( typename Backend::Real_v const & input ) {
     if( IsEmpty(condition) ){
       std::cout << "No lane in condition " << condition << " satisfied\n";
       for( int i=0; i<Backend::kRealVectorSize; ++i ) {
-        //  assert( GetMaskComponent( condition, i) == false && "Problem in IsEmpty");
+           assert( GetMaskComponent( condition, i) == false && "Problem in IsEmpty");
       }
     }
 
@@ -258,10 +258,10 @@ int main(){
     VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
 
    TestBackends<DefaultVectorBackend<float> >( input1 );
-   // TestBackends<DefaultVectorBackend<double> >( input2 );
+   TestBackends<DefaultVectorBackend<double> >( input2 );
 
-   // DefaultScalarBackend<float>::Real_v sinput1(1.);
-    // TestBackends<DefaultScalarBackend<float> >(sinput1);
+   DefaultScalarBackend<float>::Real_v sinput1(1.);
+   TestBackends<DefaultScalarBackend<float> >(sinput1);
 
     // test a scalar API
     // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );

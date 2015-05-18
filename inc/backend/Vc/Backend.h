@@ -4,7 +4,6 @@
 #define VECCORE_BACKEND_VCBACKEND_H_
 
 #include "VecCoreGlobal.h"
-
 #include <Vc/Vc>
 
 namespace VecCore {
@@ -109,6 +108,7 @@ bool const
 GetMaskComponent( typename Vc::Vector<float>::Mask const & x, int index ) {
     return x[index];
 }
+
 VECCORE_INLINE
 static
 bool const
@@ -188,23 +188,23 @@ void LoadFrom( typename Vc::Vector<Type> & into, Type const * const fromaddr ){
 //}
 
 // returns if all lanes/slots in (vector) condition are true
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool IsFull(typename Vc::Vector<Type>::Mask const &cond) {
-  return cond.isFull();
+bool IsFull(MaskType const &cond) {
+    return cond.isFull();
 }
 
 // returns if any lane/slot in (vector) condition is true
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool Any(typename Vc::Vector<Type>::Mask const &cond) {
+bool Any(MaskType const &cond) {
   return !cond.isEmpty();
 }
 
 // returns if all lanes/slots in (vector) condition are false
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool IsEmpty(typename Vc::Vector<Type>::Mask const &cond) {
+bool IsEmpty(MaskType const &cond) {
   return cond.isEmpty();
 }
 
