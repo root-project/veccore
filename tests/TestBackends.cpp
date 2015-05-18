@@ -27,13 +27,25 @@ using VecCore::Backend::Vector::LoadFrom;
 using VecCore::Backend::Scalar::StoreTo;
 using VecCore::Backend::Scalar::LoadFrom;
 
+using VecCore::Backend::Vector::Any;
+using VecCore::Backend::Vector::IsFull;
+using VecCore::Backend::Vector::IsEmpty;
+using VecCore::Backend::Scalar::Any;
+using VecCore::Backend::Scalar::IsFull;
+using VecCore::Backend::Scalar::IsEmpty;
+using VecCore::Backend::Vector::Abs;
+using VecCore::Backend::Scalar::Abs;
+using VecCore::Backend::Vector::Sqrt;
+using VecCore::Backend::Scalar::Sqrt;
+
+
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
     // some typedefs
     typedef typename Backend::Real_v Real_v;
     typedef typename Backend::Real_t Real_t;
 
-    std::cout << " START OF TESTING BACKEND FUNCTION\n";
+    std::cout << "***** START OF TESTING BACKEND FUNCTION *******\n";
     // At least one test for all backendfunctions
 
     // get all components/lanes of input
@@ -66,6 +78,28 @@ void TestBackends( typename Backend::Real_v const & input ) {
     for( int i=0; i<Backend::kRealVectorSize; ++i )
           std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
 
+    std::cout << "-- TESTING AVAILABILITY OF ISFULL, ANY, ISEMPTY --\n";
+    if( IsFull(condition) ){
+        std::cout << "Every lane in condition " << condition << " satisfied\n";
+        // assert that this really the case
+        for( int i=0; i<Backend::kRealVectorSize; ++i ) {
+           assert( GetMaskComponent( condition, i) == true && "Problem in IsFull");
+        }
+
+    }
+    if( Any(condition) ){
+           std::cout << "Some lane in condition " << condition << " satisfied\n";
+           bool valid = true;
+           for( int i=0; i<Backend::kRealVectorSize; ++i)
+                if( GetMaskComponent( condition, i) == true ) valid=true;
+           assert( valid && "Problem in Any");
+    }
+    if( IsEmpty(condition) ){
+      std::cout << "No lane in condition " << condition << " satisfied\n";
+      for( int i=0; i<Backend::kRealVectorSize; ++i ) {
+        //  assert( GetMaskComponent( condition, i) == false && "Problem in IsEmpty");
+      }
+    }
 
     // check masked assignments
     std::cout << "-- TESTING MASKED ASSIGN -- \n";
@@ -81,9 +115,6 @@ void TestBackends( typename Backend::Real_v const & input ) {
     for( int i=0; i<Backend::kRealVectorSize; ++i )
         assert( GetComponent( copy, i ) == array[i] && "problem in StoreTo");
 
-    // unfortunately copy2 needs to be constructed (here with =operator) before call to LoadFrom;
-    //Real_v copy2 = copy;
-    // this does not work:
     Real_v copy2;
     LoadFrom( copy2, &array[4] );
     for( int i=0; i<Backend::kRealVectorSize; ++i ){
@@ -94,8 +125,30 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
 
     // "-- TESTING MATHEMATICAL FUNCTIONS --"
-
-/*
+    {
+        std::cout << "-- TESTING ABS --\n";
+        Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        for( int i=0; i<Backend::kRealVectorSize; ++i ) { array1[i]=-i; array2[i]=i; }
+        Real_v val1; LoadFrom( val1, array1 );
+        Real_v val2; LoadFrom( val2, array2 );
+        assert( Abs( val1 ) == val2 );
+        _mm_free(array1);
+        _mm_free(array2);
+    }
+    // tesing Sqrt
+    {
+      std::cout << "-- TESTING SQRT --\n";
+      Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ) { array1[i]=(i+1)*(i+1); array2[i]=i+1; }
+      Real_v val1; LoadFrom( val1, array1 );
+      Real_v val2; LoadFrom( val2, array2 );
+      assert( Sqrt( val1 ) == val2 );
+      _mm_free(array1);
+      _mm_free(array2);
+    }
+    /*
     // returns if all lanes/slots in (vector) condition are true
     template <typename Type>
     VECGEOM_INLINE
@@ -204,10 +257,10 @@ int main(){
     VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
     VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
 
-   // TestBackends<DefaultVectorBackend<float> >( input1 );
-    TestBackends<DefaultVectorBackend<double> >( input2 );
+   TestBackends<DefaultVectorBackend<float> >( input1 );
+   // TestBackends<DefaultVectorBackend<double> >( input2 );
 
-    DefaultScalarBackend<float>::Real_v sinput1(1.);
+   // DefaultScalarBackend<float>::Real_v sinput1(1.);
     // TestBackends<DefaultScalarBackend<float> >(sinput1);
 
     // test a scalar API

@@ -141,40 +141,40 @@ void LoadFrom( Type & into, Type const *const fromaddr ){
 }
 
 
-//
+
+VECCORE_INLINE
+bool IsFull(bool const &cond){
+    return cond;
+}
+
+
 //VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//bool IsFull(bool const &cond){
-//    return cond;
-//}
+VECCORE_INLINE
+bool Any(bool const &cond) {
+  return cond;
+}
+
+VECCORE_INLINE
+bool IsEmpty(bool const &cond){
+    return !cond;
+}
 //
+//
+//
+template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//bool Any(bool const &cond) {
-//  return cond;
-//}
-//
+VECCORE_INLINE
+Type Abs(const Type val) {
+  return fabs(val);
+}
+
+
+template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//bool IsEmpty(bool const &cond){
-//    return !cond;
-//}
-//
-//
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Abs(const Type val) {
-//  return fabs(val);
-//}
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Sqrt(const Type val) {
-//  return std::sqrt(val);
-//}
+VECCORE_INLINE
+Type Sqrt(const Type val) {
+  return std::sqrt(val);
+}
 //
 //template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH
