@@ -123,6 +123,24 @@ void MaskedAssign(const bool cond,
   *output = (cond) ? thenval : *output;
 }
 
+// stores a vector type into a memory position ( normally an array ) toaddr
+// toaddr has to be properly aligned
+template <typename Type>
+VECCORE_INLINE
+void StoreTo( Type const & what,
+              Type * toaddr ){
+    *toaddr = what;
+}
+
+// loads number of bytes corresponding to the into type from a memory
+// location and puts it into "into"
+template <typename Type>
+VECCORE_INLINE
+void LoadFrom( Type & into, Type const *const fromaddr ){
+    into = *fromaddr;
+}
+
+
 //
 //VECCORE_CUDA_HEADER_BOTH
 //VECCORE_INLINE

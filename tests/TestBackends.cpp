@@ -9,6 +9,7 @@
 
 #include "backend/Vc/Backend.h"
 #include "backend/scalar/Backend.h"
+#include <mm_malloc.h>
 #undef NDEBUG
 #include <cassert>
 
@@ -20,6 +21,11 @@ using VecCore::Backend::Scalar::CondAssign;
 using VecCore::Backend::Vector::CondAssign;
 using VecCore::Backend::Scalar::GetMaskComponent;
 using VecCore::Backend::Vector::GetMaskComponent;
+
+using VecCore::Backend::Vector::StoreTo;
+using VecCore::Backend::Vector::LoadFrom;
+using VecCore::Backend::Scalar::StoreTo;
+using VecCore::Backend::Scalar::LoadFrom;
 
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
@@ -60,74 +66,36 @@ void TestBackends( typename Backend::Real_v const & input ) {
     for( int i=0; i<Backend::kRealVectorSize; ++i )
           std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
 
+
+    // check masked assignments
+    std::cout << "-- TESTING MASKED ASSIGN -- \n";
+
+
     // check Loads and Stores from Array
-    std::cout << "-- Testing abstraction for loads/stores --\n";
+    std::cout << "-- TESTING LOAD/STORE ABSTRACTION --\n";
+    // initialize an array first
+    Real_t * array = (Real_t *) _mm_malloc( sizeof( Real_t ) * 8, 32 );
+    for( int i=0;i<8;++i ) array[i]=i;
+    StoreTo( copy, array );
+    // assert that array really contains the stuff from copy
+    for( int i=0; i<Backend::kRealVectorSize; ++i )
+        assert( GetComponent( copy, i ) == array[i] && "problem in StoreTo");
 
-    /*
-    typename Vc::Vector<Type>::EntryType &
-    GetWritableComponent( typename Vc::Vector<Type> & x, int index ) {
-        return x(index);
+    // unfortunately copy2 needs to be constructed (here with =operator) before call to LoadFrom;
+    //Real_v copy2 = copy;
+    // this does not work:
+    Real_v copy2;
+    LoadFrom( copy2, &array[4] );
+    for( int i=0; i<Backend::kRealVectorSize; ++i ){
+          std::cout << " copy2[" << i << "] " << GetComponent( copy2, i ) << "\n";
+          assert( GetComponent( copy2, i) == array[4+i] && "problem in LoadFrom");
     }
-
-    // same for Mask
-    template <typename Type>
-    VECGEOM_INLINE
-    static
-    bool &
-    GetWritableComponent( typename Vc::Vector<Type>::Mask & x, int index ) {
-        return x(index);
-    }
-
-    // might need to abstract on other things
-    // LoadFromArray; StoreToArray
+    _mm_free( array );
 
 
-    template <typename Type>
-    VECGEOM_INLINE
-    static
-    void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
-                    Vc::Vector<Type> const &thenval,
-                    Vc::Vector<Type> const &elseval,
-                    Vc::Vector<Type> *const output) {
-      (*output)(cond) = thenval;
-      (*output)(!cond) = elseval;
-    }
+    // "-- TESTING MATHEMATICAL FUNCTIONS --"
 
-    template <typename Type>
-    VECGEOM_INLINE
-    void CondAssign(typename Vc::Vector<Type>::Mask const &cond,
-                    Type const &thenval,
-                    Type const &elseval,
-                    Vc::Vector<Type> *const output) {
-      (*output)(cond) = thenval;
-      (*output)(!cond) = elseval;
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
-                      Vc::Vector<Type> const &thenval,
-                      Vc::Vector<Type> *const output) {
-      (*output)(cond) = thenval;
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
-                      Type const &thenval,
-                      Vc::Vector<Type> *const output) {
-      (*output)(cond) = thenval;
-    }
-
-    // special version of MaskedAssignment when output
-    // is of type int_v
-    VECGEOM_INLINE
-    void MaskedAssign(VcBool const &cond,
-                      const Inside_t thenval,
-                      VcInside *const output) {
-      (*output)(VcInside::Mask(cond)) = thenval;
-    }
-
+/*
     // returns if all lanes/slots in (vector) condition are true
     template <typename Type>
     VECGEOM_INLINE
@@ -236,11 +204,11 @@ int main(){
     VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
     VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
 
-    TestBackends<DefaultVectorBackend<float> >( input1 );
+   // TestBackends<DefaultVectorBackend<float> >( input1 );
     TestBackends<DefaultVectorBackend<double> >( input2 );
 
     DefaultScalarBackend<float>::Real_v sinput1(1.);
-    TestBackends<DefaultScalarBackend<float> >(sinput1);
+    // TestBackends<DefaultScalarBackend<float> >(sinput1);
 
     // test a scalar API
     // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );

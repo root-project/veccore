@@ -158,6 +158,26 @@ void MaskedAssign(typename Vc::Vector<Type>::Mask const &cond,
   (*output)(cond) = thenval;
 }
 
+// stores a vector type into a memory position ( normally an array ) toaddr
+// toaddr has to be properly aligned
+// this function is an abstraction for the Vc API "store"
+template <typename Type>
+VECCORE_INLINE
+void StoreTo( typename Vc::Vector<Type> const & what,
+            Type * toaddr ){
+    what.store(toaddr);
+}
+
+// loads number of bytes corresponding to the into type from a memory
+// location and puts it into "into"
+template <typename Type>
+VECCORE_INLINE
+void LoadFrom( typename Vc::Vector<Type> & into, Type const * const fromaddr ){
+    into.load(fromaddr);
+}
+
+
+
 // special version of MaskedAssignment when output
 // is of type int_v
 //VECCORE_INLINE
