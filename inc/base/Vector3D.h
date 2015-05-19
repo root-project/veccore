@@ -230,7 +230,7 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   void Normalize() {
-    *this /= (1. / Length());
+    *this *= (1. / Length());
   }
 
   VECCORE_CUDA_HEADER_BOTH
