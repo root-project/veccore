@@ -10,6 +10,7 @@
 #include "backend/Vc/Backend.h"
 #include "backend/scalar/Backend.h"
 #include <mm_malloc.h>
+#include <cmath>
 #undef NDEBUG
 #include <cassert>
 
@@ -37,7 +38,22 @@ using VecCore::Backend::Vector::Abs;
 using VecCore::Backend::Scalar::Abs;
 using VecCore::Backend::Vector::Sqrt;
 using VecCore::Backend::Scalar::Sqrt;
-
+using VecCore::Backend::Vector::ATan2;
+using VecCore::Backend::Scalar::ATan2;
+using VecCore::Backend::Vector::Pow;
+using VecCore::Backend::Scalar::Pow;
+using VecCore::Backend::Vector::Cos;
+using VecCore::Backend::Scalar::Cos;
+using VecCore::Backend::Vector::Sin;
+using VecCore::Backend::Scalar::Sin;
+using VecCore::Backend::Vector::Tan;
+using VecCore::Backend::Scalar::Tan;
+using VecCore::Backend::Vector::Min;
+using VecCore::Backend::Scalar::Min;
+using VecCore::Backend::Vector::Max;
+using VecCore::Backend::Scalar::Max;
+using VecCore::Backend::Vector::Floor;
+using VecCore::Backend::Scalar::Floor;
 
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
@@ -77,6 +93,7 @@ void TestBackends( typename Backend::Real_v const & input ) {
     CondAssign( condition, Real_t(-10.), Real_t(10.), &copy );
     for( int i=0; i<Backend::kRealVectorSize; ++i )
           std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+    condition = copy > input;
 
     std::cout << "-- TESTING AVAILABILITY OF ISFULL, ANY, ISEMPTY --\n";
     if( IsFull(condition) ){
@@ -85,7 +102,6 @@ void TestBackends( typename Backend::Real_v const & input ) {
         for( int i=0; i<Backend::kRealVectorSize; ++i ) {
            assert( GetMaskComponent( condition, i) == true && "Problem in IsFull");
         }
-
     }
     if( Any(condition) ){
            std::cout << "Some lane in condition " << condition << " satisfied\n";
@@ -97,7 +113,7 @@ void TestBackends( typename Backend::Real_v const & input ) {
     if( IsEmpty(condition) ){
       std::cout << "No lane in condition " << condition << " satisfied\n";
       for( int i=0; i<Backend::kRealVectorSize; ++i ) {
-        //  assert( GetMaskComponent( condition, i) == false && "Problem in IsEmpty");
+           assert( GetMaskComponent( condition, i) == false && "Problem in IsEmpty");
       }
     }
 
@@ -148,100 +164,134 @@ void TestBackends( typename Backend::Real_v const & input ) {
       _mm_free(array1);
       _mm_free(array2);
     }
-    /*
-    // returns if all lanes/slots in (vector) condition are true
-    template <typename Type>
-    VECGEOM_INLINE
-    bool IsFull(typename Vc::Vector<Type>::Mask const &cond) {
-      return cond.isFull();
+
+    {
+      std::cout << "-- TESTING ATAN2 --\n";
+      Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ){
+          array1[i]=(i+1); array2[i]=std::atan2(array1[i], array1[i] + 1); }
+      Real_v val1; LoadFrom( val1, array1 );
+      Real_v val2; LoadFrom( val2, array2 );
+      assert( ATan2( val1, val1 + 1 ) == val2 );
+      _mm_free(array1);
+      _mm_free(array2);
     }
 
-    // returns if any lane/slot in (vector) condition is true
-    template <typename Type>
-    VECGEOM_INLINE
-    bool Any(typename Vc::Vector<Type>::Mask const &cond) {
-      return !cond.isEmpty();
+    {
+      std::cout << "-- TESTING POW --\n";
+      Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ){
+          array1[i]=(i+2); array2[i]=std::pow(array1[i], 1.25*array1[i] + 1); }
+      Real_v val1; LoadFrom( val1, array1 );
+      Real_v val2; LoadFrom( val2, array2 );
+      Real_v result = Pow( val1, Real_t(1.25)*val1 + 1 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ){
+         // assert on relative error
+          assert( std::abs( GetComponent( result, i ) - array2[i] )/array2[i] < 1E-6 && "Problem in Pow" );
+      }
+      _mm_free(array1);
+      _mm_free(array2);
     }
-
-    // returns if all lanes/slots in (vector) condition are false
-    template <typename Type>
-    VECGEOM_INLINE
-    bool IsEmpty(typename Vc::Vector<Type>::Mask const &cond) {
-      return cond.isEmpty();
+    {
+       std::cout << "-- TESTING COS --\n";
+       Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+              array1[i]=1.25*(i+1); array2[i]=std::cos(array1[i]); }
+       Real_v val1; LoadFrom( val1, array1 );
+       Real_v result = Cos( val1 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+             // assert on relative error
+              assert( std::abs( GetComponent( result, i ) - array2[i] ) < 1E-6 && "Problem in Cos" );
+       }
+      _mm_free(array1);
+      _mm_free(array2);
     }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Abs(typename Vc::Vector<Type> const &val) {
-      return Vc::abs(val);
+    {
+       std::cout << "-- TESTING SIN --\n";
+       Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+              array1[i]=1.25*(i+1); array2[i]=std::sin(array1[i]); }
+       Real_v val1; LoadFrom( val1, array1 );
+       Real_v result = Sin( val1 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+             // assert on relative error
+              assert( std::abs( GetComponent( result, i ) - array2[i] ) < 1E-6 && "Problem in Cos" );
+       }
+      _mm_free(array1);
+      _mm_free(array2);
     }
+    {
+       std::cout << "-- TESTING TAN --\n";
+       Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+              array1[i]=1.25*(i+1); array2[i]=std::tan(array1[i]); }
+       Real_v val1; LoadFrom( val1, array1 );
+       Real_v result = Tan( val1 );
+       for( int i=0; i<Backend::kRealVectorSize; ++i ){
+             // assert on relative error
+              assert( std::abs( GetComponent( result, i ) - array2[i] ) < 1E-6 && "Problem in Cos" );
+       }
+      _mm_free(array1);
+      _mm_free(array2);
+     }
 
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Sqrt(typename Vc::Vector<Type> const &val) {
-      return Vc::sqrt(val);
+    {
+        std::cout << "-- TESTING FLOOR --\n";
+        Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        for( int i=0; i<Backend::kRealVectorSize; ++i ){
+               array1[i]=1.25*(i+1); array2[i]=std::floor(array1[i]); }
+        Real_v val1; LoadFrom( val1, array1 );
+        Real_v result = Floor( val1 );
+        for( int i=0; i<Backend::kRealVectorSize; ++i ){
+              // assert on relative error
+               assert( std::abs( GetComponent( result, i ) - array2[i] ) < 1E-6 && "Problem in Floor" );
+        }
+       _mm_free(array1);
+       _mm_free(array2);
+      }
+
+    {
+      std::cout << "-- TESTING MIN --\n";
+      Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ){
+             array1[i]=i+1; array2[i]=-array1[i];
+      }
+      Real_v val1; LoadFrom( val1, array1 );
+      Real_v val2; LoadFrom( val2, array2 );
+
+      Real_v result = Min( val1, val2 );
+      for( int i=0; i<Backend::kRealVectorSize; ++i ){
+            // assert on relative error
+             assert( GetComponent( result, i ) == array2[i]  && "Problem in Min" );
+      }
+     _mm_free(array1);
+     _mm_free(array2);
     }
+    {
+        std::cout << "-- TESTING MAX --\n";
+        Real_t * array1 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        Real_t * array2 = (Real_t *) _mm_malloc( sizeof( Real_t ) * Backend::kRealVectorSize, 32 );
+        for( int i=0; i<Backend::kRealVectorSize; ++i ){
+               array1[i]=i+1; array2[i]=-array1[i];
+        }
+        Real_v val1; LoadFrom( val1, array1 );
+        Real_v val2; LoadFrom( val2, array2 );
 
-    template <typename Type>
-    VECGEOM_INLINE
-    VcPrecision ATan2(typename Vc::Vector<Type> const &y,
-                      typename Vc::Vector<Type> const &x) {
-      return Vc::atan2(y, x);
+        Real_v result = Max( val1, val2 );
+        for( int i=0; i<Backend::kRealVectorSize; ++i ){
+              // assert on relative error
+               assert( GetComponent( result, i ) == array1[i]  && "Problem in Max" );
+        }
+       _mm_free(array1);
+       _mm_free(array2);
     }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> sin(typename Vc::Vector<Type> const &x) {
-      return Vc::sin(x);
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> cos(typename Vc::Vector<Type> const &x) {
-      return Vc::cos(x);
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
-      // apparently Vc does not have a tan function
-      // return Vc::tan(radians);
-      // emulating it for the moment
-      VcPrecision s,c;
-      Vc::sincos(radians,&s,&c);
-      return s/c;
-    }
-
-    // ??????
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
-                                  typename Vc::Vector<Type> & arg) {
-        // What about a Vc version ?
-        return std::pow(x,arg);
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Min(typename Vc::Vector<Type> const &val1,
-                                  typename Vc::Vector<Type> const &val2) {
-      return Vc::min(val1, val2);
-    }
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Max(typename Vc::Vector<Type> const &val1,
-                                  typename Vc::Vector<Type> const &val2) {
-      return Vc::max(val1, val2);
-    }
-
-
-    template <typename Type>
-    VECGEOM_INLINE
-    typename Vc::Vector<Type> Floor( typename Vc::Vector<Type> const &val ){
-      return Vc::floor( val );
-    }
-*/
 
 
 }
@@ -258,15 +308,16 @@ int main(){
     VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
 
    TestBackends<DefaultVectorBackend<float> >( input1 );
-   // TestBackends<DefaultVectorBackend<double> >( input2 );
+   TestBackends<DefaultVectorBackend<double> >( input2 );
 
-   // DefaultScalarBackend<float>::Real_v sinput1(1.);
-    // TestBackends<DefaultScalarBackend<float> >(sinput1);
+   DefaultScalarBackend<float>::Real_v sinput1(1.);
+   TestBackends<DefaultScalarBackend<float> >(sinput1);
+   DefaultScalarBackend<double>::Real_v sinput2(1.);
+   TestBackends<DefaultScalarBackend<double> >(sinput2);
 
-    // test a scalar API
-    // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );
-
-    return 0;
+   // test a scalar API
+   // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );
+   return 0;
 }
 
 

@@ -4,7 +4,6 @@
 #define VECCORE_BACKEND_VCBACKEND_H_
 
 #include "VecCoreGlobal.h"
-
 #include <Vc/Vc>
 
 namespace VecCore {
@@ -109,6 +108,7 @@ bool const
 GetMaskComponent( typename Vc::Vector<float>::Mask const & x, int index ) {
     return x[index];
 }
+
 VECCORE_INLINE
 static
 bool const
@@ -188,23 +188,23 @@ void LoadFrom( typename Vc::Vector<Type> & into, Type const * const fromaddr ){
 //}
 
 // returns if all lanes/slots in (vector) condition are true
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool IsFull(typename Vc::Vector<Type>::Mask const &cond) {
-  return cond.isFull();
+bool IsFull(MaskType const &cond) {
+    return cond.isFull();
 }
 
 // returns if any lane/slot in (vector) condition is true
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool Any(typename Vc::Vector<Type>::Mask const &cond) {
+bool Any(MaskType const &cond) {
   return !cond.isEmpty();
 }
 
 // returns if all lanes/slots in (vector) condition are false
-template <typename Type>
+template <typename MaskType>
 VECCORE_INLINE
-bool IsEmpty(typename Vc::Vector<Type>::Mask const &cond) {
+bool IsEmpty(MaskType const &cond) {
   return cond.isEmpty();
 }
 
@@ -229,19 +229,19 @@ typename Vc::Vector<Type> ATan2(typename Vc::Vector<Type> const &y,
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> sin(typename Vc::Vector<Type> const &x) {
+typename Vc::Vector<Type> Sin(typename Vc::Vector<Type> const &x) {
   return Vc::sin(x);
 }
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> cos(typename Vc::Vector<Type> const &x) {
+typename Vc::Vector<Type> Cos(typename Vc::Vector<Type> const &x) {
   return Vc::cos(x);
 }
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
+typename Vc::Vector<Type> Tan(typename Vc::Vector<Type> const &radians) {
   // apparently Vc does not have a tan function
   // return Vc::tan(radians);
   // emulating it for the moment
@@ -250,13 +250,13 @@ typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
   return s/c;
 }
 
-// ??????
+
 template <typename Type>
 VECCORE_INLINE
 typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
-                              typename Vc::Vector<Type> & arg) {
-    // What about a Vc version ?
-    return std::pow(x,arg);
+                              typename Vc::Vector<Type> const &arg) {
+    // Vc does not have a proper Pow function
+    return Vc::exp(Vc::log(x) * arg);
 }
 
 template <typename Type>
