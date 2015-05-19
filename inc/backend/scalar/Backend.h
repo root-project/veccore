@@ -176,92 +176,93 @@ Type Sqrt(const Type val) {
   return std::sqrt(val);
 }
 //
-//template <typename Type>
+template <typename Type>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+Type Pow(const Type val1, const Type val2) {
+  return std::pow(val1, val2);
+}
+//
+
+//
+//
+
+// why do we need this??
+template <typename Type>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+Type Pow(Type const &x, int arg) {
+   return pow(x,arg);
+}
+
+template <typename Type>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+Type Cbrt(const Type val1) {
+   return cbrt(val1);
+}
+
+template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Pow(const Type val1, const Type val2) {
-//  return std::pow(val1, val2);
-//}
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Pow(Type const &x, Type arg) {
-//   return pow(x,arg);
-//}
-//
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Pow(Type const &x, int arg) {
-//   return pow(x,arg);
-//}
-//
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type Cbrt(const Type val1) {
-//  return cbrt(val1);
-//}
-//
-//
-//template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Type ATan2(const Type y, const Type x) {
-//  if (x != 0) return  std::atan2(y, x);
-//  if (y >  0) return  kPi / 2;
-//  if (y <  0) return -kPi / 2;
-//  return  0;
-//}
-//
-//template <typename T>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//T Min(T const &val1, T const &val2) {
-//#ifndef VECCORE_NVCC_DEVICE
-//  return std::min(val1, val2);
-//#else
-//  return val1 < val2 ? val1 : val2;
-//#endif
-//}
-//
-//template <typename T>
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//T Max(T const &val1, T const &val2) {
-//#ifndef VECCORE_NVCC_DEVICE
-//  return std::max(val1, val2);
-//#else
-//  return val1 > val2 ? val1 : val2;
-//#endif
-//}
-//
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Precision sin(const Precision radians) {
-//  return std::sin(radians);
-//}
-//
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Precision cos(const Precision radians) {
-//  return std::cos(radians);
-//}
-//
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Precision tan(const Precision radians) {
-//  return std::tan(radians);
-//}
-//
-//VECCORE_CUDA_HEADER_BOTH
-//VECCORE_INLINE
-//Precision Floor( Precision val ){
-//    return std::floor(val);
-//}
+VECCORE_INLINE
+Type ATan2(const Type y, const Type x) {
+  if (x != 0) return  std::atan2(y, x);
+  if (y >  0) return  kPi / 2;
+  if (y <  0) return -kPi / 2;
+  return Type(0.);
+}
+
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Min(T const &val1, T const &val2) {
+#ifndef VECCORE_NVCC_DEVICE
+  return std::min(val1, val2);
+#else
+  return val1 < val2 ? val1 : val2;
+#endif
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Max(T const &val1, T const &val2) {
+#ifndef VECCORE_NVCC_DEVICE
+  return std::max(val1, val2);
+#else
+  return val1 > val2 ? val1 : val2;
+#endif
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Sin(T radians) {
+  return std::sin(radians);
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Cos(T radians) {
+  return std::cos(radians);
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Tan(T radians) {
+  return std::tan(radians);
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Floor( T val ){
+    return std::floor(val);
+}
+
 //
 //template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH

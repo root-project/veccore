@@ -229,19 +229,19 @@ typename Vc::Vector<Type> ATan2(typename Vc::Vector<Type> const &y,
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> sin(typename Vc::Vector<Type> const &x) {
+typename Vc::Vector<Type> Sin(typename Vc::Vector<Type> const &x) {
   return Vc::sin(x);
 }
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> cos(typename Vc::Vector<Type> const &x) {
+typename Vc::Vector<Type> Cos(typename Vc::Vector<Type> const &x) {
   return Vc::cos(x);
 }
 
 template <typename Type>
 VECCORE_INLINE
-typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
+typename Vc::Vector<Type> Tan(typename Vc::Vector<Type> const &radians) {
   // apparently Vc does not have a tan function
   // return Vc::tan(radians);
   // emulating it for the moment
@@ -250,13 +250,13 @@ typename Vc::Vector<Type> tan(typename Vc::Vector<Type> const &radians) {
   return s/c;
 }
 
-// ??????
+
 template <typename Type>
 VECCORE_INLINE
 typename Vc::Vector<Type> Pow(typename Vc::Vector<Type> const &x,
-                              typename Vc::Vector<Type> & arg) {
-    // What about a Vc version ?
-    return std::pow(x,arg);
+                              typename Vc::Vector<Type> const &arg) {
+    // Vc does not have a proper Pow function
+    return Vc::exp(Vc::log(x) * arg);
 }
 
 template <typename Type>
