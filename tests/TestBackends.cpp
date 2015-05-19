@@ -9,6 +9,7 @@
 
 #include "backend/Vc/Backend.h"
 #include "backend/scalar/Backend.h"
+#include "base/Vector3D.h"
 #include <mm_malloc.h>
 #include <cmath>
 #undef NDEBUG
@@ -54,6 +55,104 @@ using VecCore::Backend::Vector::Max;
 using VecCore::Backend::Scalar::Max;
 using VecCore::Backend::Vector::Floor;
 using VecCore::Backend::Scalar::Floor;
+using VecCore::Backend::Vector::SinCos;
+using VecCore::Backend::Scalar::SinCos;
+
+using namespace VecCore;
+
+ /**
+   * Example Kernel: Propagate track along Helix on constant B=(0,0,Bz) field
+   */
+  template<typename Backend>
+  void ConstBzFieldHelixStepperDoStepKernel(
+          Vector3D<typename Backend::Real_v> const & pos,
+          Vector3D<typename Backend::Real_v> const & dir,
+          typename Backend::Int_v const & charge,
+          typename Backend::Real_v const & momentum,
+          typename Backend::Real_v const & step,
+          Vector3D<typename Backend::Real_v> & pos_out,
+          Vector3D<typename Backend::Real_v> & dir_out,
+          typename Backend::Real_v const & Bz)
+  {
+      typedef typename Backend::Real_v Real_v;
+      const Real_v kB2C_local(-0.299792458e-3);
+      const Real_v kSmall(1.E-30);
+      // could do a fast square root here
+      Real_v dt = Sqrt((dir.x()*dir.x()) + (dir.y()*dir.y())) + kSmall;
+      Real_v invnorm=1./dt;
+      // radius has sign and determines the sense of rotation
+      Real_v R = momentum*dt/((kB2C_local*Real_v(charge))*(Bz));
+
+      Real_v cosa= dir.x()*invnorm;
+      Real_v sina= dir.y()*invnorm;
+      Real_v phi = step * Real_v(charge) * Bz * kB2C_local / momentum;
+
+      Real_v cosphi;
+      Real_v sinphi;
+      SinCos(phi, &sinphi, &cosphi);
+
+      pos_out.x() = pos.x() + R*(-sina - (-cosphi*sina - sinphi*cosa));
+      pos_out.y() = pos.y() + R*( cosa - (-sina*sinphi + cosphi*cosa));
+      pos_out.z() = pos.z() + step * dir.z();
+
+      dir_out.x() = dir.x() * cosphi - sinphi * dir.y();
+      dir_out.y() = dir.x() * sinphi + cosphi * dir.y();
+      dir_out.z() = dir.z();
+  }
+
+#define _R_ __restrict__
+  // a client making use of the generic kernel
+  void DoStep_v(
+            double const * _R_ posx, double const * _R_ posy, double const * _R_ posz,
+            double const * _R_ dirx, double const * _R_ diry, double const * _R_ dirz,
+            int const * _R_ charge, double const * _R_ momentum, double const * _R_ step,
+            double * _R_ newposx, double * _R_ newposy, double * _R_ newposz,
+            double * _R_ newdirx, double * _R_ newdiry, double * _R_ newdirz,
+            int np )
+   {
+       // we have choice here: ( try autovectorization: )
+
+//#pragma ivdep
+//      for (int i=0;i<np;++i){
+//            DoStep( posx[i], posy[i], posz[i], dirx[i], diry[i], dirz[i],
+//                    charge[i], momentum[i], step[i],
+//                    newposx[i], newposy[i], newposz[i],
+//                    newdirx[i], newdiry[i], newdirz[i]
+//                  );
+//       }
+
+       // alternative loop with Vc:
+       for (int i=0;i<np;i+= DefaultVectorBackend<double>::kRealVectorSize )
+       {
+            // results cannot not be temporaries
+           typedef typename DefaultVectorBackend<double>::Real_v Real_v;
+           Vector3D<Real_v> newpos;
+           Vector3D<Real_v> newdir;
+
+           ConstBzFieldHelixStepperDoStepKernel<DefaultVectorBackend<double> >(
+                   Vector3D<Real_v>( Real_v(posx[i]),
+                                     Real_v(posy[i]),
+                                     Real_v(posz[i]) ),
+                   Vector3D<Real_v>( Real_v(dirx[i]),
+                                     Real_v(diry[i]),
+                                     Real_v(dirz[i]) ),
+                   typename DefaultVectorBackend<double>::Int_v(charge[i]),
+                   Real_v(momentum[i]),
+                   Real_v(step[i]),
+                   newpos, newdir, Real_v(1.0));
+
+            // write results
+            StoreTo(newpos.x(), &newposx[i] );
+            StoreTo(newpos.y(), &newposy[i] );
+            StoreTo(newpos.z(), &newposz[i] );
+            StoreTo(newdir.x(), &newdirx[i] );
+            StoreTo(newdir.y(), &newdiry[i] );
+            StoreTo(newdir.z(), &newdirz[i] );
+       }
+       // tail part: tobedone
+   }
+
+
 
 template <typename Backend>
 void TestBackends( typename Backend::Real_v const & input ) {
@@ -296,16 +395,10 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
 }
 
-// template alias to set default backends
-template<typename T>
-   using DefaultVectorBackend = typename VecCore::Backend::Vector::kVc<T>;
-
-template<typename T>
-   using DefaultScalarBackend = typename VecCore::Backend::Scalar::kScalar<T>;
 
 int main(){
-    VecCore::Backend::Vector::kVc<float>::Real_v input1(1.);
-    VecCore::Backend::Vector::kVc<double>::Real_v input2(1.);
+    DefaultVectorBackend<float>::Real_v input1(1.);
+    DefaultVectorBackend<double>::Real_v input2(1.);
 
    TestBackends<DefaultVectorBackend<float> >( input1 );
    TestBackends<DefaultVectorBackend<double> >( input2 );

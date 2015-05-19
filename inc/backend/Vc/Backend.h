@@ -241,6 +241,14 @@ typename Vc::Vector<Type> Cos(typename Vc::Vector<Type> const &x) {
 
 template <typename Type>
 VECCORE_INLINE
+void SinCos(typename Vc::Vector<Type> const &x,
+            typename Vc::Vector<Type> * s,
+            typename Vc::Vector<Type> * c ) {
+  return Vc::sincos(x, s, c);
+}
+
+template <typename Type>
+VECCORE_INLINE
 typename Vc::Vector<Type> Tan(typename Vc::Vector<Type> const &radians) {
   // apparently Vc does not have a tan function
   // return Vc::tan(radians);

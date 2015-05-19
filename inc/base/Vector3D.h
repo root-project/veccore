@@ -5,8 +5,18 @@
 #define VECCORE_BASE_VECTOR3D_H_
 
 #include "VecCoreGlobal.h"
+#include "BackendGlobal.h"
+using VecCore::Backend::Vector::Abs;
+using VecCore::Backend::Scalar::Abs;
+using VecCore::Backend::Vector::MaskedAssign;
+using VecCore::Backend::Scalar::MaskedAssign;
+using VecCore::Backend::Vector::Sin;
+using VecCore::Backend::Scalar::Cos;
+using VecCore::Backend::Vector::Sqrt;
+using VecCore::Backend::Scalar::Sqrt;
+using VecCore::Backend::Vector::ATan2;
+using VecCore::Backend::Scalar::ATan2;
 
-#include "backend/Backend.h"
 
 //#ifndef VECCORE_NVCC
 //  #if (defined(VECCORE_VC) || defined(VECCORE_VC_ACCELERATION))
@@ -32,7 +42,8 @@ inline namespace VECCORE_IMPL_NAMESPACE {
  *          will use vector instructions for operations when possible.
  */
 template <typename Type>
-class Vector3D : public AlignedBase {
+class Vector3D {
+        //: public AlignedBase {
 
   typedef Vector3D<Type> VecType;
 
@@ -85,22 +96,23 @@ public:
   }
 
 
-  /**
-   * Constructs a vector from an std::string of the same format as output by the
-   * "<<"-operator for outstreams.
-   * @param str String formatted as "(%d, %d, %d)".
-   */
-  VECCORE_CUDA_HEADER_HOST
-  Vector3D(std::string const &str) {
-    int begin = 1, end = str.find(",");
-    vec[0] = std::atof(str.substr(begin, end-begin).c_str());
-    begin = end + 2;
-    end = str.find(",", begin);
-    vec[1] = std::atof(str.substr(begin, end-begin).c_str());
-    begin = end + 2;
-    end = str.find(")", begin);
-    vec[2] = std::atof(str.substr(begin, end-begin).c_str());
-  }
+//  /**
+//   * Constructs a vector from an std::string of the same format as output by the
+//   * "<<"-operator for outstreams.
+//   * @param str String formatted as "(%d, %d, %d)".
+//   */
+//  VECCORE_CUDA_HEADER_HOST
+//  Vector3D(std::string const &str) {
+//    int begin = 1, end = str.find(",");
+//    vec[0] = std::atof(str.substr(begin, end-begin).c_str());
+//    begin = end + 2;
+//    end = str.find(",", begin);
+//    vec[1] = std::atof(str.substr(begin, end-begin).c_str());
+//    begin = end + 2;
+//    end = str.find(")", begin);
+//    vec[2] = std::atof(str.substr(begin, end-begin).c_str());
+//  }
+
 
   /**
    * Contains no check for correct indexing to avoid impairing performance.
@@ -285,9 +297,9 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Vector3D<Type> Abs() const {
-    return Vector3D<Type>(vecgeom::Abs(vec[0]),
-                          vecgeom::Abs(vec[1]),
-                          vecgeom::Abs(vec[2]));
+    return Vector3D<Type>(Abs(vec[0]),
+                          Abs(vec[1]),
+                          Abs(vec[2]));
   }
 
   template <typename BoolType>
@@ -316,26 +328,26 @@ public:
     return max;
   }
 
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  VecType Unit() const {
-    const Precision mag2 = Mag2();
-    VecType output(*this);
-    output /= Sqrt(mag2 + kMinimum);
-    return output;
-  }
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  VecType Unit() const {
+//    const Precision mag2 = Mag2();
+//    VecType output(*this);
+//    output /= Sqrt(mag2 + kMinimum);
+//    return output;
+//  }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   static VecType FromCylindrical(Type r, Type phi, Type z) {
-    return VecType(r*cos(phi), r*sin(phi), z);
+    return VecType(r*Cos(phi), r*Sin(phi), z);
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   VecType& FixZeroes() {
     for (int i = 0; i < 3; ++i) {
-      vecgeom::MaskedAssign(vecgeom::Abs(vec[i]) < kTolerance, 0., &vec[i]);
+      MaskedAssign(Abs(vec[i]) < kTolerance, 0., &vec[i]);
     }
     return *this;
   }
@@ -388,316 +400,316 @@ std::ostream& operator<<(std::ostream& os, Vector3D<T> const &vec) {
   return os;
 }
 
-#ifdef VECCORE_VC_ACCELERATION
-
-/// This is a template specialization of class Vector3D<double> or
-/// Vector3D<float> that can provide internal vectorization of common vector
-/// operations.
-
-
-
-template <>
-class Vector3D<Precision> : public AlignedBase {
-
-  typedef Vector3D<Precision> VecType;
-  typedef Vector3D<bool> BoolType;
-  typedef Vc::Vector<Precision> Base_t;
-
-private:
-
-  Vc::Memory<Vc::Vector<Precision>, 3> mem;
-
-public:
-
-  Precision* AsArray() {
-    return &mem[0];
-  }
-
- Vector3D(const Precision a, const Precision b, const Precision c) : mem() {
-    mem[0] = a;
-    mem[1] = b;
-    mem[2] = c;
-  }
-
-  // Performance issue in Vc with: mem = a;
-  VECCORE_INLINE
-  Vector3D(const Precision a) : Vector3D(a, a, a) {}
-
-  VECCORE_INLINE
-  Vector3D() : Vector3D(0, 0, 0) {}
-
-  VECCORE_INLINE
-    Vector3D(Vector3D const &other) : mem() {
-    //for( int i=0; i < 1 + 3/Base_t::Size; i++ )
-//      {
-         //Base_t v1 = other.mem.vector(i);
-         //this->mem.vector(i)=v1;
-       //}
-     mem[0]=other.mem[0];
-     mem[1]=other.mem[1];
-     mem[2]=other.mem[2];
-  }
-
-  VECCORE_INLINE
-  Vector3D & operator=( Vector3D const & rhs )
-   {
-    
-      //for( int i=0; i < 1 + 3/Base_t::Size; i++ )
-      //{
-         //Base_t v1 = rhs.mem.vector(i);
-         //this->mem.vector(i)=v1;
-       //}
-      // the following line must not be used: this is a bug in Vc
-      // this->mem = rhs.mem;
-      mem[0]=rhs.mem[0];
-      mem[1]=rhs.mem[1];
-      mem[2]=rhs.mem[2];
-      return *this;
-   }
-
-  Vector3D(std::string const &str) : mem() {
-    int begin = 1, end = str.find(",");
-    mem[0] = atof(str.substr(begin, end-begin).c_str());
-    begin = end + 2;
-    end = str.find(",", begin);
-    mem[1] = atof(str.substr(begin, end-begin).c_str());
-    begin = end + 2;
-    end = str.find(")", begin);
-    mem[2] = atof(str.substr(begin, end-begin).c_str());
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision& operator[](const int index) {
-    return mem[index];
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  const Precision& operator[](const int index) const {
-    return mem[index];
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision& x() { return mem[0]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  const Precision& x() const { return mem[0]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision& y() { return mem[1]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  const Precision& y() const { return mem[1]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision& z() { return mem[2]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  const Precision& z() const { return mem[2]; }
-
-  VECCORE_CUDA_HEADER_BOTH
-  void Set(const Precision x, const Precision y, const Precision z) {
-    mem[0] = x;
-    mem[1] = y;
-    mem[2] = z;
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  void Set(const Precision x) {
-    Set(x, x, x);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Length() const {
-    return sqrt(mem[0]*mem[0] + mem[1]*mem[1] + mem[2]*mem[2]);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Mag2() const {
-      return Dot(*this,*this);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Mag() const {
-    return Sqrt(Mag2());
-  }
-
-  // TODO: study if we gain from internal vectorization here.
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Perp2() const {
-    return mem[0]*mem[0] + mem[1]*mem[1];
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Perp() const {
-    return Sqrt(Perp2());
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  void Normalize() {
-    *this *= 1. / Length();
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Vector3D<Precision> Normalized() const;
-
-  VECCORE_INLINE
-  void Map(Precision (*f)(const Precision&)) {
-    mem[0] = f(mem[0]);
-    mem[1] = f(mem[1]);
-    mem[2] = f(mem[2]);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  void MaskedAssign(Vector3D<bool> const &condition,
-                    Vector3D<Precision> const &value) {
-    mem[0] = (condition[0]) ? value[0] : mem[0];
-    mem[1] = (condition[1]) ? value[1] : mem[1];
-    mem[2] = (condition[2]) ? value[2] : mem[2];
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Min() const {
-    return std::min(std::min(mem[0], mem[1]), mem[2]);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Max() const {
-    return std::max(std::max(mem[0], mem[1]), mem[2]);
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  VecType Unit() const {
-    const Precision mag2 = Mag2();
-    VecType output(*this);
-    output /= Sqrt(mag2 + kMinimum);
-    return output;
-  }
-
-  /// \return Azimuthal angle between -pi and pi.
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Phi() const {
-    return (mem[0] != 0. || mem[1] != 0.) ? ATan2(mem[1], mem[0]) : 0.;
-  }
-
-  /// \return The dot product of two Vector3D<Precision> objects.
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  static
-  Precision Dot(Vector3D<Precision> const &left,
-                Vector3D<Precision> const &right) {
-    // TODO: This function should be internally vectorized (if proven to be
-    //       beneficial)
-
-    // To avoid to initialize the padding component, we can not use mem.vector's
-    // multiplication and addition since it would accumulate also the (random) padding component
-    return left.mem[0]*right.mem[0] + left.mem[1]*right.mem[1] + left.mem[2]*right.mem[2];
-  }
-
-  /// \return The dot product with another Vector3D<Precision> object.
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Precision Dot(Vector3D<Precision> const &right) const {
-    return Dot(*this, right);
-  }
-
-  // For UVector3 compatibility. Is equal to normal multiplication.
-  // TODO: check if there are implicit dot products in USolids...
-  VECCORE_INLINE
-  VecType MultiplyByComponents(VecType const &other) const;
-
-  /// The cross product of two Vector3D<T> objects.
-  /// \return Type (where Type is float, double, or various SIMD vector types)
-  template <class FirstType, class SecondType>
-  VECCORE_INLINE
-  static Vector3D<Precision> Cross(
-      Vector3D<FirstType> const &left,
-      Vector3D<SecondType> const &right) {
-    return Vector3D<Precision>(left[1]*right[2] - left[2]*right[1],
-                               left[2]*right[0] - left[0]*right[2],
-                               left[0]*right[1] - left[1]*right[0]);
-  }
-
-  /// The cross product with another Vector3D<T> objects
-  /// \return Type (where Type is float, double, or various SIMD vector types)
-  template <class OtherType>
-  VECCORE_INLINE
-  Vector3D<Precision> Cross(Vector3D<OtherType> const &right) const {
-    return Cross<Precision, OtherType>(*this, right);
-  }
-
-  /// Returns absolute value of the vector (as a vector).
-  VECCORE_INLINE
-  Vector3D<Precision> Abs() const {
-    VecType tmp;
-    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) {
-      Base_t v = this->mem.vector(i);
-      tmp.mem.vector(i) = Vc::abs( v );
-    }
-    return tmp;
-  }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Vector3D<Precision>& FixZeroes() {
-    for (int i = 0; i < 3; ++i) {
-      if (std::abs(mem.scalar(i)) < kTolerance) mem.scalar(i) = 0;
-    }
-    return *this;
-  }
-
-  // Inplace binary operators
-
-  #define VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(OPERATOR) \
-  VECCORE_CUDA_HEADER_BOTH \
-  VecType& operator OPERATOR(const VecType &other) { \
-    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) { \
-      this->mem.vector(i) OPERATOR other.mem.vector(i); \
-    } \
-    return *this; \
-  } \
-  VECCORE_CUDA_HEADER_BOTH \
-  VecType& operator OPERATOR(const Precision &scalar) { \
-    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) { \
-      this->mem.vector(i) OPERATOR scalar; \
-    } \
-    return *this; \
-  }
-  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(+=)
-  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(-=)
-  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(*=)
-  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(/=)
-  #undef VECTOR3D_ACCELERATED_INPLACE_BINARY_OP
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  static VecType FromCylindrical(Precision r, Precision phi, Precision z) {
-    return VecType(r*cos(phi), r*sin(phi), z);
-  }
-
-};
-#else
-//#pragma message "using normal Vector3D.h"
-#endif // VECCORE_VC_ACCELERATION
+//#ifdef VECCORE_VC_ACCELERATION
+//
+///// This is a template specialization of class Vector3D<double> or
+///// Vector3D<float> that can provide internal vectorization of common vector
+///// operations.
+//
+//
+//
+//template <>
+//class Vector3D<Precision> : public AlignedBase {
+//
+//  typedef Vector3D<Precision> VecType;
+//  typedef Vector3D<bool> BoolType;
+//  typedef Vc::Vector<Precision> Base_t;
+//
+//private:
+//
+//  Vc::Memory<Vc::Vector<Precision>, 3> mem;
+//
+//public:
+//
+//  Precision* AsArray() {
+//    return &mem[0];
+//  }
+//
+// Vector3D(const Precision a, const Precision b, const Precision c) : mem() {
+//    mem[0] = a;
+//    mem[1] = b;
+//    mem[2] = c;
+//  }
+//
+//  // Performance issue in Vc with: mem = a;
+//  VECCORE_INLINE
+//  Vector3D(const Precision a) : Vector3D(a, a, a) {}
+//
+//  VECCORE_INLINE
+//  Vector3D() : Vector3D(0, 0, 0) {}
+//
+//  VECCORE_INLINE
+//    Vector3D(Vector3D const &other) : mem() {
+//    //for( int i=0; i < 1 + 3/Base_t::Size; i++ )
+////      {
+//         //Base_t v1 = other.mem.vector(i);
+//         //this->mem.vector(i)=v1;
+//       //}
+//     mem[0]=other.mem[0];
+//     mem[1]=other.mem[1];
+//     mem[2]=other.mem[2];
+//  }
+//
+//  VECCORE_INLINE
+//  Vector3D & operator=( Vector3D const & rhs )
+//   {
+//
+//      //for( int i=0; i < 1 + 3/Base_t::Size; i++ )
+//      //{
+//         //Base_t v1 = rhs.mem.vector(i);
+//         //this->mem.vector(i)=v1;
+//       //}
+//      // the following line must not be used: this is a bug in Vc
+//      // this->mem = rhs.mem;
+//      mem[0]=rhs.mem[0];
+//      mem[1]=rhs.mem[1];
+//      mem[2]=rhs.mem[2];
+//      return *this;
+//   }
+//
+//  Vector3D(std::string const &str) : mem() {
+//    int begin = 1, end = str.find(",");
+//    mem[0] = atof(str.substr(begin, end-begin).c_str());
+//    begin = end + 2;
+//    end = str.find(",", begin);
+//    mem[1] = atof(str.substr(begin, end-begin).c_str());
+//    begin = end + 2;
+//    end = str.find(")", begin);
+//    mem[2] = atof(str.substr(begin, end-begin).c_str());
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision& operator[](const int index) {
+//    return mem[index];
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  const Precision& operator[](const int index) const {
+//    return mem[index];
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision& x() { return mem[0]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  const Precision& x() const { return mem[0]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision& y() { return mem[1]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  const Precision& y() const { return mem[1]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision& z() { return mem[2]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  const Precision& z() const { return mem[2]; }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  void Set(const Precision x, const Precision y, const Precision z) {
+//    mem[0] = x;
+//    mem[1] = y;
+//    mem[2] = z;
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  void Set(const Precision x) {
+//    Set(x, x, x);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Length() const {
+//    return sqrt(mem[0]*mem[0] + mem[1]*mem[1] + mem[2]*mem[2]);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Mag2() const {
+//      return Dot(*this,*this);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Mag() const {
+//    return Sqrt(Mag2());
+//  }
+//
+//  // TODO: study if we gain from internal vectorization here.
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Perp2() const {
+//    return mem[0]*mem[0] + mem[1]*mem[1];
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Perp() const {
+//    return Sqrt(Perp2());
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  void Normalize() {
+//    *this *= 1. / Length();
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Vector3D<Precision> Normalized() const;
+//
+//  VECCORE_INLINE
+//  void Map(Precision (*f)(const Precision&)) {
+//    mem[0] = f(mem[0]);
+//    mem[1] = f(mem[1]);
+//    mem[2] = f(mem[2]);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  void MaskedAssign(Vector3D<bool> const &condition,
+//                    Vector3D<Precision> const &value) {
+//    mem[0] = (condition[0]) ? value[0] : mem[0];
+//    mem[1] = (condition[1]) ? value[1] : mem[1];
+//    mem[2] = (condition[2]) ? value[2] : mem[2];
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Min() const {
+//    return std::min(std::min(mem[0], mem[1]), mem[2]);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Max() const {
+//    return std::max(std::max(mem[0], mem[1]), mem[2]);
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  VecType Unit() const {
+//    const Precision mag2 = Mag2();
+//    VecType output(*this);
+//    output /= Sqrt(mag2 + kMinimum);
+//    return output;
+//  }
+//
+//  /// \return Azimuthal angle between -pi and pi.
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Phi() const {
+//    return (mem[0] != 0. || mem[1] != 0.) ? ATan2(mem[1], mem[0]) : 0.;
+//  }
+//
+//  /// \return The dot product of two Vector3D<Precision> objects.
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  static
+//  Precision Dot(Vector3D<Precision> const &left,
+//                Vector3D<Precision> const &right) {
+//    // TODO: This function should be internally vectorized (if proven to be
+//    //       beneficial)
+//
+//    // To avoid to initialize the padding component, we can not use mem.vector's
+//    // multiplication and addition since it would accumulate also the (random) padding component
+//    return left.mem[0]*right.mem[0] + left.mem[1]*right.mem[1] + left.mem[2]*right.mem[2];
+//  }
+//
+//  /// \return The dot product with another Vector3D<Precision> object.
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Precision Dot(Vector3D<Precision> const &right) const {
+//    return Dot(*this, right);
+//  }
+//
+//  // For UVector3 compatibility. Is equal to normal multiplication.
+//  // TODO: check if there are implicit dot products in USolids...
+//  VECCORE_INLINE
+//  VecType MultiplyByComponents(VecType const &other) const;
+//
+//  /// The cross product of two Vector3D<T> objects.
+//  /// \return Type (where Type is float, double, or various SIMD vector types)
+//  template <class FirstType, class SecondType>
+//  VECCORE_INLINE
+//  static Vector3D<Precision> Cross(
+//      Vector3D<FirstType> const &left,
+//      Vector3D<SecondType> const &right) {
+//    return Vector3D<Precision>(left[1]*right[2] - left[2]*right[1],
+//                               left[2]*right[0] - left[0]*right[2],
+//                               left[0]*right[1] - left[1]*right[0]);
+//  }
+//
+//  /// The cross product with another Vector3D<T> objects
+//  /// \return Type (where Type is float, double, or various SIMD vector types)
+//  template <class OtherType>
+//  VECCORE_INLINE
+//  Vector3D<Precision> Cross(Vector3D<OtherType> const &right) const {
+//    return Cross<Precision, OtherType>(*this, right);
+//  }
+//
+//  /// Returns absolute value of the vector (as a vector).
+//  VECCORE_INLINE
+//  Vector3D<Precision> Abs() const {
+//    VecType tmp;
+//    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) {
+//      Base_t v = this->mem.vector(i);
+//      tmp.mem.vector(i) = Vc::abs( v );
+//    }
+//    return tmp;
+//  }
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  Vector3D<Precision>& FixZeroes() {
+//    for (int i = 0; i < 3; ++i) {
+//      if (std::abs(mem.scalar(i)) < kTolerance) mem.scalar(i) = 0;
+//    }
+//    return *this;
+//  }
+//
+//  // Inplace binary operators
+//
+//  #define VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(OPERATOR) \
+//  VECCORE_CUDA_HEADER_BOTH \
+//  VecType& operator OPERATOR(const VecType &other) { \
+//    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) { \
+//      this->mem.vector(i) OPERATOR other.mem.vector(i); \
+//    } \
+//    return *this; \
+//  } \
+//  VECCORE_CUDA_HEADER_BOTH \
+//  VecType& operator OPERATOR(const Precision &scalar) { \
+//    for (unsigned i = 0; i < 1 + 3/Vc::Vector<Precision>::Size; ++i) { \
+//      this->mem.vector(i) OPERATOR scalar; \
+//    } \
+//    return *this; \
+//  }
+//  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(+=)
+//  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(-=)
+//  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(*=)
+//  VECTOR3D_ACCELERATED_INPLACE_BINARY_OP(/=)
+//  #undef VECTOR3D_ACCELERATED_INPLACE_BINARY_OP
+//
+//  VECCORE_CUDA_HEADER_BOTH
+//  VECCORE_INLINE
+//  static VecType FromCylindrical(Precision r, Precision phi, Precision z) {
+//    return VecType(r*cos(phi), r*sin(phi), z);
+//  }
+//
+//};
+//#else
+////#pragma message "using normal Vector3D.h"
+//#endif // VECCORE_VC_ACCELERATION
 
 
 #define VECTOR3D_BINARY_OP(OPERATOR, INPLACE) \
@@ -734,23 +746,23 @@ VECTOR3D_BINARY_OP(*, *=)
 VECTOR3D_BINARY_OP(/, /=)
 #undef VECTOR3D_BINARY_OP
 
-VECCORE_INLINE
-VECCORE_CUDA_HEADER_BOTH
-bool operator==(
-    Vector3D<Precision> const &lhs,
-    Vector3D<Precision> const &rhs) {
-  return Abs(lhs[0] - rhs[0]) < kTolerance &&
-         Abs(lhs[1] - rhs[1]) < kTolerance &&
-         Abs(lhs[2] - rhs[2]) < kTolerance;
-}
+//VECCORE_INLINE
+//VECCORE_CUDA_HEADER_BOTH
+//bool operator==(
+//    Vector3D<Precision> const &lhs,
+//    Vector3D<Precision> const &rhs) {
+//  return Abs(lhs[0] - rhs[0]) < kTolerance &&
+//         Abs(lhs[1] - rhs[1]) < kTolerance &&
+//         Abs(lhs[2] - rhs[2]) < kTolerance;
+//}
 
-VECCORE_INLINE
-VECCORE_CUDA_HEADER_BOTH
-Vector3D<bool> operator!=(
-    Vector3D<Precision> const &lhs,
-    Vector3D<Precision> const &rhs) {
-  return !(lhs == rhs);
-}
+//VECCORE_INLINE
+//VECCORE_CUDA_HEADER_BOTH
+//Vector3D<bool> operator!=(
+//    Vector3D<Precision> const &lhs,
+//    Vector3D<Precision> const &rhs) {
+//  return !(lhs == rhs);
+//}
 
 template <typename Type>
 VECCORE_CUDA_HEADER_BOTH
@@ -781,39 +793,39 @@ VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(||)
 #undef VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP
 #pragma GCC diagnostic pop
 
-#ifdef VECCORE_VC
-
-VECCORE_INLINE
-Vector3D<VcBool> operator!(Vector3D<VcBool> const &vec) {
-  return Vector3D<VcBool>(!vec[0], !vec[1], !vec[2]);
-}
-
-VECCORE_INLINE
-VcBool operator==(
-    Vector3D<VcPrecision> const &lhs,
-    Vector3D<VcPrecision> const &rhs) {
-  return Abs(lhs[0] - rhs[0]) < kTolerance &&
-         Abs(lhs[1] - rhs[1]) < kTolerance &&
-         Abs(lhs[2] - rhs[2]) < kTolerance;
-}
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#define VECTOR3D_VC_BOOLEAN_LOGICAL_OP(OPERATOR) \
-VECCORE_INLINE \
-Vector3D<VcBool> operator OPERATOR( \
-    Vector3D<VcBool> const &lhs, \
-    Vector3D<VcBool> const &rhs) { \
-  return Vector3D<VcBool>(lhs[0] OPERATOR rhs[0], \
-                          lhs[1] OPERATOR rhs[1], \
-                          lhs[2] OPERATOR rhs[2]); \
-}
-VECTOR3D_VC_BOOLEAN_LOGICAL_OP(&&)
-VECTOR3D_VC_BOOLEAN_LOGICAL_OP(||)
-#undef VECTOR3D_VC_BOOLEAN_LOGICAL_OP
-#pragma GCC diagnostic pop
-
-#endif // VECCORE_VC
+//#ifdef VECCORE_VC
+//
+//VECCORE_INLINE
+//Vector3D<VcBool> operator!(Vector3D<VcBool> const &vec) {
+//  return Vector3D<VcBool>(!vec[0], !vec[1], !vec[2]);
+//}
+//
+//VECCORE_INLINE
+//VcBool operator==(
+//    Vector3D<VcPrecision> const &lhs,
+//    Vector3D<VcPrecision> const &rhs) {
+//  return Abs(lhs[0] - rhs[0]) < kTolerance &&
+//         Abs(lhs[1] - rhs[1]) < kTolerance &&
+//         Abs(lhs[2] - rhs[2]) < kTolerance;
+//}
+//
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Weffc++"
+//#define VECTOR3D_VC_BOOLEAN_LOGICAL_OP(OPERATOR) \
+//VECCORE_INLINE \
+//Vector3D<VcBool> operator OPERATOR( \
+//    Vector3D<VcBool> const &lhs, \
+//    Vector3D<VcBool> const &rhs) { \
+//  return Vector3D<VcBool>(lhs[0] OPERATOR rhs[0], \
+//                          lhs[1] OPERATOR rhs[1], \
+//                          lhs[2] OPERATOR rhs[2]); \
+//}
+//VECTOR3D_VC_BOOLEAN_LOGICAL_OP(&&)
+//VECTOR3D_VC_BOOLEAN_LOGICAL_OP(||)
+//#undef VECTOR3D_VC_BOOLEAN_LOGICAL_OP
+//#pragma GCC diagnostic pop
+//
+//#endif // VECCORE_VC
 
 
 #ifdef VECCORE_VC_ACCELERATION

@@ -228,11 +228,6 @@ VECCORE_GLOBAL int kAlignmentBoundary = 64;
 VECCORE_GLOBAL int kAlignmentBoundary = 32;
 #endif
 
-// CHOOSE THE DEFAULT BACKENDS IN FUTURE HERE:
-//
-// template <typename T> using DefaultScalarBackend = VecCore::Backends::Scalar::kScalar<T>;
-// using DefaultVectorBackend = ;
-
 // TODO: I think we want to have
 // VecCore::Numeric_Constants< type > in the future
 
@@ -241,8 +236,10 @@ VECCORE_GLOBAL DefaultPrecision_t kTwoPi = 2.*kPi;
 VECCORE_GLOBAL DefaultPrecision_t kTwoPiInv = 1./kTwoPi;
 VECCORE_GLOBAL DefaultPrecision_t kDegToRad = kPi/180.;
 VECCORE_GLOBAL DefaultPrecision_t kRadToDeg = 180./kPi;
-VECCORE_GLOBAL DefaultPrecision_t kInfinity =
+//
+VECCORE_GLOBAL DefaultPrecision_t kTolerance = 1E-8;
 
+VECCORE_GLOBAL DefaultPrecision_t kInfinity =
 #ifndef VECCORE_NVCC
     std::numeric_limits<DefaultPrecision_t>::infinity();
 #else

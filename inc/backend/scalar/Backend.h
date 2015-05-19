@@ -252,6 +252,18 @@ T Cos(T radians) {
 template <typename T>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
+void SinCos(T radians, T * s, T * c) {
+    // add the sincos function on MAC because sincos is not part of math.h
+    #ifdef __APPLE__ // possibly other conditions
+      __sincos(radians,s,c);
+    #else
+    std::sincos(radians, s, c);
+#endif
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
 T Tan(T radians) {
   return std::tan(radians);
 }

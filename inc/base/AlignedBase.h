@@ -1,18 +1,18 @@
 /// \file AlignedBase.h
 /// \author Johannes de Fine Licht (johannes.definelicht@cern.ch)
 
-#ifndef VECGEOM_BASE_ALIGNEDBASE_H_
-#define VECGEOM_BASE_ALIGNEDBASE_H_
+#ifndef VECCORE_BASE_ALIGNEDBASE_H_
+#define VECCORE_BASE_ALIGNEDBASE_H_
 
-#include "base/Global.h"
+#include "VecCoreGlobal.h"
 #ifdef VECGEOM_VC
 #include <Vc/Vc>
 #endif
 
-namespace vecgeom {
+namespace VecCore {
 
-VECGEOM_DEVICE_FORWARD_DECLARE( class AlignedBase; )
-VECGEOM_DEVICE_DECLARE_CONV( AlignedBase )
+VECCORE_DEVICE_FORWARD_DECLARE( class AlignedBase; )
+VECCORE_DEVICE_DECLARE_CONV( AlignedBase )
 
 inline namespace VECGEOM_IMPL_NAMESPACE {
 
@@ -26,40 +26,40 @@ class AlignedBase {
 
 public:
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void *operator new(size_t size) {
     return _mm_malloc(size, kAlignmentBoundary);
   }
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void *operator new(size_t, void *p) {
     return p;
   }
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void *operator new[](size_t size) {
     return _mm_malloc(size, kAlignmentBoundary);
   }
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void *operator new[](size_t , void *p) {
     return p;
   }
   
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void operator delete(void *ptr, size_t) {
     _mm_free(ptr);
   }
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void operator delete(void *, void *) {}
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void operator delete[](void *ptr, size_t) {
     _mm_free(ptr);
   }
 
-  VECGEOM_INLINE
+  VECCORE_INLINE
   void operator delete[](void *, void *) {}
 
 };
@@ -69,4 +69,4 @@ class AlignedBase {};
 
 } } // End global namespace
 
-#endif // VECGEOM_BASE_ALIGNEDBASE_H_
+#endif // VECCORE_BASE_ALIGNEDBASE_H_
