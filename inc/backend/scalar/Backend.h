@@ -98,6 +98,16 @@ GetComponent( T const & x, int index ) {
     return x;
 }
 
+
+template <typename T>
+VECCORE_INLINE
+static
+void
+SetComponent( T & x, int index, T to ) {
+    assert(index == 0);
+    x = to;
+}
+
 // same for Mask
 VECCORE_INLINE
 static
@@ -158,9 +168,7 @@ VECCORE_INLINE
 bool IsEmpty(bool const &cond){
     return !cond;
 }
-//
-//
-//
+
 template <typename Type>
 //VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
@@ -256,6 +264,19 @@ void SinCos(T radians, T * s, T * c) {
     // add the sincos function on MAC because sincos is not part of math.h
     #ifdef __APPLE__ // possibly other conditions
       __sincos(radians,s,c);
+    #else
+    std::sincos(radians, s, c);
+#endif
+}
+
+// template specialization for float
+template <>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+void SinCos<float>(float radians, float * s, float * c) {
+    // add the sincos function on MAC because sincos is not part of math.h
+    #ifdef __APPLE__ // possibly other conditions
+      __sincosf(radians,s,c);
     #else
     std::sincos(radians, s, c);
 #endif

@@ -23,6 +23,8 @@ using VecCore::Backend::Scalar::CondAssign;
 using VecCore::Backend::Vector::CondAssign;
 using VecCore::Backend::Scalar::GetMaskComponent;
 using VecCore::Backend::Vector::GetMaskComponent;
+using VecCore::Backend::Scalar::SetComponent;
+using VecCore::Backend::Vector::SetComponent;
 
 using VecCore::Backend::Vector::StoreTo;
 using VecCore::Backend::Vector::LoadFrom;
@@ -67,25 +69,33 @@ using namespace VecCore;
   void ConstBzFieldHelixStepperDoStepKernel(
           Vector3D<typename Backend::Real_v> const & pos,
           Vector3D<typename Backend::Real_v> const & dir,
-          typename Backend::Int_v const & charge,
+          // mixing of vector types ( int - floating point ) is VERY Dangerous
+          // and has to be avoided
+          // typename Backend::Int_v const & charge,
+          // better to give charge directly as Real_v
+          typename Backend::Real_v const & charge,
           typename Backend::Real_v const & momentum,
           typename Backend::Real_v const & step,
           Vector3D<typename Backend::Real_v> & pos_out,
           Vector3D<typename Backend::Real_v> & dir_out,
-          typename Backend::Real_v const & Bz)
-  {
+          typename Backend::Real_v const & Bz) {
+      std::cerr << "input posx " << pos.x() << "\n";
+      std::cerr << "input dirx " << dir.x() << "\n";
+
       typedef typename Backend::Real_v Real_v;
       const Real_v kB2C_local(-0.299792458e-3);
       const Real_v kSmall(1.E-30);
       // could do a fast square root here
       Real_v dt = Sqrt((dir.x()*dir.x()) + (dir.y()*dir.y())) + kSmall;
-      Real_v invnorm=1./dt;
+      Real_v invnorm=Real_v(1.)/dt;
       // radius has sign and determines the sense of rotation
-      Real_v R = momentum*dt/((kB2C_local*Real_v(charge))*(Bz));
+      std::cerr << "charge " << charge << "\n";
+
+      Real_v R = momentum*dt/((kB2C_local*charge)*(Bz));
 
       Real_v cosa= dir.x()*invnorm;
       Real_v sina= dir.y()*invnorm;
-      Real_v phi = step * Real_v(charge) * Bz * kB2C_local / momentum;
+      Real_v phi = step * charge * Bz * kB2C_local / momentum;
 
       Real_v cosphi;
       Real_v sinphi;
@@ -100,48 +110,48 @@ using namespace VecCore;
       dir_out.z() = dir.z();
   }
 
-#define _R_ __restrict__
+  #define _R_ __restrict__
   // a client making use of the generic kernel
+  template <typename FloatType>
   void DoStep_v(
-            double const * _R_ posx, double const * _R_ posy, double const * _R_ posz,
-            double const * _R_ dirx, double const * _R_ diry, double const * _R_ dirz,
-            int const * _R_ charge, double const * _R_ momentum, double const * _R_ step,
-            double * _R_ newposx, double * _R_ newposy, double * _R_ newposz,
-            double * _R_ newdirx, double * _R_ newdiry, double * _R_ newdirz,
+            FloatType const * _R_ posx, FloatType const * _R_ posy, FloatType const * _R_ posz,
+            FloatType const * _R_ dirx, FloatType const * _R_ diry, FloatType const * _R_ dirz,
+            int const * _R_ charge, FloatType const * _R_ momentum, FloatType const * _R_ step,
+            FloatType * _R_ newposx, FloatType * _R_ newposy, FloatType * _R_ newposz,
+            FloatType * _R_ newdirx, FloatType * _R_ newdiry, FloatType * _R_ newdirz,
             int np )
    {
-       // we have choice here: ( try autovectorization: )
-
-//#pragma ivdep
-//      for (int i=0;i<np;++i){
-//            DoStep( posx[i], posy[i], posz[i], dirx[i], diry[i], dirz[i],
-//                    charge[i], momentum[i], step[i],
-//                    newposx[i], newposy[i], newposz[i],
-//                    newdirx[i], newdiry[i], newdirz[i]
-//                  );
-//       }
-
-       // alternative loop with Vc:
-       for (int i=0;i<np;i+= DefaultVectorBackend<double>::kRealVectorSize )
+       // do a study if this loop autovectorizes if DefaultVectorBackend = kScalar
+       for (int i=0;i<np;i+= DefaultVectorBackend<FloatType>::kRealVectorSize )
        {
-            // results cannot not be temporaries
-           typedef typename DefaultVectorBackend<double>::Real_v Real_v;
+           typedef typename DefaultVectorBackend<FloatType>::Real_v Real_v;
+           typedef typename DefaultVectorBackend<FloatType>::Real_t Real_t;
+           // output values
            Vector3D<Real_v> newpos;
            Vector3D<Real_v> newdir;
 
-           ConstBzFieldHelixStepperDoStepKernel<DefaultVectorBackend<double> >(
-                   Vector3D<Real_v>( Real_v(posx[i]),
-                                     Real_v(posy[i]),
-                                     Real_v(posz[i]) ),
-                   Vector3D<Real_v>( Real_v(dirx[i]),
-                                     Real_v(diry[i]),
-                                     Real_v(dirz[i]) ),
-                   typename DefaultVectorBackend<double>::Int_v(charge[i]),
-                   Real_v(momentum[i]),
-                   Real_v(step[i]),
+           // since charge is given as int --> need to make a Real_v value
+           Real_v castedcharge;
+           for( int j=0; j< DefaultVectorBackend<FloatType>::kRealVectorSize; ++j ){
+               int tmp = charge[ i + j ];
+               ComponentAssign( j, Real_t(1.)*tmp, castedcharge);
+           }
+
+           ConstBzFieldHelixStepperDoStepKernel<DefaultVectorBackend<FloatType> >(
+                   // LOADOP is either & or not depending on type and backend
+                   // THE ALTERNATIVE WOULD BE TO USE THE BACKEND LoadFrom function
+                   Vector3D<Real_v>( Real_v( LOADOP posx[i] ),
+                                     Real_v( LOADOP posy[i] ),
+                                     Real_v( LOADOP posz[i] ) ),
+                   Vector3D<Real_v>( Real_v( LOADOP dirx[i] ),
+                                     Real_v( LOADOP diry[i] ),
+                                     Real_v( LOADOP dirz[i] ) ),
+                                     castedcharge,
+                   Real_v( LOADOP momentum[i]),
+                   Real_v( LOADOP step[i]),
                    newpos, newdir, Real_v(1.0));
 
-            // write results
+            // write results to output arrays
             StoreTo(newpos.x(), &newposx[i] );
             StoreTo(newpos.y(), &newposy[i] );
             StoreTo(newpos.z(), &newposz[i] );
@@ -152,6 +162,45 @@ using namespace VecCore;
        // tail part: tobedone
    }
 
+  template <typename Type>
+  Type * Alloc(size_t size){
+      return (Type *) _mm_malloc( sizeof(Type)* size, 32);
+  }
+
+   template <typename FloatType>
+   void TestDoStep( ){
+       int np = 8;
+       FloatType * posx = Alloc<FloatType>(np);
+       FloatType * posy = Alloc<FloatType>(np);
+       FloatType * posz = Alloc<FloatType>(np);
+       FloatType * dirx = Alloc<FloatType>(np);
+       FloatType * diry = Alloc<FloatType>(np);
+       FloatType * dirz = Alloc<FloatType>(np);
+       int    * charge = Alloc<int>(np);
+       FloatType * momentum = Alloc<FloatType>(np);
+       FloatType * step = Alloc<FloatType>(np);
+       FloatType * newposx = Alloc<FloatType>(np);
+       FloatType * newposy = Alloc<FloatType>(np);
+       FloatType * newposz = Alloc<FloatType>(np);
+       FloatType * newdirx = Alloc<FloatType>(np);
+       FloatType * newdiry = Alloc<FloatType>(np);
+       FloatType * newdirz = Alloc<FloatType>(np);
+
+       //init some data
+       for(int i=0 ; i<np ; ++i){
+           posx[i] = i+0.1;
+           posy[i] = 2*i;
+           posz[i] = -i;
+           dirx[i] = i % 3 == 0 ? 1 : 0;
+           diry[i] = (i + 1) % 3 == 0 ? 1 : 0;
+           dirz[i] = (i + 1) % 3 == 0 ? 1 : 0;
+           charge[i] = (i%2)? -1*i: 1*i;
+           momentum[i] = i;
+           step[i] = 1.1*i;
+       }
+       DoStep_v<FloatType>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
+                 newposz, newdirx, newdiry, newdirz, np );
+   }
 
 
 template <typename Backend>
@@ -175,6 +224,8 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
     for( int i=0; i<Backend::kRealVectorSize; ++i )
         std::cout << " copy[" << i << "] " << GetComponent( copy, i ) << "\n";
+
+
 
     // check ConditionalAssign
     std::cout << "-- CONDITIONAL ASSIGN + MaskComponent --\n";
@@ -222,22 +273,24 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
     // check Loads and Stores from Array
     std::cout << "-- TESTING LOAD/STORE ABSTRACTION --\n";
+    {
+    //
     // initialize an array first
-    Real_t * array = (Real_t *) _mm_malloc( sizeof( Real_t ) * 8, 32 );
-    for( int i=0;i<8;++i ) array[i]=i;
+    Real_t * array = (Real_t *) _mm_malloc( sizeof( Real_t ) * 2* Backend::kRealVectorSize, 32 );
+    for( int i=0;i<2*Backend::kRealVectorSize;++i ) array[i]=i;
     StoreTo( copy, array );
     // assert that array really contains the stuff from copy
     for( int i=0; i<Backend::kRealVectorSize; ++i )
         assert( GetComponent( copy, i ) == array[i] && "problem in StoreTo");
 
     Real_v copy2;
-    LoadFrom( copy2, &array[4] );
+    LoadFrom( copy2, &array[ Backend::kRealVectorSize ] );
     for( int i=0; i<Backend::kRealVectorSize; ++i ){
           std::cout << " copy2[" << i << "] " << GetComponent( copy2, i ) << "\n";
-          assert( GetComponent( copy2, i) == array[4+i] && "problem in LoadFrom");
+          assert( GetComponent( copy2, i) == array[Backend::kRealVectorSize + i] && "problem in LoadFrom");
     }
     _mm_free( array );
-
+    }
 
     // "-- TESTING MATHEMATICAL FUNCTIONS --"
     {
@@ -288,7 +341,7 @@ void TestBackends( typename Backend::Real_v const & input ) {
       Real_v result = Pow( val1, Real_t(1.25)*val1 + 1 );
       for( int i=0; i<Backend::kRealVectorSize; ++i ){
          // assert on relative error
-          assert( std::abs( GetComponent( result, i ) - array2[i] )/array2[i] < 1E-6 && "Problem in Pow" );
+          assert( std::abs( GetComponent( result, i ) - array2[i] )/array2[i] < 1E-3 && "Problem in Pow" );
       }
       _mm_free(array1);
       _mm_free(array2);
@@ -410,6 +463,8 @@ int main(){
 
    // test a scalar API
    // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );
+   TestDoStep<double>();
+   TestDoStep<float>();
    return 0;
 }
 

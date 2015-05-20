@@ -99,6 +99,14 @@ GetComponent( typename Vc::Vector<Type> const & x, int index ) {
     return x[index];
 }
 
+template <typename Type>
+VECCORE_INLINE
+static
+void
+SetComponent( typename Vc::Vector<Type> & x, int index,
+              Type const to ) {
+    x[index]=to;
+}
 
 // acces components of a "mask" -- template on type does not work here;
 // the compiler was not able to deduce the type correctly
