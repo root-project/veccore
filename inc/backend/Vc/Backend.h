@@ -47,20 +47,6 @@ struct kVc {
   //typedef Vc::Vector<Precision>::Mask Bool_t;
   typedef Vc::Vector<Real_t>          Index_t;
 
-  // numeric constants of this backend
-  // can they be made constexpr ?
-  const static Real_v kOne;
-  const static Real_v kZero;
-  const static Bool_v kTrue;
-  const static Bool_v kFalse;
-
-  // what about numeric constants for Double_v or Float_v
-  // could by like
-  static Double_v kDoubleOne;
-  static Double_v kDoubleZero;
-  static DoubleBool_v kDoubleTrue;
-  static DoubleBool_v kDoubleFalse;
-
   // other properties of this backend
   // this is to be benchmarked ... could also make it a
   // configurable template parameter of this trait

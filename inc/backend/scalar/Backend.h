@@ -46,11 +46,6 @@ struct kScalar {
   // alternative typedefs ( might supercede above typedefs )
   typedef int                   Int_t;
 
-  constexpr static Real_v kOne = 1.0;
-  constexpr static Real_v kZero = 0.0;
-  constexpr static Bool_v kTrue = true;
-  constexpr static Bool_v kFalse = false;
-
 //  template <class Backend>
 //  VECCORE_CUDA_HEADER_BOTH
 //  static VECCORE_CONSTEXPR_RETURN bool IsEqual() { return false; }
