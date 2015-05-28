@@ -39,12 +39,7 @@ struct kVc {
   typedef typename Vc::int_v                   Int_v;
   typedef typename Vc::int_v::Mask             IntBool_v;
 
-  // alternative typedefs ( might supercede above typedefs )
-  // We can no longer define Double_t like this this !!
-  //typedef Vc::int_v                   Int_t;
-  //typedef Vc::Vector<Precision>       Double_t;
-  //typedef Vc::Vector<Precision>::Mask Bool_t;
-  typedef Vc::Vector<Real_t>          Index_t;
+  typedef Vc::Vector<Real_t>                   Index_t;
 
   // other properties of this backend
   // this is to be benchmarked ... could also make it a

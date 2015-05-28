@@ -23,7 +23,7 @@ struct kScalar {
   typedef RealInput_t                 Real_t;
   // we could define the other base primitive types
   typedef double                      Double_t;
-  typedef float                      Float_t;
+  typedef float                       Float_t;
 
   typedef Real_t                      Real_v;
   typedef bool                        Bool_v;

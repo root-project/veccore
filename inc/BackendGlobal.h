@@ -23,6 +23,10 @@ template <typename T> using DefaultVectorBackend = VecCore::Backend::Scalar::kSc
 #endif
 template <typename T> using DefaultScalarBackend = VecCore::Backend::Scalar::kScalar<T>;
 
+// alternative shorter names
+template <typename T> using DfltVBckEnd = DefaultVectorBackend<T>;
+template <typename T> using DfltSBckEnd = DefaultScalarBackend<T>;
+
 
 } } // End global namespace
 
