@@ -18,10 +18,8 @@ inline namespace VECCORE_IMPL_NAMESPACE{
 // include the appropriate backend files
 #ifdef VCBACKEND
 template <typename T> using DefaultVectorBackend = VecCore::Backend::Vector::kVc<T>;
-#define LOADOP &
 #else
 template <typename T> using DefaultVectorBackend = VecCore::Backend::Scalar::kScalar<T>;
-#define LOADOP
 #endif
 template <typename T> using DefaultScalarBackend = VecCore::Backend::Scalar::kScalar<T>;
 

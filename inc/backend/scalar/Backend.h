@@ -55,6 +55,14 @@ struct kScalar {
   constexpr static int kRealVectorSize = 1;
   constexpr static int kDoubleVectorSize = 1;
   constexpr static int kFloatVectorSize = 1;
+
+  // function determining how types Real_v, Double_v, Float_v are to
+  // be constructed given an array as constructor input
+  template <typename Type>
+  VECCORE_INLINE
+  static const Type GrabVectorStartAt( Type const & arrayelement ){
+        return arrayelement;
+  }
 };
 
 //template <>

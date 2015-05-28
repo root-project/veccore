@@ -56,6 +56,17 @@ struct kVc {
   constexpr static int kDoubleVectorSize = Double_v::Size;
   constexpr static int kFloatVectorSize = Float_v::Size;
   // ... in principle also kIntVectorSize ...
+
+
+  // function determining how types Real_v, Double_v, Float_v are to
+  // be constructed given an array as constructor input
+  // in case of Vc, we need to give the startADDRESS
+  // arrayelement is usually something like an element x[i] in an array x
+  template <typename Type>
+  VECCORE_INLINE
+  static const Type * GrabVectorStartAt( Type const & arrayelement ){
+          return &arrayelement;
+  }
 };
 
 // Functions to extract individual components of vectors
@@ -168,7 +179,6 @@ VECCORE_INLINE
 void LoadFrom( typename Vc::Vector<Type> & into, Type const * const fromaddr ){
     into.load(fromaddr);
 }
-
 
 
 // special version of MaskedAssignment when output

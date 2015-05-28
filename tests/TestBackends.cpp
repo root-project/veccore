@@ -138,17 +138,16 @@ using namespace VecCore;
            }
 
            ConstBzFieldHelixStepperDoStepKernel<DefaultVectorBackend<FloatType> >(
-                   // LOADOP is either & or not depending on type and backend
-                   // THE ALTERNATIVE WOULD BE TO USE THE BACKEND LoadFrom function
-                   Vector3D<Real_v>( Real_v( LOADOP posx[i] ),
-                                     Real_v( LOADOP posy[i] ),
-                                     Real_v( LOADOP posz[i] ) ),
-                   Vector3D<Real_v>( Real_v( LOADOP dirx[i] ),
-                                     Real_v( LOADOP diry[i] ),
-                                     Real_v( LOADOP dirz[i] ) ),
+
+                   Vector3D<Real_v>( Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posx[i] ) ),
+                                     Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posy[i] ) ),
+                                     Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posz[i] ) ) ),
+                   Vector3D<Real_v>( Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( dirx[i] ) ),
+                                     Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( diry[i] ) ),
+                                     Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( dirz[i] ) ) ),
                                      castedcharge,
-                   Real_v( LOADOP momentum[i]),
-                   Real_v( LOADOP step[i]),
+                   Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( momentum[i] ) ),
+                   Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( step[i] ) ),
                    newpos, newdir, Real_v(1.0));
 
             // write results to output arrays
