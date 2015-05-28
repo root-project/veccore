@@ -37,7 +37,6 @@ struct kVc {
   typedef typename Vc::Vector<float>::Mask     FloatBool_v;
 
   typedef typename Vc::int_v                   Int_v;
-  typedef Int_v                       Inside_v;
   typedef typename Vc::int_v::Mask             IntBool_v;
 
   // alternative typedefs ( might supercede above typedefs )
