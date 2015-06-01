@@ -4,6 +4,7 @@
 #define VECCORE_BACKEND_SCALARBACKEND_H_
 
 #include "VecCoreGlobal.h"
+#include "BoxingOfPrimitives.h"
 
 #include <algorithm>
 #include <cstring>
@@ -26,6 +27,7 @@ struct kScalar {
   typedef float                       Float_t;
 
   typedef Real_t                      Real_v;
+  typedef BoxedPrimitiveRef<Real_t>   BoxedReal_v; // just a temp name to distinguish from Real_v
   typedef bool                        Bool_v;
 
   typedef double                      Double_v;

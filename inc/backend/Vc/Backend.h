@@ -28,6 +28,8 @@ struct kVc {
 
   // define vector types for wanted precision
   typedef typename Vc::Vector<Real_t>          Real_v;
+  typedef typename Vc::Vector<Real_t>          BoxedReal_v;
+
   typedef typename Vc::Vector<Real_t>::Mask    Bool_v; // ( should we call this RealBool )
 
   // define vector types for standard double + float types

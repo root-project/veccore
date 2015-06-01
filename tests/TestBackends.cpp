@@ -161,6 +161,23 @@ using namespace VecCore;
        // tail part: tobedone
    }
 
+  // a kernel testing new operator API ( + the rest to do things like MaskedAssignments etc )
+  template <typename Backend>
+  typename Backend::Real_v TestOperatorApproach( typename Backend::BoxedReal_v const a,
+                                                 typename Backend::BoxedReal_v const b ){
+    typename Backend::BoxedReal_v tmp = a;
+    // the replacement of MaskedAssign
+    tmp( b > a ) = b;
+    return tmp;
+  }
+
+  double foo(){
+      double a = 2.;
+      double b = 3.;
+      return TestOperatorApproach<DefaultScalarBackend<double> >( a, b );
+  }
+
+
   template <typename Type>
   Type * Alloc(size_t size){
       return (Type *) _mm_malloc( sizeof(Type)* size, 32);
