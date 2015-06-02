@@ -166,16 +166,43 @@ using namespace VecCore;
   typename Backend::Real_v TestOperatorApproach( typename Backend::BoxedReal_v const a,
                                                  typename Backend::BoxedReal_v const b ){
     typename Backend::BoxedReal_v tmp = a;
-    // the replacement of MaskedAssign
-    tmp( b > a ) = b;
+    // the replacement of MaskedAssign + [] accessor to vector lane
+    tmp( b > a ) -= b + 2.*a[0];
     return tmp;
   }
-
-  double foo(){
-      double a = 2.;
-      double b = 3.;
-      return TestOperatorApproach<DefaultScalarBackend<double> >( a, b );
+  // the alternative is
+  template <typename Backend>
+  typename Backend::Real_v TestTraditionalApproach( typename Backend::Real_v const a,
+                                                    typename Backend::Real_v const b ){
+      typename Backend::Real_v tmp = a;
+      // the replacement of MaskedAssign + [] accessor to vector lane
+      typename Backend::Real_v newvalue = tmp - (b + 2. * GetComponent(a,0));
+      MaskedAssign( b > a, newvalue, &tmp);
+      return tmp;
   }
+
+  // these functions are here to inspect and compare the assembly code
+  // of the function overload versus type class promotion and operator approach
+  __attribute__((noinline))
+  double foo( double a, double b ){
+    return TestOperatorApproach<DefaultScalarBackend<double> >( a, b );
+  }
+
+  __attribute__((noinline))
+  double bar( double a, double b ){
+    return TestTraditionalApproach<DefaultScalarBackend<double> >( a, b );
+  }
+
+  __attribute__((noinline))
+  typename DfltVBckEnd<double>::Real_v foo2( DfltVBckEnd<double>::Real_v a, DfltVBckEnd<double>::Real_v b ){
+    return TestOperatorApproach<DfltVBckEnd<double> >( a, b );
+  }
+
+  __attribute__((noinline))
+  typename DfltVBckEnd<double>::Real_v bar2( DfltVBckEnd<double>::Real_v a, DfltVBckEnd<double>::Real_v b ){
+    return TestTraditionalApproach<DfltVBckEnd<double> >( a, b );
+  }
+
 
 
   template <typename Type>
@@ -466,8 +493,8 @@ void TestBackends( typename Backend::Real_v const & input ) {
 
 
 int main(){
-    DefaultVectorBackend<float>::Real_v input1(1.);
-    DefaultVectorBackend<double>::Real_v input2(1.);
+   DefaultVectorBackend<float>::Real_v input1(1.);
+   DefaultVectorBackend<double>::Real_v input2(1.);
 
    TestBackends<DefaultVectorBackend<float> >( input1 );
    TestBackends<DefaultVectorBackend<double> >( input2 );
