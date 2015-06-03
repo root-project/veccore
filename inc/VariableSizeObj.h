@@ -4,6 +4,10 @@
 #ifndef VECCORE_VARIABLESIZEOBJ_H
 #define VECCORE_VARIABLESIZEOBJ_H
 
+#ifdef OFFLOAD_MODE
+#pragma offload_attribute(push, target(mic))
+#endif
+
 // This file will eventually move in VecCore.
 #include "base/Global.h"
 
@@ -165,5 +169,9 @@ namespace VecCore {
    };
 
 }
+
+#ifdef OFFLOAD_MODE
+#pragma offload_attribute(pop)
+#endif
 
 #endif
