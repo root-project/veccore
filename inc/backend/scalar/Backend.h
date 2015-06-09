@@ -27,7 +27,7 @@ struct kScalar {
   typedef float                       Float_t;
 
   typedef Real_t                      Real_v;
-  typedef BoxedPrimitiveRef<Real_t>   BoxedReal_v; // just a temp name to distinguish from Real_v
+  typedef BoxedPrimitive<Real_t>   BoxedReal_v; // just a temp name to distinguish from Real_v
   typedef bool                        Bool_v;
 
   typedef double                      Double_v;

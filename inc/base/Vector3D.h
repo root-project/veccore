@@ -71,20 +71,18 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(const Type a) {
-    vec[0] = a;
-    vec[1] = a;
-    vec[2] = a;
-  }
+  Vector3D(const Type a) : vec{a,a,a} {}
 
   template <typename TypeOther>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(Vector3D<TypeOther> const &other) {
-    vec[0] = other[0];
-    vec[1] = other[1];
-    vec[2] = other[2];
-  }
+  Vector3D(Vector3D<TypeOther> const &other) : vec{ Type(other[0]), Type(other[1]), Type(other[2]) } {}
+
+  // this constructor was added to allow implicit boxing of members of Vector3D
+  template <typename TypeOther>
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  Vector3D(Vector3D<TypeOther> &other) : vec{ Type(other[0]), Type(other[1]), Type(other[2]) } { }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
@@ -736,8 +734,8 @@ VECCORE_INLINE \
 VECCORE_CUDA_HEADER_BOTH \
 Vector3D<Type> operator OPERATOR(const ScalarType lhs, \
                                  Vector3D<Type> const &rhs) { \
-  Vector3D<Type> result(rhs); \
-  result INPLACE lhs; \
+  Vector3D<Type> result(lhs); \
+  result INPLACE rhs; \
   return result; \
 }
 VECTOR3D_BINARY_OP(+, +=)
