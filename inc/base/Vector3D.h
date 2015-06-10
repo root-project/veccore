@@ -78,12 +78,6 @@ public:
   VECCORE_INLINE
   Vector3D(Vector3D<TypeOther> const &other) : vec{ Type(other[0]), Type(other[1]), Type(other[2]) } {}
 
-  // this constructor was added to allow implicit boxing of members of Vector3D
-  template <typename TypeOther>
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Vector3D(Vector3D<TypeOther> &other) : vec{ Type(other[0]), Type(other[1]), Type(other[2]) } { }
-
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Vector3D& operator=(Vector3D const &other) {

@@ -67,20 +67,20 @@ using namespace VecCore;
 //
 template<typename Backend>
 void ConstBzFieldHelixStepperDoStepKernel(
-      Vector3D<typename Backend::BoxedReal_v> const & pos,
-      Vector3D<typename Backend::BoxedReal_v> const & dir,
+      Vector3D<typename Backend::Real_v> const & pos,
+      Vector3D<typename Backend::Real_v> const & dir,
       // mixing of vector types ( int - floating point ) is VERY Dangerous
       // and has to be avoided
       // typename Backend::Int_v const & charge,
       // better to give charge directly as Real_v
-      typename Backend::BoxedReal_v const & charge,
-      typename Backend::BoxedReal_v const & momentum,
-      typename Backend::BoxedReal_v const & step,
-      Vector3D<typename Backend::BoxedReal_v> & pos_out,
-      Vector3D<typename Backend::BoxedReal_v> & dir_out,
-      typename Backend::BoxedReal_v const & Bz) {
-  std::cerr << "input posx " << pos.x() << "\n";
-  std::cerr << "input dirx " << dir.x() << "\n";
+      typename Backend::Real_v const & charge,
+      typename Backend::Real_v const & momentum,
+      typename Backend::Real_v const & step,
+      Vector3D<typename Backend::Real_v> & pos_out,
+      Vector3D<typename Backend::Real_v> & dir_out,
+      typename Backend::Real_v const & Bz) {
+ // std::cerr << "input posx " << pos.x() << "\n";
+ // std::cerr << "input dirx " << dir.x() << "\n";
 
   typedef typename Backend::Real_v Real_v;
   const Real_v kB2C_local(-0.299792458e-3);
@@ -89,7 +89,7 @@ void ConstBzFieldHelixStepperDoStepKernel(
   Real_v dt = Sqrt((dir.x()*dir.x()) + (dir.y()*dir.y())) + kSmall;
   Real_v invnorm=Real_v(1.)/dt;
   // radius has sign and determines the sense of rotation
-  std::cerr << "charge " << charge << "\n";
+ // std::cerr << "charge " << charge << "\n";
 
   Real_v R = momentum*dt/((kB2C_local*charge)*(Bz));
 
@@ -110,9 +110,57 @@ void ConstBzFieldHelixStepperDoStepKernel(
   dir_out.z() = dir.z();
 }
 
+// same kernel using boxed types
+template<typename Backend>
+void ConstBzFieldHelixStepperDoStepKernel2(
+      Vector3D<typename Backend::BoxedReal_v> const & pos,
+      Vector3D<typename Backend::BoxedReal_v> const & dir,
+      // mixing of vector types ( int - floating point ) is VERY Dangerous
+      // and has to be avoided
+      // typename Backend::Int_v const & charge,
+      // better to give charge directly as Real_v
+      typename Backend::BoxedReal_v const & charge,
+      typename Backend::BoxedReal_v const & momentum,
+      typename Backend::BoxedReal_v const & step,
+      Vector3D<typename Backend::BoxedReal_v> & pos_out,
+      Vector3D<typename Backend::BoxedReal_v> & dir_out,
+      typename Backend::BoxedReal_v const & Bz) {
+ // std::cerr << "input posx " << pos.x() << "\n";
+ // std::cerr << "input dirx " << dir.x() << "\n";
+
+  typedef typename Backend::Real_v Real_v;
+  const Real_v kB2C_local(-0.299792458e-3);
+  const Real_v kSmall(1.E-30);
+  // could do a fast square root here
+  Real_v dt = Sqrt((dir.x()*dir.x()) + (dir.y()*dir.y())) + kSmall;
+  Real_v invnorm=Real_v(1.)/dt;
+  // radius has sign and determines the sense of rotation
+//  std::cerr << "charge " << charge << "\n";
+
+  Real_v R = momentum*dt/((kB2C_local*charge)*(Bz));
+
+  Real_v cosa= dir.x()*invnorm;
+  Real_v sina= dir.y()*invnorm;
+  Real_v phi = step * charge * Bz * kB2C_local / momentum;
+
+  Real_v cosphi;
+  Real_v sinphi;
+  SinCos(phi, &sinphi, &cosphi);
+
+  pos_out.x() = pos.x() + R*(-sina - (-cosphi*sina - sinphi*cosa));
+  pos_out.y() = pos.y() + R*( cosa - (-sina*sinphi + cosphi*cosa));
+  pos_out.z() = pos.z() + step * dir.z();
+
+  dir_out.x() = dir.x() * cosphi - sinphi * dir.y();
+  dir_out.y() = dir.x() * sinphi + cosphi * dir.y();
+  dir_out.z() = dir.z();
+}
+
+
+
 #define _R_ __restrict__
 // a client making use of the generic kernel
-template <typename FloatType>
+template <typename Backend, typename FloatType>
 void DoStep_v(
         FloatType const * _R_ posx, FloatType const * _R_ posy, FloatType const * _R_ posz,
         FloatType const * _R_ dirx, FloatType const * _R_ diry, FloatType const * _R_ dirz,
@@ -122,32 +170,32 @@ void DoStep_v(
         int np )
 {
   // do a study if this loop autovectorizes if DefaultVectorBackend = kScalar
-  for (int i=0;i<np;i+= DefaultVectorBackend<FloatType>::kRealVectorSize )
+  for (int i=0;i<np;i+= Backend::kRealVectorSize )
   {
-    typedef typename DefaultVectorBackend<FloatType>::Real_v Real_v;
-    typedef typename DefaultVectorBackend<FloatType>::Real_t Real_t;
+    typedef typename Backend::Real_v Real_v;
+    typedef typename Backend::Real_t Real_t;
     // output values
     Vector3D<Real_v> newpos;
     Vector3D<Real_v> newdir;
 
     // since charge is given as int --> need to make a Real_v value
     Real_v castedcharge;
-    for( int j=0; j< DefaultVectorBackend<FloatType>::kRealVectorSize; ++j ){
+    for( int j=0; j< Backend::kRealVectorSize; ++j ){
       int tmp = charge[ i + j ];
       ComponentAssign( j, Real_t(1.)*tmp, castedcharge);
     }
 
-    ConstBzFieldHelixStepperDoStepKernel<DefaultVectorBackend<FloatType> >(
-       Vector3D<Real_v>( Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posx[i] ) ),
-                         Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posy[i] ) ),
-                         Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( posz[i] ) ) ),
-       Vector3D<Real_v>( Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( dirx[i] ) ),
-                         Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( diry[i] ) ),
-                         Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( dirz[i] ) ) ),
+       ConstBzFieldHelixStepperDoStepKernel<Backend>(
+       Vector3D<Real_v>( Real_v( Backend::GrabVectorStartAt( posx[i] ) ),
+                         Real_v( Backend::GrabVectorStartAt( posy[i] ) ),
+                         Real_v( Backend::GrabVectorStartAt( posz[i] ) ) ),
+       Vector3D<Real_v>( Real_v( Backend::GrabVectorStartAt( dirx[i] ) ),
+                         Real_v( Backend::GrabVectorStartAt( diry[i] ) ),
+                         Real_v( Backend::GrabVectorStartAt( dirz[i] ) ) ),
        castedcharge,
-       Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( momentum[i] ) ),
-       Real_v( DefaultVectorBackend<FloatType>::GrabVectorStartAt( step[i] ) ),
-       newpos, newdir, Real_v(1.0));
+       Real_v( Backend::GrabVectorStartAt( momentum[i] ) ),
+       Real_v( Backend::GrabVectorStartAt( step[i] ) ),
+       newpos, newdir, Real_v(1000.0));
 
     // write results to output arrays
     StoreTo(newpos.x(), &newposx[i] );
@@ -164,7 +212,7 @@ void DoStep_v(
 // demonstration of new unified way to instantiate Backend::Real_v types and to store them back to an
 // array
 #define _R_ __restrict__
-template <typename FloatType>
+template <typename Backend, typename FloatType>
 void DoStep_WithOperators_v(
         FloatType const * _R_ posx, FloatType const * _R_ posy, FloatType const * _R_ posz,
         FloatType const * _R_ dirx, FloatType const * _R_ diry, FloatType const * _R_ dirz,
@@ -174,14 +222,14 @@ void DoStep_WithOperators_v(
         int np )
 {
   // do a study if this loop autovectorizes if DefaultVectorBackend = kScalar
-  for (int i=0;i<np;i+= DefaultScalarBackend<FloatType>::kRealVectorSize )
+  for (int i=0;i<np;i+= Backend::kRealVectorSize )
   {
-    typedef typename DefaultScalarBackend<FloatType>::BoxedReal_v Real_v;
-    typedef typename DefaultScalarBackend<FloatType>::Real_t Real_t;
+    typedef typename Backend::BoxedReal_v Real_v;
+    typedef typename Backend::Real_t Real_t;
 
     // since charge is given as int --> need to make a Real_v value
     Real_v castedcharge;
-    for( int j=0; j< DefaultScalarBackend<FloatType>::kRealVectorSize; ++j )
+    for( int j=0; j< Backend::kRealVectorSize; ++j )
       castedcharge[j]=Real_t(charge[i+j]);
 
     // output values:
@@ -189,11 +237,11 @@ void DoStep_WithOperators_v(
     Vector3D<Real_v> newdir;
 
     // call kernel with init of parameters from array
-    ConstBzFieldHelixStepperDoStepKernel<DefaultScalarBackend<FloatType> >(
+    ConstBzFieldHelixStepperDoStepKernel2<Backend >(
        Vector3D<Real_v>( Real_v(&posx[i]), Real_v(&posy[i]), Real_v(&posz[i]) ),
        Vector3D<Real_v>( Real_v(&dirx[i]), Real_v(&diry[i]), Real_v(&dirz[i]) ),
        castedcharge,
-       Real_v( &momentum[i] ), Real_v( &step[i] ), newpos, newdir, Real_v(1.0) );
+       Real_v( &momentum[i] ), Real_v( &step[i] ), newpos, newdir, Real_v(1000.0) );
 
     // write results to output arrays
     newpos.x().store( &newposx[i] );
@@ -364,8 +412,9 @@ Type * Alloc(size_t size){
   return (Type *) _mm_malloc( sizeof(Type)* size, 32);
 }
 
-template <typename FloatType>
-void TestDoStep( ){
+template <typename Backend, typename FloatType, bool usetraditional>
+__attribute__((noinline))
+void TestDoStep(){
   int np = 8;
   FloatType * posx = Alloc<FloatType>(np);
   FloatType * posy = Alloc<FloatType>(np);
@@ -388,15 +437,29 @@ void TestDoStep( ){
     posx[i] = i+0.1;
     posy[i] = 2*i;
     posz[i] = -i;
-    dirx[i] = i % 3 == 0 ? 1 : 0;
-    diry[i] = (i + 1) % 3 == 0 ? 1 : 0;
-    dirz[i] = (i + 1) % 3 == 0 ? 1 : 0;
+    dirx[i] = i % 3 == 0 ? 1. : 0.;
+    diry[i] = (i + 1) % 3 == 0. ? 1. : 0.;
+    dirz[i] = (i + 2) % 3 == 0. ? 1. : 0.;
     charge[i] = (i%2)? -1*i: 1*i;
     momentum[i] = i;
     step[i] = 1.1*i;
   }
-  DoStep_WithOperators_v<FloatType>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
-             newposz, newdirx, newdiry, newdirz, np );
+  // process data
+  if( usetraditional ){
+      DoStep_v<Backend>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
+                   newposz, newdirx, newdiry, newdirz, np );
+  }
+  else{
+      DoStep_WithOperators_v<Backend>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
+                   newposz, newdirx, newdiry, newdirz, np );
+  }
+  for(int i=0; i<np; ++i ){
+    std::cerr << i << " old pos << " << posx[i] << ", " << posy[i] << " , " << posz[i] << "\n";
+    std::cerr << i << " old dir << " << dirx[i] << ", " << diry[i] << " , " << dirz[i] << "\n";
+    std::cerr << i << " new pos << " << newposx[i] << ", " << newposy[i] << " , " << newposz[i] << "\n";
+    std::cerr << i << " new dir << " << newdirx[i] << ", " << newdiry[i] << " , " << newdirz[i] << "\n";
+  }
+
 }
 
 
@@ -658,10 +721,15 @@ int main(){
    DefaultScalarBackend<double>::Real_v sinput2(1.);
    TestBackends<DefaultScalarBackend<double> >(sinput2);
 
-   // test a scalar API
-   // TestBackends<VecCore::Backend::Scakar::kScalar<float> >( input );
-   TestDoStep<double>();
-   TestDoStep<float>();
+   // test do step in all variations: scalar x vector x ( traditional or wrapped pods)
+   TestDoStep<DefaultScalarBackend<double>, double, true>();
+   TestDoStep<DefaultScalarBackend<double>, double, false>();
+   TestDoStep<DefaultScalarBackend<float>, float, true>();
+   TestDoStep<DefaultScalarBackend<float>, float, false>();
+   TestDoStep<DefaultVectorBackend<double>, double, true>();
+   TestDoStep<DefaultVectorBackend<double>, double, false>();
+   TestDoStep<DefaultVectorBackend<float>, float, true>();
+   TestDoStep<DefaultVectorBackend<float>, float, false>();
 
    // test operator approach
    TestOperatorApproach();
