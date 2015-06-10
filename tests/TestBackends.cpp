@@ -67,18 +67,18 @@ using namespace VecCore;
 //
 template<typename Backend>
 void ConstBzFieldHelixStepperDoStepKernel(
-      Vector3D<typename Backend::Real_v> const & pos,
-      Vector3D<typename Backend::Real_v> const & dir,
+      Vector3D<typename Backend::BoxedReal_v> const & pos,
+      Vector3D<typename Backend::BoxedReal_v> const & dir,
       // mixing of vector types ( int - floating point ) is VERY Dangerous
       // and has to be avoided
       // typename Backend::Int_v const & charge,
       // better to give charge directly as Real_v
-      typename Backend::Real_v const & charge,
-      typename Backend::Real_v const & momentum,
-      typename Backend::Real_v const & step,
-      Vector3D<typename Backend::Real_v> & pos_out,
-      Vector3D<typename Backend::Real_v> & dir_out,
-      typename Backend::Real_v const & Bz) {
+      typename Backend::BoxedReal_v const & charge,
+      typename Backend::BoxedReal_v const & momentum,
+      typename Backend::BoxedReal_v const & step,
+      Vector3D<typename Backend::BoxedReal_v> & pos_out,
+      Vector3D<typename Backend::BoxedReal_v> & dir_out,
+      typename Backend::BoxedReal_v const & Bz) {
   std::cerr << "input posx " << pos.x() << "\n";
   std::cerr << "input dirx " << dir.x() << "\n";
 
@@ -160,6 +160,54 @@ void DoStep_v(
   // tail part/treatment should follow here
 }
 
+
+// demonstration of new unified way to instantiate Backend::Real_v types and to store them back to an
+// array
+#define _R_ __restrict__
+template <typename FloatType>
+void DoStep_WithOperators_v(
+        FloatType const * _R_ posx, FloatType const * _R_ posy, FloatType const * _R_ posz,
+        FloatType const * _R_ dirx, FloatType const * _R_ diry, FloatType const * _R_ dirz,
+        int const * _R_ charge, FloatType const * _R_ momentum, FloatType const * _R_ step,
+        FloatType * _R_ newposx, FloatType * _R_ newposy, FloatType * _R_ newposz,
+        FloatType * _R_ newdirx, FloatType * _R_ newdiry, FloatType * _R_ newdirz,
+        int np )
+{
+  // do a study if this loop autovectorizes if DefaultVectorBackend = kScalar
+  for (int i=0;i<np;i+= DefaultScalarBackend<FloatType>::kRealVectorSize )
+  {
+    typedef typename DefaultScalarBackend<FloatType>::BoxedReal_v Real_v;
+    typedef typename DefaultScalarBackend<FloatType>::Real_t Real_t;
+
+    // since charge is given as int --> need to make a Real_v value
+    Real_v castedcharge;
+    for( int j=0; j< DefaultScalarBackend<FloatType>::kRealVectorSize; ++j )
+      castedcharge[j]=Real_t(charge[i+j]);
+
+    // output values:
+    Vector3D<Real_v> newpos;
+    Vector3D<Real_v> newdir;
+
+    // call kernel with init of parameters from array
+    ConstBzFieldHelixStepperDoStepKernel<DefaultScalarBackend<FloatType> >(
+       Vector3D<Real_v>( Real_v(&posx[i]), Real_v(&posy[i]), Real_v(&posz[i]) ),
+       Vector3D<Real_v>( Real_v(&dirx[i]), Real_v(&diry[i]), Real_v(&dirz[i]) ),
+       castedcharge,
+       Real_v( &momentum[i] ), Real_v( &step[i] ), newpos, newdir, Real_v(1.0) );
+
+    // write results to output arrays
+    newpos.x().store( &newposx[i] );
+    newpos.y().store( &newposy[i] );
+    newpos.z().store( &newposz[i] );
+    newdir.x().store( &newdirx[i] );
+    newdir.y().store( &newdiry[i] );
+    newdir.z().store( &newdirz[i] );
+  }
+  // tail part/treatment should follow here
+}
+
+
+
 // a kernel testing new operator API provided by pod-wrapper class
 template <typename Backend>
 __attribute__((noinline))
@@ -177,6 +225,7 @@ typename Backend::Real_v TestOperatorApproach( typename Backend::BoxedReal_v con
 
 // the traditional alternative kernel is
 template <typename Backend>
+__attribute__((noinline))
 typename Backend::Real_v TestTraditionalApproach( typename Backend::Real_v const a,
                                                   typename Backend::Real_v const b,
                                                   Vector3D<typename Backend::Real_v> const v,
@@ -195,10 +244,11 @@ typename Backend::Real_v TestTraditionalApproach( typename Backend::Real_v const
 // these functions are here instantiate the template kernels;
 // to inspect and compare the assembly code
 // to test the correctness
+__attribute__((noinline))
 void TestOperatorApproach(){
   BoxedPrimitive<double > a(2.);
   BoxedPrimitive<double > b(3.);
-  Vector3D<BoxedPrimitive<double> > v1(1,0,0);
+  Vector3D<BoxedPrimitive<double> > v1(1.,0.,0.);
   Vector3D<BoxedPrimitive<double> > v2(11.,0.,0.);
   auto r = TestOperatorApproach<DefaultScalarBackend<double> >( a, b, v1,  v2 );
   assert( r == -6. );
@@ -210,7 +260,7 @@ __attribute__((noinline))
 void TestTraditionalApproach(){
   double a(2.);
   double b(3.);
-  Vector3D<double> v1(1,0,0);
+  Vector3D<double> v1(1.,0.,0.);
   Vector3D<double> v2(11.,0.,0.);
   auto r = TestTraditionalApproach<DefaultScalarBackend<double> >( a, b, v1, v2 );
   assert( r == -6. );
@@ -345,7 +395,7 @@ void TestDoStep( ){
     momentum[i] = i;
     step[i] = 1.1*i;
   }
-  DoStep_v<FloatType>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
+  DoStep_WithOperators_v<FloatType>( posx, posy, posz, dirx, diry, dirz, charge, momentum, step, newposx, newposy,
              newposz, newdirx, newdiry, newdirz, np );
 }
 

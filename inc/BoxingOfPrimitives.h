@@ -74,6 +74,11 @@ class BoxedPrimitive{
     VECCORE_INLINE
     BoxedPrimitive(T const & t) : fT(t) { }
 
+    // construct from an address
+    // semantics is: grab value at that address, mimics behaviour of Vc
+    VECCORE_INLINE
+    BoxedPrimitive(T const * addr ) : fT(*addr) {}
+
     // copy constructor must copy the value not the reference
     VECCORE_INLINE
     BoxedPrimitive( BoxedPrimitive const & other ) : fT(other.fT) { }
@@ -93,6 +98,13 @@ class BoxedPrimitive{
     // operator/accessor to fetch a "vector lane"
     VECCORE_INLINE
     T const operator[](int i) const {
+      assert(i==0);
+      return fT;
+    }
+
+    // for getting an lvalue reference to a "vector lane"
+    VECCORE_INLINE
+    T &operator[](int i) {
       assert(i==0);
       return fT;
     }
@@ -118,24 +130,29 @@ class BoxedPrimitive{
     INPLACE_BINARY_OP(*=)
     INPLACE_BINARY_OP(/=)
 #undef INPLACE_BINARY_OP
+
+    // a store function to write back value to array ( address )
+    // mimics Vc
+    VECCORE_INLINE
+    void store(T * addr) const { *addr = fT; }
 };
 
 template <typename T>
 VECCORE_INLINE
-bool operator>( BoxedPrimitive<T>  a, BoxedPrimitive<T>  b ){
+bool operator>(BoxedPrimitive<T> a, BoxedPrimitive<T> b){
   return a.data() > b.data();
 }
 
 template <typename T>
 VECCORE_INLINE
-bool operator<( BoxedPrimitive<T>  a, BoxedPrimitive<T>  b ){
+bool operator<(BoxedPrimitive<T> a, BoxedPrimitive<T> b){
   return a.data() < b.data();
 }
 
 // for comparisons with literals which cannot be promoted to a boxed type
 template <typename T, typename Tp >
 VECCORE_INLINE
-bool operator>( BoxedPrimitive<T>  a, Tp b ){
+bool operator>(BoxedPrimitive<T>  a, Tp b){
   return a.data() > b;
 }
 
@@ -194,8 +211,15 @@ BINARY_OP(/, /=)
 template <typename T>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-BoxedPrimitive<T> operator-(BoxedPrimitive<T> const vec) {
-    return -vec.data();
+BoxedPrimitive<T> operator-(BoxedPrimitive<T> const x) {
+    return -x.data();
+}
+
+// restore pod behaviour for streams
+template <typename Stream_t, typename T>
+Stream_t & operator<<(Stream_t & str, BoxedPrimitive<T> const x){
+    str << x.data();
+    return str;
 }
 
 } // end inline namespace

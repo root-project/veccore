@@ -181,12 +181,22 @@ Type Abs(const Type val) {
 }
 
 
-template <typename Type>
-//VECCORE_CUDA_HEADER_BOTH
+//template <typename Type>
+// SW: It turns out that it is better to explicitely give
+// the two different versions for Sqrt; the templated solution
+// has problems accepting a wrapped pod
+VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-Type Sqrt(const Type val) {
+float Sqrt(const float val) {
   return std::sqrt(val);
 }
+
+VECCORE_INLINE
+double Sqrt(const double val) {
+  return std::sqrt(val);
+}
+
+
 //
 template <typename Type>
 VECCORE_CUDA_HEADER_BOTH
