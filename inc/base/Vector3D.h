@@ -18,17 +18,7 @@ using veccore::backend::vector::ATan2;
 using veccore::backend::scalar::ATan2;
 
 
-//#ifndef VECCORE_NVCC
-//  #if (defined(VECCORE_VC) || defined(VECCORE_VC_ACCELERATION))
-    //#include <Vc/Vc>
-  //#endif
-//#endif
-
 #include "base/AlignedBase.h"
-
-#include <cstdlib>
-#include <ostream>
-#include <string>
 
 namespace veccore{
 
@@ -49,33 +39,33 @@ class Vector3D {
 
 private:
 
-  Type vec[3];
+  Type fVec[3];
 
 public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(const Type a, const Type b, const Type c) : vec{a,b,c} {}
+  Vector3D(const Type a, const Type b, const Type c) : fVec{a,b,c} {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D() : vec{Type(0.),Type(0.),Type(0.)} {}
+  Vector3D() : fVec{Type(0.),Type(0.),Type(0.)} {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(const Type a) : vec{a,a,a} {}
+  Vector3D(const Type a) : fVec{a,a,a} {}
 
   template <typename TypeOther>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(Vector3D<TypeOther> const &other) : vec{ Type(other[0]), Type(other[1]), Type(other[2]) } {}
+  Vector3D(Vector3D<TypeOther> const &other) : fVec{Type(other[0]), Type(other[1]), Type(other[2])} {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Vector3D& operator=(Vector3D const &other) {
-    vec[0] = other[0];
-    vec[1] = other[1];
-    vec[2] = other[2];
+    fVec[0] = other[0];
+    fVec[1] = other[1];
+    fVec[2] = other[2];
     return *this;
   }
 
@@ -105,7 +95,7 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type& operator[](const int index) {
-    return vec[index];
+    return fVec[index];
   }
 
   /**
@@ -115,38 +105,38 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type const& operator[](const int index) const {
-    return vec[index];
+    return fVec[index];
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& x() { return vec[0]; }
+  Type& x() { return fVec[0]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& x() const { return vec[0]; }
+  Type const& x() const { return fVec[0]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& y() { return vec[1]; }
+  Type& y() { return fVec[1]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& y() const { return vec[1]; }
+  Type const& y() const { return fVec[1]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& z() { return vec[2]; }
+  Type& z() { return fVec[2]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& z() const { return vec[2]; }
+  Type const& z() const { return fVec[2]; }
 
   VECCORE_CUDA_HEADER_BOTH
   void Set(Type const &a, Type const &b, Type const &c) {
-    vec[0] = a;
-    vec[1] = b;
-    vec[2] = c;
+    fVec[0] = a;
+    fVec[1] = b;
+    fVec[2] = c;
   }
 
   VECCORE_CUDA_HEADER_BOTH
@@ -155,7 +145,7 @@ public:
   /// \return the length squared perpendicular to z direction
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Perp2() const { return vec[0]*vec[0]+vec[1]*vec[1]; }
+  Type Perp2() const { return fVec[0]*fVec[0]+fVec[1]*fVec[1]; }
 
   /// \return the length perpendicular to z direction
   VECCORE_CUDA_HEADER_BOTH
@@ -242,7 +232,7 @@ public:
     //vecgeom::MaskedAssign(vec[0] != 0. || vec[1] != 0.,
     //                      ATan2(vec[1], vec[0]), &output);
     //return output;
-    return ATan2(vec[1], vec[0]);
+    return ATan2(fVec[1], fVec[0]);
   }
 
   /// The cross (vector) product of two Vector3D<T> objects
@@ -273,17 +263,17 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   void Map(Type (*f)(const Type&)) {
-    vec[0] = f(vec[0]);
-    vec[1] = f(vec[1]);
-    vec[2] = f(vec[2]);
+    fVec[0] = f(fVec[0]);
+    fVec[1] = f(fVec[1]);
+    fVec[2] = f(fVec[2]);
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Vector3D<Type> Abs() const {
-    return Vector3D<Type>(Abs(vec[0]),
-                          Abs(vec[1]),
-                          Abs(vec[2]));
+    return Vector3D<Type>(Abs(fVec[0]),
+                          Abs(fVec[1]),
+                          Abs(fVec[2]));
   }
 
   template <typename BoolType>
@@ -291,24 +281,24 @@ public:
   VECCORE_INLINE
   void MaskedAssign(Vector3D<BoolType> const &condition,
                     Vector3D<Type> const &value) {
-    vec[0] = (condition[0]) ? value[0] : vec[0];
-    vec[1] = (condition[1]) ? value[1] : vec[1];
-    vec[2] = (condition[2]) ? value[2] : vec[2];
+    fVec[0] = (condition[0]) ? value[0] : fVec[0];
+    fVec[1] = (condition[1]) ? value[1] : fVec[1];
+    fVec[2] = (condition[2]) ? value[2] : fVec[2];
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Min() const {
-    Type min = (vec[1] < vec[0]) ? vec[1] : vec[0];
-    min = (vec[2] < min) ? vec[2] : min;
+    Type min = (fVec[1] < fVec[0]) ? fVec[1] : fVec[0];
+    min = (fVec[2] < min) ? fVec[2] : min;
     return min;
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Max() const {
-    Type max = (vec[1] > vec[0]) ? vec[1] : vec[0];
-    max = (vec[2] > max) ? vec[2] : max;
+    Type max = (fVec[1] > fVec[0]) ? fVec[1] : fVec[0];
+    max = (fVec[2] > max) ? fVec[2] : max;
     return max;
   }
 
@@ -331,7 +321,7 @@ public:
   VECCORE_INLINE
   VecType& FixZeroes() {
     for (int i = 0; i < 3; ++i) {
-      MaskedAssign(Abs(vec[i]) < kTolerance, 0., &vec[i]);
+      MaskedAssign(Abs(fVec[i]) < kTolerance, 0., &fVec[i]);
     }
     return *this;
   }
@@ -342,26 +332,26 @@ public:
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
   VecType& operator OPERATOR(const VecType &other) { \
-    vec[0] OPERATOR other.vec[0]; \
-    vec[1] OPERATOR other.vec[1]; \
-    vec[2] OPERATOR other.vec[2]; \
+    fVec[0] OPERATOR other.fVec[0]; \
+    fVec[1] OPERATOR other.fVec[1]; \
+    fVec[2] OPERATOR other.fVec[2]; \
     return *this; \
   } \
   template <typename OtherType> \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
   VecType& operator OPERATOR(const Vector3D<OtherType> &other) { \
-    vec[0] OPERATOR other[0]; \
-    vec[1] OPERATOR other[1]; \
-    vec[2] OPERATOR other[2]; \
+    fVec[0] OPERATOR other[0]; \
+    fVec[1] OPERATOR other[1]; \
+    fVec[2] OPERATOR other[2]; \
     return *this; \
   } \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
   VecType& operator OPERATOR(const Type &scalar) { \
-    vec[0] OPERATOR scalar; \
-    vec[1] OPERATOR scalar; \
-    vec[2] OPERATOR scalar; \
+    fVec[0] OPERATOR scalar; \
+    fVec[1] OPERATOR scalar; \
+    fVec[2] OPERATOR scalar; \
     return *this; \
   }
   VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(+=)
@@ -374,13 +364,13 @@ public:
   VECCORE_INLINE
   // conversion to boolean: Why is this useful --> can potentially be removed
   operator bool() const {
-    return vec[0] && vec[1] && vec[2];
+    return fVec[0] && fVec[1] && fVec[2];
   }
 
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, Vector3D<T> const &vec) {
+template <typename Stream_t, typename T>
+Stream_t& operator<<(Stream_t& os, Vector3D<T> const &vec) {
   os << "(" << vec[0] << ", " << vec[1] << ", " << vec[2] << ")";
   return os;
 }
