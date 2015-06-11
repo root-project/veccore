@@ -324,13 +324,6 @@ public:
 
 };
 
-template <typename Stream_t, typename T>
-Stream_t& operator<<(Stream_t& os, Vector3D<T> const &vec) {
-  os << "(" << vec[0] << ", " << vec[1] << ", " << vec[2] << ")";
-  return os;
-}
-
-
 #define VECTOR3D_BINARY_OP(OPERATOR, INPLACE) \
 template <typename Type, typename OtherType> \
 VECCORE_INLINE \
