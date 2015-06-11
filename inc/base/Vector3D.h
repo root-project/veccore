@@ -44,7 +44,9 @@ public:
   Vector3D(const T a) : fVec{a, a, a} {}
 
   template <typename TypeOther>
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE Vector3D(Vector3D<TypeOther> const &other)
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  Vector3D(Vector3D<TypeOther> const &other)
       : fVec{T(other[0]), T(other[1]), T(other[2])} {}
 
   VECCORE_CUDA_HEADER_BOTH
@@ -118,7 +120,9 @@ public:
   /// The dot product of two Vector3D<T> objects
   /// \return T (where T is float, double, or various SIMD vector types)
   /// TODO: make nonstatic standalone function
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE static T Dot(Vector3D<T> const &left, Vector3D<Type2> const &right) {
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  static T Dot(Vector3D<T> const &left, Vector3D<Type2> const &right) {
     return left[0] * right[0] + left[1] * right[1] + left[2] * right[2];
   }
 
@@ -170,8 +174,10 @@ public:
   /// The cross (vector) product of two Vector3D<T> objects
   /// \return T (where T is float, double, or various SIMD vector types)
   template <class FirstType, class SecondType>
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE static Vector3D<T> Cross(Vector3D<FirstType> const &left,
-                                                                   Vector3D<SecondType> const &right) {
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  static Vector3D<T> Cross(Vector3D<FirstType> const &left,
+                           Vector3D<SecondType> const &right) {
     return Vector3D<T>(left[1] * right[2] - left[2] * right[1], left[2] * right[0] - left[0] * right[2],
                        left[0] * right[1] - left[1] * right[0]);
   }
@@ -180,7 +186,9 @@ public:
   /// \return T (where T is float, double, or various SIMD vector types)
   /// TODO: can be deprecated
   template <class OtherType>
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE Vector3D<T> Cross(Vector3D<OtherType> const &right) const {
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  Vector3D<T> Cross(Vector3D<OtherType> const &right) const {
     return Cross<T, OtherType>(*this, right);
   }
 
@@ -199,8 +207,10 @@ public:
   Vector3D<T> Abs() const { return Vector3D<T>(Abs(fVec[0]), Abs(fVec[1]), Abs(fVec[2])); }
 
   template <typename BoolType>
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE void MaskedAssign(Vector3D<BoolType> const &condition,
-                                                            Vector3D<T> const &value) {
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  void MaskedAssign(Vector3D<BoolType> const &condition,
+                    Vector3D<T> const &value) {
     fVec[0] = (condition[0]) ? value[0] : fVec[0];
     fVec[1] = (condition[1]) ? value[1] : fVec[1];
     fVec[2] = (condition[2]) ? value[2] : fVec[2];
@@ -237,30 +247,33 @@ public:
 
 // Inplace binary operators
 
-#define VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(OPERATOR)                                                                  \
-  VECCORE_CUDA_HEADER_BOTH                                                                                             \
-  VECCORE_INLINE                                                                                                       \
-  Vector3D<T> &operator OPERATOR(const Vector3D<T> &other) {                                                           \
-    fVec[0] OPERATOR other.fVec[0];                                                                                  \
-    fVec[1] OPERATOR other.fVec[1];                                                                                  \
-    fVec[2] OPERATOR other.fVec[2];                                                                                  \
-    return *this;                                                                                                      \
-  }                                                                                                                    \
-  template <typename OtherType>                                                                                        \
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE Vector3D<T> &operator OPERATOR(const Vector3D<OtherType> &other) {           \
-    fVec[0] OPERATOR other[0];                                                                                        \
-    fVec[1] OPERATOR other[1];                                                                                        \
-    fVec[2] OPERATOR other[2];                                                                                        \
-    return *this;                                                                                                      \
-  }                                                                                                                    \
-  VECCORE_CUDA_HEADER_BOTH                                                                                             \
-  VECCORE_INLINE                                                                                                       \
-  Vector3D<T> &operator OPERATOR(const T &scalar) {                                                                    \
-    fVec[0] OPERATOR scalar;                                                                                          \
-    fVec[1] OPERATOR scalar;                                                                                          \
-    fVec[2] OPERATOR scalar;                                                                                          \
-    return *this;                                                                                                      \
+#define VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(OPERATOR)                          \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  VECCORE_INLINE                                                               \
+  Vector3D<T> &operator OPERATOR(const Vector3D<T> &other) {                   \
+    fVec[0] OPERATOR other.fVec[0];                                          \
+    fVec[1] OPERATOR other.fVec[1];                                          \
+    fVec[2] OPERATOR other.fVec[2];                                          \
+    return *this;                                                              \
+  }                                                                            \
+  template <typename OtherType>                                                \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  VECCORE_INLINE                                                               \
+  Vector3D<T> &operator OPERATOR(const Vector3D<OtherType> &other) {           \
+    fVec[0] OPERATOR other[0];                                                \
+    fVec[1] OPERATOR other[1];                                                \
+    fVec[2] OPERATOR other[2];                                                \
+    return *this;                                                              \
+  }                                                                            \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  VECCORE_INLINE                                                               \
+  Vector3D<T> &operator OPERATOR(const T &scalar) {                            \
+    fVec[0] OPERATOR scalar;                                                  \
+    fVec[1] OPERATOR scalar;                                                  \
+    fVec[2] OPERATOR scalar;                                                  \
+    return *this;                                                              \
   }
+
   VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(+= )
   VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(-= )
   VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(*= )
@@ -273,35 +286,45 @@ public:
   operator bool() const { return fVec[0] && fVec[1] && fVec[2]; }
 };
 
-#define VECTOR3D_BINARY_OP(OPERATOR, INPLACE)                                                                          \
-  template <typename T, typename OtherType>                                                                            \
-  VECCORE_INLINE VECCORE_CUDA_HEADER_BOTH Vector3D<T> operator OPERATOR(const Vector3D<T> &lhs,                        \
-                                                                        const Vector3D<OtherType> &rhs) {              \
-    Vector3D<T> result(lhs);                                                                                           \
-    result INPLACE rhs;                                                                                                \
-    return result;                                                                                                     \
-  }                                                                                                                    \
-  template <typename T, typename ScalarType>                                                                           \
-  VECCORE_INLINE VECCORE_CUDA_HEADER_BOTH Vector3D<T> operator OPERATOR(Vector3D<T> const &lhs,                        \
-                                                                        const ScalarType rhs) {                        \
-    Vector3D<T> result(lhs);                                                                                           \
-    result INPLACE rhs;                                                                                                \
-    return result;                                                                                                     \
-  }                                                                                                                    \
-  template <typename T, typename ScalarType>                                                                           \
-  VECCORE_INLINE VECCORE_CUDA_HEADER_BOTH Vector3D<T> operator OPERATOR(const ScalarType lhs,                          \
-                                                                        Vector3D<T> const &rhs) {                      \
-    Vector3D<T> result(lhs);                                                                                           \
-    result INPLACE rhs;                                                                                                \
-    return result;                                                                                                     \
+#define VECTOR3D_BINARY_OP(OPERATOR, INPLACE)                                  \
+  template <typename T, typename OtherType>                                    \
+  VECCORE_INLINE                                                               \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  Vector3D<T> operator OPERATOR(const Vector3D<T> &lhs,                        \
+                                const Vector3D<OtherType> &rhs) {              \
+    Vector3D<T> result(lhs);                                                   \
+    result INPLACE rhs;                                                        \
+    return result;                                                             \
+  }                                                                            \
+  template <typename T, typename ScalarType>                                   \
+  VECCORE_INLINE                                                               \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  Vector3D<T> operator OPERATOR(Vector3D<T> const &lhs,                        \
+                                const ScalarType rhs) {                        \
+    Vector3D<T> result(lhs);                                                   \
+    result INPLACE rhs;                                                        \
+    return result;                                                             \
+  }                                                                            \
+  template <typename T, typename ScalarType>                                   \
+  VECCORE_INLINE                                                               \
+  VECCORE_CUDA_HEADER_BOTH                                                     \
+  Vector3D<T> operator OPERATOR(const ScalarType lhs,                          \
+                                Vector3D<T> const &rhs) {                      \
+    Vector3D<T> result(lhs);                                                   \
+    result INPLACE rhs;                                                        \
+    return result;                                                             \
   }
+
 VECTOR3D_BINARY_OP(+, += )
 VECTOR3D_BINARY_OP(-, -= )
 VECTOR3D_BINARY_OP(*, *= )
 VECTOR3D_BINARY_OP(/, /= )
 #undef VECTOR3D_BINARY_OP
 
-template <typename T> VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE Vector3D<T> operator-(Vector3D<T> const &fVec) {
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+Vector3D<T> operator-(Vector3D<T> const &fVec) {
   return Vector3D<T>(-fVec[0], -fVec[1], -fVec[2]);
 }
 
@@ -311,14 +334,14 @@ Vector3D<bool> operator!(Vector3D<bool> const &fVec) { return Vector3D<bool>(!fV
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
-#define VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(OPERATOR)                                                                   \
-  VECCORE_CUDA_HEADER_BOTH                                                                                             \
-  VECCORE_INLINE                                                                                                       \
-  Vector3D<bool> operator OPERATOR(Vector3D<bool> const &lhs, Vector3D<bool> const &rhs) {                             \
-    return Vector3D<bool>(lhs[0] OPERATOR rhs[0], lhs[1] OPERATOR rhs[1], lhs[2] OPERATOR rhs[2]);                     \
+#define VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(OPERATOR)                                               \
+  VECCORE_CUDA_HEADER_BOTH                                                                         \
+  VECCORE_INLINE                                                                                   \
+  Vector3D<bool> operator OPERATOR(Vector3D<bool> const &lhs, Vector3D<bool> const &rhs) {         \
+    return Vector3D<bool>(lhs[0] OPERATOR rhs[0], lhs[1] OPERATOR rhs[1], lhs[2] OPERATOR rhs[2]); \
   }
 VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(&&)
-VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(|| )
+VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(||)
 #undef VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP
 #pragma GCC diagnostic pop
 } // End inline namespace
