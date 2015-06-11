@@ -116,25 +116,6 @@ public:
   VECCORE_INLINE
   T Perp() const { return Sqrt(Perp2()); }
 
-  template <typename Type2>
-  /// The dot product of two Vector3D<T> objects
-  /// \return T (where T is float, double, or various SIMD vector types)
-  /// TODO: make nonstatic standalone function
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  static T Dot(Vector3D<T> const &left, Vector3D<Type2> const &right) {
-    return left[0] * right[0] + left[1] * right[1] + left[2] * right[2];
-  }
-
-  template <typename Type2>
-  /// The dot product of two Vector3D<T> objects
-  /// \return T (where T is float, double, or various SIMD vector types)
-  /// note: outer form of Dot should be preferred -- this function exists for backward (UVector3) compatibility
-  /// but is actually not used in USolids: can be deprecated
-  VECCORE_CUDA_HEADER_BOTH VECCORE_INLINE T Dot(Vector3D<Type2> const &right) const {
-    return Dot(*this, right);
-  }
-
   // For UVector3 compatibility. Is equal to normal multiplication.
   // TODO: check if there are implicit dot products in USolids...
   VECCORE_CUDA_HEADER_BOTH
@@ -170,27 +151,6 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T Phi() const { return ATan2(fVec[1], fVec[0]); }
-
-  /// The cross (vector) product of two Vector3D<T> objects
-  /// \return T (where T is float, double, or various SIMD vector types)
-  template <class FirstType, class SecondType>
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  static Vector3D<T> Cross(Vector3D<FirstType> const &left,
-                           Vector3D<SecondType> const &right) {
-    return Vector3D<T>(left[1] * right[2] - left[2] * right[1], left[2] * right[0] - left[0] * right[2],
-                       left[0] * right[1] - left[1] * right[0]);
-  }
-
-  /// The cross (vector) product of two Vector3D<T> objects
-  /// \return T (where T is float, double, or various SIMD vector types)
-  /// TODO: can be deprecated
-  template <class OtherType>
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Vector3D<T> Cross(Vector3D<OtherType> const &right) const {
-    return Cross<T, OtherType>(*this, right);
-  }
 
   /// Maps each vector entry to a function that manipulates the entry type.
   /// \param f A function of type "T f(const T&)" to map over entries.
@@ -326,6 +286,24 @@ VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
 Vector3D<T> operator-(Vector3D<T> const &fVec) {
   return Vector3D<T>(-fVec[0], -fVec[1], -fVec[2]);
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+T Dot(const Vector3D<T> &v1, const Vector3D<T> &v2)
+{
+    return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+}
+
+template <typename T>
+VECCORE_CUDA_HEADER_BOTH
+VECCORE_INLINE
+Vector3D<T> Cross(const Vector3D<T> &v1, const Vector3D<T> &v2)
+{
+    return Vector3D<T>(v1[1] * v2[2] - v1[2] * v2[1],
+                       v1[2] * v2[0] - v1[0] * v2[2],
+                       v1[0] * v2[1] - v1[1] * v2[0]);
 }
 
 VECCORE_CUDA_HEADER_BOTH
