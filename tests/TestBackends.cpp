@@ -15,52 +15,52 @@
 #undef NDEBUG
 #include <cassert>
 
-using VecCore::Backend::Vector::GetComponent;
-using VecCore::Backend::Vector::ComponentAssign;
-using VecCore::Backend::Scalar::GetComponent;
-using VecCore::Backend::Scalar::ComponentAssign;
-using VecCore::Backend::Scalar::CondAssign;
-using VecCore::Backend::Vector::CondAssign;
-using VecCore::Backend::Scalar::GetMaskComponent;
-using VecCore::Backend::Vector::GetMaskComponent;
-using VecCore::Backend::Scalar::SetComponent;
-using VecCore::Backend::Vector::SetComponent;
+using veccore::backend::vector::GetComponent;
+using veccore::backend::vector::ComponentAssign;
+using veccore::backend::scalar::GetComponent;
+using veccore::backend::scalar::ComponentAssign;
+using veccore::backend::scalar::CondAssign;
+using veccore::backend::vector::CondAssign;
+using veccore::backend::scalar::GetMaskComponent;
+using veccore::backend::vector::GetMaskComponent;
+using veccore::backend::scalar::SetComponent;
+using veccore::backend::vector::SetComponent;
 
-using VecCore::Backend::Vector::StoreTo;
-using VecCore::Backend::Vector::LoadFrom;
-using VecCore::Backend::Scalar::StoreTo;
-using VecCore::Backend::Scalar::LoadFrom;
+using veccore::backend::vector::StoreTo;
+using veccore::backend::vector::LoadFrom;
+using veccore::backend::scalar::StoreTo;
+using veccore::backend::scalar::LoadFrom;
 
-using VecCore::Backend::Vector::Any;
-using VecCore::Backend::Vector::IsFull;
-using VecCore::Backend::Vector::IsEmpty;
-using VecCore::Backend::Scalar::Any;
-using VecCore::Backend::Scalar::IsFull;
-using VecCore::Backend::Scalar::IsEmpty;
-using VecCore::Backend::Vector::Abs;
-using VecCore::Backend::Scalar::Abs;
-using VecCore::Backend::Vector::Sqrt;
-using VecCore::Backend::Scalar::Sqrt;
-using VecCore::Backend::Vector::ATan2;
-using VecCore::Backend::Scalar::ATan2;
-using VecCore::Backend::Vector::Pow;
-using VecCore::Backend::Scalar::Pow;
-using VecCore::Backend::Vector::Cos;
-using VecCore::Backend::Scalar::Cos;
-using VecCore::Backend::Vector::Sin;
-using VecCore::Backend::Scalar::Sin;
-using VecCore::Backend::Vector::Tan;
-using VecCore::Backend::Scalar::Tan;
-using VecCore::Backend::Vector::Min;
-using VecCore::Backend::Scalar::Min;
-using VecCore::Backend::Vector::Max;
-using VecCore::Backend::Scalar::Max;
-using VecCore::Backend::Vector::Floor;
-using VecCore::Backend::Scalar::Floor;
-using VecCore::Backend::Vector::SinCos;
-using VecCore::Backend::Scalar::SinCos;
+using veccore::backend::vector::Any;
+using veccore::backend::vector::IsFull;
+using veccore::backend::vector::IsEmpty;
+using veccore::backend::scalar::Any;
+using veccore::backend::scalar::IsFull;
+using veccore::backend::scalar::IsEmpty;
+using veccore::backend::vector::Abs;
+using veccore::backend::scalar::Abs;
+using veccore::backend::vector::Sqrt;
+using veccore::backend::scalar::Sqrt;
+using veccore::backend::vector::ATan2;
+using veccore::backend::scalar::ATan2;
+using veccore::backend::vector::Pow;
+using veccore::backend::scalar::Pow;
+using veccore::backend::vector::Cos;
+using veccore::backend::scalar::Cos;
+using veccore::backend::vector::Sin;
+using veccore::backend::scalar::Sin;
+using veccore::backend::vector::Tan;
+using veccore::backend::scalar::Tan;
+using veccore::backend::vector::Min;
+using veccore::backend::scalar::Min;
+using veccore::backend::vector::Max;
+using veccore::backend::scalar::Max;
+using veccore::backend::vector::Floor;
+using veccore::backend::scalar::Floor;
+using veccore::backend::vector::SinCos;
+using veccore::backend::scalar::SinCos;
 
-using namespace VecCore;
+using namespace veccore;
 
 //
 // Example Kernel: Propagate track along Helix on constant B=(0,0,Bz) field

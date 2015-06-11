@@ -6,11 +6,11 @@
 #include "VecCoreGlobal.h"
 #include <Vc/Vc>
 
-namespace VecCore {
+namespace veccore{
 
-namespace Backend {
+namespace backend {
 
-namespace Vector {
+namespace vector {
 
 inline namespace VECCORE_IMPL_NAMESPACE {
 

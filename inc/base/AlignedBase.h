@@ -9,7 +9,7 @@
 #include <Vc/Vc>
 #endif
 
-namespace VecCore {
+namespace veccore{
 
 VECCORE_DEVICE_FORWARD_DECLARE( class AlignedBase; )
 VECCORE_DEVICE_DECLARE_CONV( AlignedBase )

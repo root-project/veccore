@@ -1,7 +1,7 @@
 #ifndef VECCORE_BOXING_PRIMITIVES_H_
 #define VECCORE_BOXING_PRIMITIVES_H_
 
-namespace VecCore {
+namespace veccore{
 inline namespace VECCORE_IMPL_NAMESPACE{
 
 template <typename T> class BoxedPrimitive;

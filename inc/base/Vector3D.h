@@ -6,16 +6,16 @@
 
 #include "VecCoreGlobal.h"
 #include "BackendGlobal.h"
-using VecCore::Backend::Vector::Abs;
-using VecCore::Backend::Scalar::Abs;
-using VecCore::Backend::Vector::MaskedAssign;
-using VecCore::Backend::Scalar::MaskedAssign;
-using VecCore::Backend::Vector::Sin;
-using VecCore::Backend::Scalar::Cos;
-using VecCore::Backend::Vector::Sqrt;
-using VecCore::Backend::Scalar::Sqrt;
-using VecCore::Backend::Vector::ATan2;
-using VecCore::Backend::Scalar::ATan2;
+using veccore::backend::vector::Abs;
+using veccore::backend::scalar::Abs;
+using veccore::backend::vector::MaskedAssign;
+using veccore::backend::scalar::MaskedAssign;
+using veccore::backend::vector::Sin;
+using veccore::backend::scalar::Cos;
+using veccore::backend::vector::Sqrt;
+using veccore::backend::scalar::Sqrt;
+using veccore::backend::vector::ATan2;
+using veccore::backend::scalar::ATan2;
 
 
 //#ifndef VECCORE_NVCC
@@ -30,7 +30,7 @@ using VecCore::Backend::Scalar::ATan2;
 #include <ostream>
 #include <string>
 
-namespace VecCore {
+namespace veccore{
 
 VECCORE_DEVICE_FORWARD_DECLARE( template <typename Type> class Vector3D; )
 

@@ -10,11 +10,11 @@
 #include <cstring>
 #include <cassert>
 
-namespace VecCore {
+namespace veccore{
 
-namespace Backend {
+namespace backend {
 
-namespace Scalar {
+namespace scalar {
 
 inline namespace VECCORE_IMPL_NAMESPACE {
 
@@ -69,7 +69,7 @@ struct kScalar {
 
 //template <>
 //VECCORE_CUDA_HEADER_BOTH
-//inline VECCORE_CONSTEXPR_RETURN bool kScalar::IsEqual<kScalar>() {
+//inline VECCORE_CONSTEXPR_RETURN bool kscalar::IsEqual<kScalar>() {
 //  return true;
 //}
 

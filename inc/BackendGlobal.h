@@ -11,17 +11,17 @@
 #include "backend/Vc/Backend.h"
 #endif
 
-namespace VecCore {
+namespace veccore{
 inline namespace VECCORE_IMPL_NAMESPACE{
 
 // CHOOSE THE DEFAULT BACKENDS IN FUTURE HERE:
 // include the appropriate backend files
 #ifdef VCBACKEND
-template <typename T> using DefaultVectorBackend = VecCore::Backend::Vector::kVc<T>;
+template <typename T> using DefaultVectorBackend = veccore::backend::vector::kVc<T>;
 #else
-template <typename T> using DefaultVectorBackend = VecCore::Backend::Scalar::kScalar<T>;
+template <typename T> using DefaultVectorBackend = veccore::backend::scalar::kScalar<T>;
 #endif
-template <typename T> using DefaultScalarBackend = VecCore::Backend::Scalar::kScalar<T>;
+template <typename T> using DefaultScalarBackend = veccore::backend::scalar::kScalar<T>;
 
 // alternative shorter names
 template <typename T> using DfltVBckEnd = DefaultVectorBackend<T>;

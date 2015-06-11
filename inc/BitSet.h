@@ -33,7 +33,7 @@ class TRootIOCtor;
 #define GCC_DIAG_POP_NEEDED
 #endif
 
-namespace VecCore {
+namespace veccore{
 
 /**
  * @brief   Fast operation on a set of bit, all information stored contiguously in memory.

@@ -64,7 +64,7 @@
     // This enables methods that interface between C++ and CUDA environments
     #define VECCORE_CUDA_INTERFACE
   #endif
-  namespace VecCore {
+  namespace veccore{
      template <typename DataType> struct kCudaType;
      template <typename DataType> using CudaType_t = typename kCudaType<DataType>::type_t;
      template <> struct kCudaType<float> { using type_t = float; };
@@ -180,7 +180,7 @@
   #define VECCORE_CLASS_GLOBAL static constexpr
 #endif
 
-namespace VecCore {
+namespace veccore{
 inline namespace VECCORE_IMPL_NAMESPACE{
 #ifdef VECCORE_FLOAT_PRECISION
 typedef float DefaultPrecision_t;
@@ -229,7 +229,7 @@ VECCORE_GLOBAL int kAlignmentBoundary = 32;
 #endif
 
 // TODO: I think we want to have
-// VecCore::Numeric_Constants< type > in the future
+// veccore::Numeric_Constants< type > in the future
 
 VECCORE_GLOBAL DefaultPrecision_t kPi = 3.14159265358979323846;
 VECCORE_GLOBAL DefaultPrecision_t kTwoPi = 2.*kPi;
