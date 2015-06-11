@@ -6,18 +6,6 @@
 
 #include "VecCoreGlobal.h"
 #include "BackendGlobal.h"
-using veccore::backend::vector::Abs;
-using veccore::backend::scalar::Abs;
-using veccore::backend::vector::MaskedAssign;
-using veccore::backend::scalar::MaskedAssign;
-using veccore::backend::vector::Sin;
-using veccore::backend::scalar::Cos;
-using veccore::backend::vector::Sqrt;
-using veccore::backend::scalar::Sqrt;
-using veccore::backend::vector::ATan2;
-using veccore::backend::scalar::ATan2;
-
-
 #include "base/AlignedBase.h"
 
 namespace veccore{
@@ -25,6 +13,19 @@ namespace veccore{
 VECCORE_DEVICE_FORWARD_DECLARE( template <typename Type> class Vector3D; )
 
 inline namespace VECCORE_IMPL_NAMESPACE {
+
+using ::veccore::backend::scalar::Abs;
+using ::veccore::backend::vector::Abs;
+using ::veccore::backend::scalar::Cos;
+using ::veccore::backend::vector::Cos;
+using ::veccore::backend::vector::Sin;
+using ::veccore::backend::vector::Sin;
+using ::veccore::backend::scalar::Sqrt;
+using ::veccore::backend::vector::Sqrt;
+using ::veccore::backend::scalar::ATan2;
+using ::veccore::backend::vector::ATan2;
+using ::veccore::backend::scalar::MaskedAssign;
+using ::veccore::backend::vector::MaskedAssign;
 
 /**
  * @brief Three dimensional vector class supporting most arithmetic operations.
