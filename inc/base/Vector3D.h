@@ -28,9 +28,6 @@ using ::veccore::backend::vector::MaskedAssign;
 
 template <typename T>
 class Vector3D {
-
-  typedef Vector3D<T> VecType;
-
 private:
 
   T fVec[3];
@@ -151,7 +148,7 @@ public:
   // TODO: check if there are implicit dot products in USolids...
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  VecType MultiplyByComponents(VecType const &other) const {
+  Vector3D<T> MultiplyByComponents(Vector3D<T> const &other) const {
     return *this * other;
   }
 
@@ -266,13 +263,13 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  static VecType FromCylindrical(T r, T phi, T z) {
-    return VecType(r*Cos(phi), r*Sin(phi), z);
+  static Vector3D<T> FromCylindrical(T r, T phi, T z) {
+    return Vector3D<T>(r*Cos(phi), r*Sin(phi), z);
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  VecType& FixZeroes() {
+  Vector3D<T>& FixZeroes() {
     for (int i = 0; i < 3; ++i) {
       MaskedAssign(Abs(fVec[i]) < kTolerance, 0., &fVec[i]);
     }
@@ -284,27 +281,27 @@ public:
   #define VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(OPERATOR) \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
-  VecType& operator OPERATOR(const VecType &other) { \
-    fVec[0] OPERATOR other.fVec[0]; \
-    fVec[1] OPERATOR other.fVec[1]; \
-    fVec[2] OPERATOR other.fVec[2]; \
+  Vector3D<T>& operator OPERATOR(const Vector3D<T> &other) { \
+    fData[0] OPERATOR other.fData[0]; \
+    fData[1] OPERATOR other.fData[1]; \
+    fData[2] OPERATOR other.fData[2]; \
     return *this; \
   } \
   template <typename OtherType> \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
-  VecType& operator OPERATOR(const Vector3D<OtherType> &other) { \
-    fVec[0] OPERATOR other[0]; \
-    fVec[1] OPERATOR other[1]; \
-    fVec[2] OPERATOR other[2]; \
+  Vector3D<T>& operator OPERATOR(const Vector3D<OtherType> &other) { \
+    fData[0] OPERATOR other[0]; \
+    fData[1] OPERATOR other[1]; \
+    fData[2] OPERATOR other[2]; \
     return *this; \
   } \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
-  VecType& operator OPERATOR(const T &scalar) { \
-    fVec[0] OPERATOR scalar; \
-    fVec[1] OPERATOR scalar; \
-    fVec[2] OPERATOR scalar; \
+  Vector3D<T>& operator OPERATOR(const T &scalar) { \
+    fData[0] OPERATOR scalar; \
+    fData[1] OPERATOR scalar; \
+    fData[2] OPERATOR scalar; \
     return *this; \
   }
   VECTOR3D_TEMPLATE_INPLACE_BINARY_OP(+=)
