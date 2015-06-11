@@ -9,7 +9,7 @@
 
 namespace veccore{
 
-VECCORE_DEVICE_FORWARD_DECLARE( template <typename Type> class Vector3D; )
+VECCORE_DEVICE_FORWARD_DECLARE( template <typename T> class Vector3D; )
 
 inline namespace VECCORE_IMPL_NAMESPACE {
 
@@ -26,33 +26,33 @@ using ::veccore::backend::vector::ATan2;
 using ::veccore::backend::scalar::MaskedAssign;
 using ::veccore::backend::vector::MaskedAssign;
 
-template <typename Type>
+template <typename T>
 class Vector3D {
 
-  typedef Vector3D<Type> VecType;
+  typedef Vector3D<T> VecType;
 
 private:
 
-  Type fVec[3];
+  T fVec[3];
 
 public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(const Type a, const Type b, const Type c) : fVec{a,b,c} {}
+  Vector3D(const T a, const T b, const T c) : fVec{a,b,c} {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D() : fVec{Type(0.),Type(0.),Type(0.)} {}
+  Vector3D() : fVec{T(0.),T(0.),T(0.)} {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(const Type a) : fVec{a,a,a} {}
+  Vector3D(const T a) : fVec{a,a,a} {}
 
   template <typename TypeOther>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(Vector3D<TypeOther> const &other) : fVec{Type(other[0]), Type(other[1]), Type(other[2])} {}
+  Vector3D(Vector3D<TypeOther> const &other) : fVec{ T(other[0]), T(other[1]), T(other[2]) } {}
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
@@ -69,7 +69,7 @@ public:
    */
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& operator[](const int index) {
+  T& operator[](const int index) {
     return fVec[index];
   }
 
@@ -79,51 +79,51 @@ public:
    */
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& operator[](const int index) const {
+  T const& operator[](const int index) const {
     return fVec[index];
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& x() { return fVec[0]; }
+  T& x() { return fVec[0]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& x() const { return fVec[0]; }
+  T const& x() const { return fVec[0]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& y() { return fVec[1]; }
+  T& y() { return fVec[1]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& y() const { return fVec[1]; }
+  T const& y() const { return fVec[1]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type& z() { return fVec[2]; }
+  T& z() { return fVec[2]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type const& z() const { return fVec[2]; }
+  T const& z() const { return fVec[2]; }
 
   VECCORE_CUDA_HEADER_BOTH
-  void Set(Type const &a, Type const &b, Type const &c) {
+  void Set(T const &a, T const &b, T const &c) {
     fVec[0] = a;
     fVec[1] = b;
     fVec[2] = c;
   }
 
   VECCORE_CUDA_HEADER_BOTH
-  void Set(const Type a) { Set(a, a, a); }
+  void Set(const T a) { Set(a, a, a); }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Perp2() const { return fVec[0]*fVec[0]+fVec[1]*fVec[1]; }
+  T Perp2() const { return fVec[0]*fVec[0]+fVec[1]*fVec[1]; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Perp() const { return Sqrt(Perp2()); }
+  T Perp() const { return Sqrt(Perp2()); }
 
   template <typename Type2>
   ///The dot product of two Vector3D<T> objects
@@ -132,7 +132,7 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   static
-  Type Dot(Vector3D<Type> const &left, Vector3D<Type2> const &right) {
+  T Dot(Vector3D<T> const &left, Vector3D<Type2> const &right) {
     return left[0]*right[0] + left[1]*right[1] + left[2]*right[2];
   }
 
@@ -143,7 +143,7 @@ public:
   /// but is actually not used in USolids: can be deprecated
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Dot(Vector3D<Type2> const &right) const {
+  T Dot(Vector3D<Type2> const &right) const {
     return Dot(*this, right);
   }
 
@@ -157,27 +157,27 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Mag2() const {
+  T Mag2() const {
     return Dot(*this, *this);
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Mag() const {
+  T Mag() const {
     return Sqrt(Mag2());
   }
 
   // SW: this function should be deprecated
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Length() const {
+  T Length() const {
     return Mag();
   }
 
   // should be deprecated as same as Mag2
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Length2() const {
+  T Length2() const {
     return Mag2();
   }
 
@@ -189,44 +189,44 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D<Type> Normalized() const {
-    return Vector3D<Type>(*this) * (1. / Mag());
+  Vector3D<T> Normalized() const {
+    return Vector3D<T>(*this) * (1. / Mag());
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Phi() const {
+  T Phi() const {
     return ATan2(fVec[1], fVec[0]);
   }
 
   /// The cross (vector) product of two Vector3D<T> objects
-  /// \return Type (where Type is float, double, or various SIMD vector types)
+  /// \return T (where T is float, double, or various SIMD vector types)
   template <class FirstType, class SecondType>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  static Vector3D<Type> Cross(
+  static Vector3D<T> Cross(
       Vector3D<FirstType> const &left,
       Vector3D<SecondType> const &right) {
-    return Vector3D<Type>(left[1]*right[2] - left[2]*right[1],
+    return Vector3D<T>(left[1]*right[2] - left[2]*right[1],
                           left[2]*right[0] - left[0]*right[2],
                           left[0]*right[1] - left[1]*right[0]);
   }
 
   /// The cross (vector) product of two Vector3D<T> objects
-  /// \return Type (where Type is float, double, or various SIMD vector types)
+  /// \return T (where T is float, double, or various SIMD vector types)
   /// TODO: can be deprecated
   template <class OtherType>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D<Type> Cross(Vector3D<OtherType> const &right) const {
-    return Cross<Type, OtherType>(*this, right);
+  Vector3D<T> Cross(Vector3D<OtherType> const &right) const {
+    return Cross<T, OtherType>(*this, right);
   }
 
   /// Maps each vector entry to a function that manipulates the entry type.
-  /// \param f A function of type "Type f(const Type&)" to map over entries.
+  /// \param f A function of type "T f(const T&)" to map over entries.
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  void Map(Type (*f)(const Type&)) {
+  void Map(T (*f)(const T&)) {
     fVec[0] = f(fVec[0]);
     fVec[1] = f(fVec[1]);
     fVec[2] = f(fVec[2]);
@@ -234,17 +234,15 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D<Type> Abs() const {
-    return Vector3D<Type>(Abs(fVec[0]),
-                          Abs(fVec[1]),
-                          Abs(fVec[2]));
+  Vector3D<T> Abs() const {
+    return Vector3D<T>(Abs(fVec[0]), Abs(fVec[1]), Abs(fVec[2]));
   }
 
   template <typename BoolType>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   void MaskedAssign(Vector3D<BoolType> const &condition,
-                    Vector3D<Type> const &value) {
+                    Vector3D<T> const &value) {
     fVec[0] = (condition[0]) ? value[0] : fVec[0];
     fVec[1] = (condition[1]) ? value[1] : fVec[1];
     fVec[2] = (condition[2]) ? value[2] : fVec[2];
@@ -252,23 +250,23 @@ public:
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Min() const {
-    Type min = (fVec[1] < fVec[0]) ? fVec[1] : fVec[0];
+  T Min() const {
+    T min = (fVec[1] < fVec[0]) ? fVec[1] : fVec[0];
     min = (fVec[2] < min) ? fVec[2] : min;
     return min;
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Type Max() const {
-    Type max = (fVec[1] > fVec[0]) ? fVec[1] : fVec[0];
+  T Max() const {
+    T max = (fVec[1] > fVec[0]) ? fVec[1] : fVec[0];
     max = (fVec[2] > max) ? fVec[2] : max;
     return max;
   }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  static VecType FromCylindrical(Type r, Type phi, Type z) {
+  static VecType FromCylindrical(T r, T phi, T z) {
     return VecType(r*Cos(phi), r*Sin(phi), z);
   }
 
@@ -303,7 +301,7 @@ public:
   } \
   VECCORE_CUDA_HEADER_BOTH \
   VECCORE_INLINE \
-  VecType& operator OPERATOR(const Type &scalar) { \
+  VecType& operator OPERATOR(const T &scalar) { \
     fVec[0] OPERATOR scalar; \
     fVec[1] OPERATOR scalar; \
     fVec[2] OPERATOR scalar; \
@@ -325,30 +323,30 @@ public:
 };
 
 #define VECTOR3D_BINARY_OP(OPERATOR, INPLACE) \
-template <typename Type, typename OtherType> \
+template <typename T, typename OtherType> \
 VECCORE_INLINE \
 VECCORE_CUDA_HEADER_BOTH \
-Vector3D<Type> operator OPERATOR(const Vector3D<Type> &lhs, \
+Vector3D<T> operator OPERATOR(const Vector3D<T> &lhs, \
                                  const Vector3D<OtherType> &rhs) { \
-  Vector3D<Type> result(lhs); \
+  Vector3D<T> result(lhs); \
   result INPLACE rhs; \
   return result; \
 } \
-template <typename Type, typename ScalarType> \
+template <typename T, typename ScalarType> \
 VECCORE_INLINE \
 VECCORE_CUDA_HEADER_BOTH \
-Vector3D<Type> operator OPERATOR(Vector3D<Type> const &lhs, \
+Vector3D<T> operator OPERATOR(Vector3D<T> const &lhs, \
                                  const ScalarType rhs) { \
-  Vector3D<Type> result(lhs); \
+  Vector3D<T> result(lhs); \
   result INPLACE rhs; \
   return result; \
 } \
-template <typename Type, typename ScalarType> \
+template <typename T, typename ScalarType> \
 VECCORE_INLINE \
 VECCORE_CUDA_HEADER_BOTH \
-Vector3D<Type> operator OPERATOR(const ScalarType lhs, \
-                                 Vector3D<Type> const &rhs) { \
-  Vector3D<Type> result(lhs); \
+Vector3D<T> operator OPERATOR(const ScalarType lhs, \
+                                 Vector3D<T> const &rhs) { \
+  Vector3D<T> result(lhs); \
   result INPLACE rhs; \
   return result; \
 }
@@ -358,11 +356,11 @@ VECTOR3D_BINARY_OP(*, *=)
 VECTOR3D_BINARY_OP(/, /=)
 #undef VECTOR3D_BINARY_OP
 
-template <typename Type>
+template <typename T>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-Vector3D<Type> operator-(Vector3D<Type> const &vec) {
-  return Vector3D<Type>(-vec[0], -vec[1], -vec[2]);
+Vector3D<T> operator-(Vector3D<T> const &fVec) {
+  return Vector3D<T>(-fVec[0], -fVec[1], -fVec[2]);
 }
 
 VECCORE_CUDA_HEADER_BOTH
