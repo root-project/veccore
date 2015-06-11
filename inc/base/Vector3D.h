@@ -6,7 +6,6 @@
 
 #include "VecCoreGlobal.h"
 #include "BackendGlobal.h"
-#include "base/AlignedBase.h"
 
 namespace veccore{
 
@@ -27,14 +26,8 @@ using ::veccore::backend::vector::ATan2;
 using ::veccore::backend::scalar::MaskedAssign;
 using ::veccore::backend::vector::MaskedAssign;
 
-/**
- * @brief Three dimensional vector class supporting most arithmetic operations.
- * @details If vector acceleration is enabled, the scalar template instantiation
- *          will use vector instructions for operations when possible.
- */
 template <typename Type>
 class Vector3D {
-        //: public AlignedBase {
 
   typedef Vector3D<Type> VecType;
 
@@ -69,25 +62,6 @@ public:
     fVec[2] = other[2];
     return *this;
   }
-
-
-//  /**
-//   * Constructs a vector from an std::string of the same format as output by the
-//   * "<<"-operator for outstreams.
-//   * @param str String formatted as "(%d, %d, %d)".
-//   */
-//  VECCORE_CUDA_HEADER_HOST
-//  Vector3D(std::string const &str) {
-//    int begin = 1, end = str.find(",");
-//    vec[0] = std::atof(str.substr(begin, end-begin).c_str());
-//    begin = end + 2;
-//    end = str.find(",", begin);
-//    vec[1] = std::atof(str.substr(begin, end-begin).c_str());
-//    begin = end + 2;
-//    end = str.find(")", begin);
-//    vec[2] = std::atof(str.substr(begin, end-begin).c_str());
-//  }
-
 
   /**
    * Contains no check for correct indexing to avoid impairing performance.
@@ -143,12 +117,10 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   void Set(const Type a) { Set(a, a, a); }
 
-  /// \return the length squared perpendicular to z direction
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Perp2() const { return fVec[0]*fVec[0]+fVec[1]*fVec[1]; }
 
-  /// \return the length perpendicular to z direction
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Perp() const { return Sqrt(Perp2()); }
@@ -183,14 +155,12 @@ public:
     return *this * other;
   }
 
-  /// \return Squared magnitude of the vector.
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Mag2() const {
     return Dot(*this, *this);
   }
 
-  /// \return Magnitude of the vector.
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Mag() const {
@@ -211,8 +181,6 @@ public:
     return Mag2();
   }
 
-  /// Normalizes this vector by dividing each entry by the length.
-  /// \sa Vector3D::Length()
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   void Normalize() {
@@ -225,14 +193,9 @@ public:
     return Vector3D<Type>(*this) * (1. / Mag());
   }
 
-  /// \return Azimuthal angle between -pi and pi.
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Type Phi() const {
-    //Type output = 0;
-    //vecgeom::MaskedAssign(vec[0] != 0. || vec[1] != 0.,
-    //                      ATan2(vec[1], vec[0]), &output);
-    //return output;
     return ATan2(fVec[1], fVec[0]);
   }
 
@@ -302,15 +265,6 @@ public:
     max = (fVec[2] > max) ? fVec[2] : max;
     return max;
   }
-
-//  VECCORE_CUDA_HEADER_BOTH
-//  VECCORE_INLINE
-//  VecType Unit() const {
-//    const Precision mag2 = Mag2();
-//    VecType output(*this);
-//    output /= Sqrt(mag2 + kMinimum);
-//    return output;
-//  }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
@@ -411,26 +365,6 @@ VECTOR3D_BINARY_OP(*, *=)
 VECTOR3D_BINARY_OP(/, /=)
 #undef VECTOR3D_BINARY_OP
 
-// comparison operators
-// TODO: to be revised
-//VECCORE_INLINE
-//VECCORE_CUDA_HEADER_BOTH
-//bool operator==(
-//    Vector3D<Precision> const &lhs,
-//    Vector3D<Precision> const &rhs) {
-//  return Abs(lhs[0] - rhs[0]) < kTolerance &&
-//         Abs(lhs[1] - rhs[1]) < kTolerance &&
-//         Abs(lhs[2] - rhs[2]) < kTolerance;
-//}
-//
-//VECCORE_INLINE
-//VECCORE_CUDA_HEADER_BOTH
-//Vector3D<bool> operator!=(
-//    Vector3D<Precision> const &lhs,
-//    Vector3D<Precision> const &rhs) {
-//  return !(lhs == rhs);
-//}
-
 template <typename Type>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
@@ -459,10 +393,7 @@ VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(&&)
 VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(||)
 #undef VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP
 #pragma GCC diagnostic pop
-
-
 } // End inline namespace
-
 } // End global namespace
 
-#endif // VECCORE_BASE_VECTOR3D_H_
+#endif
