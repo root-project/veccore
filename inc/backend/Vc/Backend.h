@@ -3,6 +3,8 @@
 #ifndef VECCORE_BACKEND_VCBACKEND_H_
 #define VECCORE_BACKEND_VCBACKEND_H_
 
+#ifdef VCBACKEND
+
 #include "VecCoreGlobal.h"
 #include <Vc/Vc>
 
@@ -296,5 +298,5 @@ typename Vc::Vector<Type> Floor( typename Vc::Vector<Type> const &val ){
 
 } // End global namespace
 
-
+#endif
 #endif // VECCORE_BACKEND_VCBACKEND_H_

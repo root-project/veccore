@@ -7,9 +7,7 @@
 #include "VecCoreGlobal.h"
 
 #include "backend/scalar/Backend.h"
-#ifdef VCBACKEND
 #include "backend/Vc/Backend.h"
-#endif
 
 namespace veccore{
 inline namespace VECCORE_IMPL_NAMESPACE{
