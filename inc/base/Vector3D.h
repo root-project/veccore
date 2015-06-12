@@ -43,20 +43,26 @@ public:
   VECCORE_INLINE
   Vector3D(const T a) : fVec{a, a, a} {}
 
-  template <typename TypeOther>
+  template <typename Type>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
-  Vector3D(Vector3D<TypeOther> const &v)
+  Vector3D(Vector3D<Type> const &v)
       : fVec{T(v[0]), T(v[1]), T(v[2])} {}
 
+  template <typename Type>
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   Vector3D &operator=(Vector3D const &v) {
-    fVec[0] = v[0];
-    fVec[1] = v[1];
-    fVec[2] = v[2];
+    fVec[0] = static_cast<Type>(v[0]);
+    fVec[1] = static_cast<Type>(v[1]);
+    fVec[2] = static_cast<Type>(v[2]);
+
     return *this;
   }
+
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  operator const T *() const { return reinterpret_cast<const T*>(&fVec); }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
@@ -102,6 +108,12 @@ public:
   VECCORE_INLINE
   void Set(const T a) { Set(a, a, a); }
 
+  // For UVector3 compatibility. Is equal to normal multiplication.
+  // TODO: check if there are implicit dot products in USolids...
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  Vector3D<T> MultiplyByComponents(Vector3D<T> const &v) const { return *this * v; }
+
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T Perp2() const { return fVec[0]*fVec[0] + fVec[1]*fVec[1]; }
@@ -109,12 +121,6 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T Perp() const { return Sqrt(Perp2()); }
-
-  // For UVector3 compatibility. Is equal to normal multiplication.
-  // TODO: check if there are implicit dot products in USolids...
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  Vector3D<T> MultiplyByComponents(Vector3D<T> const &v) const { return *this * v; }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
@@ -145,6 +151,20 @@ public:
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T Phi() const { return ATan2(fVec[1], fVec[0]); }
+
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  T Theta() const { return ACos(fVec[2], Mag()); }
+
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  static Vector3D<T> FromCylindrical(T r, T phi, T z) { return Vector3D<T>(r * Cos(phi), r * Sin(phi), z); }
+
+  VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
+  static Vector3D ConvertFromSpherical(const T r, const T theta, const T phi) {
+    return Vector3D(r*Sin(theta)*Cos(phi), r*Sin(theta)*Sin(phi), r*Cos(theta));
+  }
 
   /// Maps each vector entry to a function that manipulates the entry type.
   /// \param f A function of type "T f(const T&)" to map over entries.
@@ -185,10 +205,6 @@ public:
     max = (fVec[2] > max) ? fVec[2] : max;
     return max;
   }
-
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  static Vector3D<T> FromCylindrical(T r, T phi, T z) { return Vector3D<T>(r * Cos(phi), r * Sin(phi), z); }
 
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
