@@ -262,16 +262,15 @@ public:
   template <typename T>                                                        \
   VECCORE_INLINE                                                               \
   VECCORE_CUDA_HEADER_BOTH                                                     \
-  Vector3D<T> operator OPERATOR(const Vector3D<T> &lhs,                        \
-                                const Vector3D<T> &rhs) {                      \
+  Vector3D<T> operator OP(const Vector3D<T> &lhs, const Vector3D<T> &rhs) {    \
     return Vector3D<T>(lhs[0] OP rhs[0], lhs[1] OP rhs[1], lhs[2] OP rhs[2]);  \
   }                                                                            \
 
-VECTOR3D_BINARY_OP(+)
-VECTOR3D_BINARY_OP(-)
-VECTOR3D_BINARY_OP(*) // These are probably only good for scalar,
-VECTOR3D_BINARY_OP(/) // what is a vector divided by another?
-#undef VECTOR3D_BINARY_OP
+VECTOR3D_BINARY_OPERATOR(+)
+VECTOR3D_BINARY_OPERATOR(-)
+VECTOR3D_BINARY_OPERATOR(*) // These are probably only good for scalar,
+VECTOR3D_BINARY_OPERATOR(/) // what is a vector divided by another?
+#undef VECTOR3D_BINARY_OPERATOR
 
 template <typename T>
 VECCORE_CUDA_HEADER_BOTH
