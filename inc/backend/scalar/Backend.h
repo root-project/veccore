@@ -279,7 +279,7 @@ void SinCos(T radians, T * s, T * c) {
     #ifdef __APPLE__ // possibly other conditions
       __sincos(radians,s,c);
     #else
-    std::sincos(radians, s, c);
+    sincos(radians, s, c);
 #endif
 }
 
@@ -292,7 +292,7 @@ void SinCos<float>(float radians, float * s, float * c) {
     #ifdef __APPLE__ // possibly other conditions
       __sincosf(radians,s,c);
     #else
-    std::sincos(radians, s, c);
+    sincosf(radians, s, c);
 #endif
 }
 
