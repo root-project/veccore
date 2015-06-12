@@ -3,8 +3,8 @@
 #ifndef VECCORE_BASE_VECTOR3D_H_
 #define VECCORE_BASE_VECTOR3D_H_
 
-#include "VecCoreGlobal.h"
-#include "BackendGlobal.h"
+#include <VecCoreGlobal.h>
+#include <BackendGlobal.h>
 
 namespace veccore {
 
@@ -58,18 +58,10 @@ public:
     return *this;
   }
 
-  /**
-   * Contains no check for correct indexing to avoid impairing performance.
-   * @param index Index of content in the range [0-2].
-   */
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T &operator[](const int index) { return fVec[index]; }
 
-  /**
-   * Contains no check for correct indexing to avoid impairing performance.
-   * @param index Index of content in the range [0-2].
-   */
   VECCORE_CUDA_HEADER_BOTH
   VECCORE_INLINE
   T const &operator[](const int index) const { return fVec[index]; }
@@ -99,6 +91,7 @@ public:
   T const &z() const { return fVec[2]; }
 
   VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
   void Set(T const &a, T const &b, T const &c) {
     fVec[0] = a;
     fVec[1] = b;
@@ -106,6 +99,7 @@ public:
   }
 
   VECCORE_CUDA_HEADER_BOTH
+  VECCORE_INLINE
   void Set(const T a) { Set(a, a, a); }
 
   VECCORE_CUDA_HEADER_BOTH
@@ -232,10 +226,6 @@ public:
   VECTOR3D_INPLACE_OPERATOR(/=)
 #undef VECTOR3D_INPLACE_OPERATOR
 
-  VECCORE_CUDA_HEADER_BOTH
-  VECCORE_INLINE
-  // conversion to boolean: Why is this useful --> can potentially be removed
-  operator bool() const { return fVec[0] && fVec[1] && fVec[2]; }
 };
 
 #define VECTOR3D_BINARY_OPERATOR(OP)                                           \
@@ -270,8 +260,8 @@ VECTOR3D_BINARY_OP(/) // what is a vector divided by another?
 template <typename T>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-Vector3D<T> operator-(Vector3D<T> const &fVec) {
-  return Vector3D<T>(-fVec[0], -fVec[1], -fVec[2]);
+Vector3D<T> operator-(Vector3D<T> const &v) {
+  return Vector3D<T>(-v[0], -v[1], -v[2]);
 }
 
 template <typename T>
@@ -292,22 +282,6 @@ Vector3D<T> Cross(const Vector3D<T> &v1, const Vector3D<T> &v2)
                        v1[0] * v2[1] - v1[1] * v2[0]);
 }
 
-VECCORE_CUDA_HEADER_BOTH
-VECCORE_INLINE
-Vector3D<bool> operator!(Vector3D<bool> const &fVec) { return Vector3D<bool>(!fVec[0], !fVec[1], !fVec[2]); }
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#define VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(OPERATOR)                                               \
-  VECCORE_CUDA_HEADER_BOTH                                                                         \
-  VECCORE_INLINE                                                                                   \
-  Vector3D<bool> operator OPERATOR(Vector3D<bool> const &lhs, Vector3D<bool> const &rhs) {         \
-    return Vector3D<bool>(lhs[0] OPERATOR rhs[0], lhs[1] OPERATOR rhs[1], lhs[2] OPERATOR rhs[2]); \
-  }
-VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(&&)
-VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP(||)
-#undef VECTOR3D_SCALAR_BOOLEAN_LOGICAL_OP
-#pragma GCC diagnostic pop
 } // End inline namespace
 } // End global namespace
 
