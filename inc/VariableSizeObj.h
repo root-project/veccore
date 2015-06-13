@@ -96,6 +96,7 @@ namespace VecCore {
       }
 
       template <typename... T>
+      VECGEOM_CUDA_HEADER_BOTH
       static  Cont *MakeInstanceAt(size_t nvalues, void *addr, const T&... params) {
          // Make an instance of the class which allocates the node array. To be
          // released using ReleaseInstance. If addr is non-zero, the user promised that
