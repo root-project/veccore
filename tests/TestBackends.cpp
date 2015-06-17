@@ -375,7 +375,7 @@ void BoxDistanceToOutKernelOperator(
    // TODO: we could offer a Vector3D interface for this
    distances[0]( direction[0] < 0.) = -distances[0];
    distances[1]( direction[1] < 0.) = -distances[1];
-   distances[2]( direction[2] < 0.) = -distances[1];
+   distances[2]( direction[2] < 0.) = -distances[2];
 
    distance = distances[0];
    distance( distances[1] < distance ) = distances[1];
