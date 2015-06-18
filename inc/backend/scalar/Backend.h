@@ -271,30 +271,29 @@ T Cos(T radians) {
   return std::cos(radians);
 }
 
-template <typename T>
+// sincos() is not part of math.h on Mac OS
+
+#ifdef __APPLE__
+#	define sincos(x)  __sincos(x)
+#	define sincosf(x) __sincosf(x)
+#endif
+
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-void SinCos(T radians, T * s, T * c) {
-    // add the sincos function on MAC because sincos is not part of math.h
-    #ifdef __APPLE__ // possibly other conditions
-      __sincos(radians,s,c);
-    #else
-    sincos(radians, s, c);
-#endif
+void SinCos(float radians, float *s, float *c) {
+    sincosf(radians, s, c);
 }
 
-// template specialization for float
-template <>
 VECCORE_CUDA_HEADER_BOTH
 VECCORE_INLINE
-void SinCos<float>(float radians, float * s, float * c) {
-    // add the sincos function on MAC because sincos is not part of math.h
-    #ifdef __APPLE__ // possibly other conditions
-      __sincosf(radians,s,c);
-    #else
-    sincosf(radians, s, c);
-#endif
+void SinCos(double radians, double *s, double *c) {
+    sincos(radians, s, c);
 }
+
+#ifdef __APPLE__
+#	undef sincos
+#	undef sincosf
+#endif
 
 template <typename T>
 VECCORE_CUDA_HEADER_BOTH
