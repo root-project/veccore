@@ -288,6 +288,7 @@ namespace VecCore {
 
       //----- bit manipulation
       //----- (note the difference with TObject's bit manipulations)
+      VECGEOM_CUDA_HEADER_BOTH
       void   ResetAllBits(bool value=false)
       {
          // Reset all bits to 0 (false).
