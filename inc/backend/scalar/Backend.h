@@ -115,7 +115,7 @@ SetComponent( T & x, int index, T to ) {
 // same for Mask
 VECCORE_INLINE
 static
-bool const
+bool
 GetMaskComponent( bool const x, int index ) {
     assert(index == 0);
     return x;
