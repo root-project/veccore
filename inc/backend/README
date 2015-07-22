@@ -1,0 +1,23 @@
+This is the directory to define the backend traits.
+
+Some things we discussed was the following
+
+I think we wanted to have something like
+
+using DefaultScalarBackend = Backend::Scalar::kScalar;
+using DefaultVectorBackend = Backend::Vector::kVc;
+
+Then we could use them as
+
+DefaultVectorBackend<float>::Double_v
+
+etc.
+
+It is important to have both Scalar and Vector backends available since
+there is often a distinction ( we might want to use both programming models ).
+
+On NVCC they can default to the same thing:
+
+using DefaultScalarBackend = Backend::Scalar::kCuda;
+using DefaultVectorBackend = Backend::Vector::kCuda;
+
