@@ -3,8 +3,8 @@
 #ifndef VECCORE_BACKEND_SCALARBACKEND_H_
 #define VECCORE_BACKEND_SCALARBACKEND_H_
 
-#include "VecCoreGlobal.h"
-#include "BoxingOfPrimitives.h"
+#include "VecCore/VecCoreGlobal.h"
+#include "VecCore/BoxingOfPrimitives.h"
 
 #include <algorithm>
 #include <cstring>

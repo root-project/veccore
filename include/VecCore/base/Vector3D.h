@@ -3,8 +3,8 @@
 #ifndef VECCORE_BASE_VECTOR3D_H_
 #define VECCORE_BASE_VECTOR3D_H_
 
-#include <VecCoreGlobal.h>
-#include <BackendGlobal.h>
+#include <VecCore/VecCoreGlobal.h>
+#include <VecCore/BackendGlobal.h>
 
 namespace veccore {
 

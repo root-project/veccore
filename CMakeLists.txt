@@ -1,16 +1,27 @@
-#
-# When moved-out of VecGeom, needs to add proper set of options, and global definitions. 
-#
-# project(VecCore)
-#
+################################################################################
+# VecCore Library                                                              #
+################################################################################
 
-# Install headers and libraries
+cmake_minimum_required(VERSION 3.0)
 
-# trailing slash after inc is semantically essential, it means to copy the content
-# of inc into the target directory (.../VecCore) rather than into .../VecCore/inc
-install(DIRECTORY inc/ DESTINATION ${INSTALL_INCLUDE_DIR}/VecCore )
+project(VecCore)
 
-#install(TARGETS veccore DESTINATION ${INSTALL_LIB_DIR})
-#if (CUDA)
-#  install(TARGETS veccorecuda DESTINATION ${INSTALL_LIB_DIR})
-#endif()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+include(RequireCXX11)
+
+option(TEST "Enable testing" OFF)
+
+option(VC "Enable vectorization support with Vc library" ON)
+
+if (VC)
+	find_package(Vc REQUIRED)
+endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+if (TEST)
+	add_subdirectory(test)
+endif()
+
+install(DIRECTORY include/VecCore DESTINATION ${CMAKE_INSTALL_PREFIX}/include)

@@ -4,10 +4,10 @@
 #ifndef VECCORE_BACKEND_GLOBAL_H_
 #define VECCORE_BACKEND_GLOBAL_H_
 
-#include "VecCoreGlobal.h"
+#include "VecCore/VecCoreGlobal.h"
 
-#include "backend/scalar/Backend.h"
-#include "backend/Vc/Backend.h"
+#include "VecCore/backend/scalar/Backend.h"
+#include "VecCore/backend/Vc/Backend.h"
 
 namespace veccore{
 inline namespace VECCORE_IMPL_NAMESPACE{

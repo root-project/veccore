@@ -1,7 +1,7 @@
 #ifndef VECCORE_BOXING_PRIMITIVES_H_
 #define VECCORE_BOXING_PRIMITIVES_H_
 
-#include <VecCoreGlobal.h>
+#include <VecCore/VecCoreGlobal.h>
 
 namespace veccore {
 inline namespace VECCORE_IMPL_NAMESPACE {

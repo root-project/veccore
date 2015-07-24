@@ -7,58 +7,59 @@
 
 // file meant to systematically test the backend api
 
-#include "backend/Vc/Backend.h"
-#include "backend/scalar/Backend.h"
-#include "base/Vector3D.h"
+#include "VecCore/backend/Vc/Backend.h"
+#include "VecCore/backend/scalar/Backend.h"
+#include "VecCore/backend/Vc/Backend.h"
+#include "VecCore/base/Vector3D.h"
 #include <mm_malloc.h>
 #include <cmath>
 #undef NDEBUG
 #include <cassert>
 
-using veccore::backend::vector::GetComponent;
-using veccore::backend::vector::ComponentAssign;
-using veccore::backend::scalar::GetComponent;
-using veccore::backend::scalar::ComponentAssign;
-using veccore::backend::scalar::CondAssign;
-using veccore::backend::vector::CondAssign;
-using veccore::backend::scalar::GetMaskComponent;
-using veccore::backend::vector::GetMaskComponent;
-using veccore::backend::scalar::SetComponent;
-using veccore::backend::vector::SetComponent;
+using ::veccore::backend::vector::GetComponent;
+using ::veccore::backend::vector::ComponentAssign;
+using ::veccore::backend::scalar::GetComponent;
+using ::veccore::backend::scalar::ComponentAssign;
+using ::veccore::backend::scalar::CondAssign;
+using ::veccore::backend::vector::CondAssign;
+using ::veccore::backend::scalar::GetMaskComponent;
+using ::veccore::backend::vector::GetMaskComponent;
+using ::veccore::backend::scalar::SetComponent;
+using ::veccore::backend::vector::SetComponent;
 
-using veccore::backend::vector::StoreTo;
-using veccore::backend::vector::LoadFrom;
-using veccore::backend::scalar::StoreTo;
-using veccore::backend::scalar::LoadFrom;
+using ::veccore::backend::vector::StoreTo;
+using ::veccore::backend::vector::LoadFrom;
+using ::veccore::backend::scalar::StoreTo;
+using ::veccore::backend::scalar::LoadFrom;
 
-using veccore::backend::vector::Any;
-using veccore::backend::vector::IsFull;
-using veccore::backend::vector::IsEmpty;
-using veccore::backend::scalar::Any;
-using veccore::backend::scalar::IsFull;
-using veccore::backend::scalar::IsEmpty;
-using veccore::backend::vector::Abs;
-using veccore::backend::scalar::Abs;
-using veccore::backend::vector::Sqrt;
-using veccore::backend::scalar::Sqrt;
-using veccore::backend::vector::ATan2;
-using veccore::backend::scalar::ATan2;
-using veccore::backend::vector::Pow;
-using veccore::backend::scalar::Pow;
-using veccore::backend::vector::Cos;
-using veccore::backend::scalar::Cos;
-using veccore::backend::vector::Sin;
-using veccore::backend::scalar::Sin;
-using veccore::backend::vector::Tan;
-using veccore::backend::scalar::Tan;
-using veccore::backend::vector::Min;
-using veccore::backend::scalar::Min;
-using veccore::backend::vector::Max;
-using veccore::backend::scalar::Max;
-using veccore::backend::vector::Floor;
-using veccore::backend::scalar::Floor;
-using veccore::backend::vector::SinCos;
-using veccore::backend::scalar::SinCos;
+using ::veccore::backend::vector::Any;
+using ::veccore::backend::vector::IsFull;
+using ::veccore::backend::vector::IsEmpty;
+using ::veccore::backend::scalar::Any;
+using ::veccore::backend::scalar::IsFull;
+using ::veccore::backend::scalar::IsEmpty;
+using ::veccore::backend::vector::Abs;
+using ::veccore::backend::scalar::Abs;
+using ::veccore::backend::vector::Sqrt;
+using ::veccore::backend::scalar::Sqrt;
+using ::veccore::backend::vector::ATan2;
+using ::veccore::backend::scalar::ATan2;
+using ::veccore::backend::vector::Pow;
+using ::veccore::backend::scalar::Pow;
+using ::veccore::backend::vector::Cos;
+using ::veccore::backend::scalar::Cos;
+using ::veccore::backend::vector::Sin;
+using ::veccore::backend::scalar::Sin;
+using ::veccore::backend::vector::Tan;
+using ::veccore::backend::scalar::Tan;
+using ::veccore::backend::vector::Min;
+using ::veccore::backend::scalar::Min;
+using ::veccore::backend::vector::Max;
+using ::veccore::backend::scalar::Max;
+using ::veccore::backend::vector::Floor;
+using ::veccore::backend::scalar::Floor;
+using ::veccore::backend::vector::SinCos;
+using ::veccore::backend::scalar::SinCos;
 
 using namespace veccore;
 
@@ -320,7 +321,6 @@ void TestTraditionalApproach(){
 // another real life example (from box) to compare traditional style coding with
 // operator style coding
 template <class Backend>
-__attribute__((always_inline))
 void BoxDistanceToOutKernelTrad( Vector3D<double  > const &dimensions,
                                  Vector3D<typename Backend::Real_v> const &point,
                                  Vector3D<typename Backend::Real_v> const &direction,
@@ -357,9 +357,8 @@ void BoxDistanceToOutKernelTrad( Vector3D<double  > const &dimensions,
 
 // the same box kernel using operator notation ( plus some more cleanup )
 template <class Backend>
-__attribute__((always_inline))
 void BoxDistanceToOutKernelOperator(
-   Vector3D<BoxedPrimitive< double > > const &dimensions,
+   Vector3D<typename Backend::BoxedReal_v> const &dimensions,
    Vector3D<typename Backend::BoxedReal_v> const &point,
    Vector3D<typename Backend::BoxedReal_v> const &direction,
    typename Backend::BoxedReal_v const &stepMax,
@@ -369,7 +368,7 @@ void BoxDistanceToOutKernelOperator(
 
    // TODO: there should be a sign in front of kMinimum
    // TODO: Is kMinimum a good value??
-   Vector3D<Real_v> inverseDirection( 1./(direction + kMinimum) );
+   Vector3D<Real_v> inverseDirection(Real_v(1.)/(direction) + Real_v(kMinimum));
    Vector3D<Real_v> distances( (dimensions - point)*inverseDirection );
 
    // TODO: we could offer a Vector3D interface for this
