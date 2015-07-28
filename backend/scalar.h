@@ -22,9 +22,6 @@ class Scalar {
 
 	class BoolWrapper {
 	  public:
-	    typedef bool type;
-	    enum { Size = 1 };
-
 	    BoolWrapper() { /* uninitialized */ }
 	    BoolWrapper(bool val) : fBool(val) {}
 
@@ -32,6 +29,18 @@ class Scalar {
 	    bool isEmpty() { return !fBool; }
 
 	    operator bool& () noexcept { return fBool; }
+
+	    bool& operator[](int index)
+	    {
+		assert(index == 0);
+		return fBool;
+	    }
+
+	    bool const operator[](int index) const
+	    {
+		assert(index == 0);
+		return fBool;
+	    }
 
 	  private:
 	    bool fBool;
@@ -98,7 +107,7 @@ class Scalar {
 		assert(index == 0);
 		return fVal;
 	    }
-	    
+
 	    T const operator[](int index) const
 	    {
 		assert(index == 0);

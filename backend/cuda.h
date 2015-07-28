@@ -8,9 +8,9 @@
 namespace VecCore {
 namespace Backend {
 
-/* CUDABackend is simply a ScalarBackend that is not asynchronous */
+/* CUDABackend is simply a scalar backend that is not asynchronous */
 
-template <typename T> class CUDA : public Scalar<T, false> {}
+template <typename T> using CUDA = Scalar<T, false>;
 
 }
 }

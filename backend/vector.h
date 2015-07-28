@@ -1,9 +1,9 @@
 #ifndef VECCORE_VECTOR_BACKEND_H
 #define VECCORE_VECTOR_BACKEND_H
 
-#ifdef VECCORE_ENABLE_VC
-
 #include <core/simd.h>
+
+#ifdef VECCORE_ENABLE_SIMD
 
 #include <cmath>
 #include <cstdint>
@@ -50,6 +50,20 @@ class Vector {
     typedef Vc::Vector<UInt32_t> UInt32_v;
     typedef Vc::Vector<UInt64_t> UInt64_v;
 };
+
+}
+}
+
+#else
+
+// fallback to scalar backend if Vc is not available
+
+#include <backend/scalar.h>
+
+namespace VecCore {
+namespace Backend {
+
+template <typename T> using Vector = Scalar<T, true>;
 
 }
 }

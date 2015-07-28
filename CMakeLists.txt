@@ -12,13 +12,18 @@ include(RequireCXX11)
 
 option(TEST "Enable testing" OFF)
 
-option(VC "Enable vectorization support with Vc library" ON)
+option(SIMD "Enable SIMD vectorization (using Vc library)" ON)
 
-if (VC)
+if (SIMD)
 	find_package(Vc REQUIRED)
+	set(${VECCORE_CXX_FLAGS} "${VECCORE_CXX_FLAGS} -march=native")
+else()
+	set(${VECCORE_CXX_FLAGS} "${VECCORE_CXX_FLAGS} -DVECCORE_DISABLE_SIMD")
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+set(${CMAKE_CXX_FLAGS} "${CMAKE_CXX_FLAGS} ${VECCORE_CXX_FLAGS}")
 
 if (TEST)
 	add_subdirectory(test)
