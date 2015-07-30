@@ -1,7 +1,6 @@
 #ifndef VECCORE_QUATERNION_H
 #define VECCORE_QUATERNION_H
 
-#include <core/cuda.h>
 #include <math/Vector3D.h>
 
 namespace VecCore {
