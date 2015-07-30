@@ -1,8 +1,6 @@
 #ifndef VECCORE_SIMD_H
 #define VECCORE_SIMD_H
 
-#include <core/macros.h>
-
 #if !defined(VECCORE_DISABLE_SIMD)
 #   if defined(__SSE__) || defined(__AVX__) || defined(__MIC__)
 #       define VECCORE_ENABLE_SIMD

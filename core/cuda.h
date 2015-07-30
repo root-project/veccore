@@ -1,8 +1,6 @@
 #ifndef VECCORE_CUDA_MACROS_H
 #define VECCORE_CUDA_MACROS_H
 
-#include <core/macros.h>
-
 #if (defined(__CUDACC__) || defined(__NVCC__))
 
 #   define VECCORE_CUDA
