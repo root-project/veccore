@@ -9,7 +9,14 @@ namespace Math {
 
 template <typename T> class Matrix3x3 {
 private:
-  T fData[3][3];
+  T fData[3][3]
+#if defined(VECCORE_CUDA) && defined(VECCORE_CUDA_DEVICE)
+  __attribute__((aligned(VECCORE_CUDA_ALIGN)));
+#elif defined(VECCORE_ENABLE_SIMD)
+  __attribute__((aligned(VECCORE_SIMD_ALIGN)));
+#else
+  ;
+#endif
 
 public:
   Matrix3x3() {}
@@ -59,6 +66,16 @@ public:
   operator const Vector3D<T> *() const
   {
     return reinterpret_cast<Vector3D<T>*>(&fData[0]);
+  }
+
+  static Matrix3x3 Diagonal(const T x, const T y, const T z)
+  {
+    return Matrix3x3(x, y, z);
+  }
+
+  static Matrix3x3 Identity()
+  {
+    return Matrix3x3::Diagonal(T(1.0), T(1.0), T(1.0));
   }
 
   T Det() const;

@@ -1,7 +1,10 @@
 #ifndef VECCORE_POINT3D_H
 #define VECCORE_POINT3D_H
 
-#include <math/base.h>
+#include <math/Vector3D.h>
+
+namespace VecCore {
+namespace Math {
 
 template <typename T> class Point3D {
 public:
@@ -10,6 +13,8 @@ public:
   __attribute__((aligned(VECCORE_CUDA_ALIGN)));
 #elif defined(VECCORE_ENABLE_SIMD)
   __attribute__((aligned(VECCORE_SIMD_ALIGN)));
+#else
+  ;
 #endif
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
@@ -137,16 +142,16 @@ Point3D<T> &operator /=(const Point3D<T> &p, const T &s)
 
 template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-Point3D<T>& operator +=(const Point3D<T> &p1, const Point3D<T> &p2)
+Point3D<T>& operator +=(const Point3D<T> &p, const Vector3D<T> &v)
 {
-  p1[0] += p2[0]; p1[1] += p2[1]; p1[2] += p2[2]; return p1;
+  p[0] += v[0]; p[1] += v[1]; p[2] += v[2]; return p;
 }
 
 template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-Point3D<T>& operator -=(const Point3D<T> &p1, const Point3D<T> &p2)
+Point3D<T>& operator -=(const Point3D<T> &p, const Vector3D<T> &v)
 {
-  p1[0] -= p2[0]; p1[1] -= p2[1]; p1[2] -= p2[2]; return p1;
+  p[0] -= v[0]; p[1] -= v[1]; p[2] -= v[2]; return p;
 }
 
 template <typename T>
@@ -179,9 +184,23 @@ Point3D<T> operator +(const Point3D<T> &p1, const Point3D<T> &p2)
 
 template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-Point3D<T> operator -(const Point3D<T> &p1, const Point3D<T> &p2)
+Point3D<T> operator +(const Point3D<T> &p, const Vector3D<T> &v)
 {
-  return Point3D<T>(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
+  return Point3D<T>(p[0] + v[0], p[1] + v[1], p[2] + v[2]);
+}
+
+template <typename T>
+VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+Vector3D<T> operator -(const Point3D<T> &p1, const Point3D<T> &p2)
+{
+  return Vector3D<T>(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
+}
+
+template <typename T>
+VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+Point3D<T> operator -(const Point3D<T> &p, const Vector3D<T> &v)
+{
+  return Vector3D<T>(p[0] - v[0], p[1] - v[1], p[2] - v[2]);
 }
 
 template <typename T>
@@ -224,6 +243,9 @@ T Norm(const Point3D<T>& p)
     default:
       return pow(Dot(p, p), n/2.0);
   }
+}
+
+}
 }
 
 #endif

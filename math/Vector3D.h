@@ -7,18 +7,21 @@ namespace VecCore {
 namespace Math {
 
 template <typename T> class Vector3D {
-private:
-  T fVec[3];
-
 public:
+  union { struct { T x, y, z; }; T fVec[3]; }
+#if defined(VECCORE_CUDA) && defined(VECCORE_CUDA_DEVICE)
+  __attribute__((aligned(VECCORE_CUDA_ALIGN)));
+#elif defined(VECCORE_ENABLE_SIMD)
+  __attribute__((aligned(VECCORE_SIMD_ALIGN)));
+#else
+  ;
+#endif
+
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Vector3D() : fVec{T(0.0), T(0.0), T(0.0)} {}
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Vector3D(const T a, const T b, const T c) : fVec{a, b, c} {}
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  Vector3D(const T a) : fVec{a, a, a} {}
 
   template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
@@ -39,27 +42,6 @@ public:
     fVec[1] = b;
     fVec[2] = c;
   }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  void Set(const T a) { Set(a, a, a); }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T &x() { return fVec[0]; }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T const &x() const { return fVec[0]; }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T &y() { return fVec[1]; }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T const &y() const { return fVec[1]; }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T &z() { return fVec[2]; }
-
-  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  T const &z() const { return fVec[2]; }
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   T &operator[](const int index) { return fVec[index]; }

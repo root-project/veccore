@@ -8,7 +8,14 @@ namespace Math {
 
 template <typename T> class Quaternion {
 private:
-  T fData[4];
+  T fData[4]
+#if defined(VECCORE_CUDA) && defined(VECCORE_CUDA_DEVICE)
+  __attribute__((aligned(VECCORE_CUDA_ALIGN)));
+#elif defined(VECCORE_ENABLE_SIMD)
+  __attribute__((aligned(VECCORE_SIMD_ALIGN)));
+#else
+  ;
+#endif
 
 public:
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
@@ -91,6 +98,8 @@ public:
   {
     *this /= sqrt(fData[0]*fData[0] + fData[1]*fData[1] + fData[2]*fData[2] + fData[3]*fData[3]);
   }
+
+  static Quaternion Identity() { return Quaternion(T(0.0), T(0.0), T(0.0), T(1.0)); }
 };
 
 template <typename T>
