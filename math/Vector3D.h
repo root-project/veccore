@@ -6,6 +6,8 @@
 namespace VecCore {
 namespace Math {
 
+using namespace std;
+
 template <typename T> class Vector3D {
 public:
   union { struct { T x, y, z; }; T fVec[3]; }
@@ -255,7 +257,7 @@ T Norm(const Vector3D<T>& v)
     case 2:
       return Dot(v, v);
     default:
-      return pow(Dot(v, v), n/2.0);
+      return pow(pow(v[0],n) + pow(v[1],n) + pow(v[2],n), 1.0/n);
   }
 }
 

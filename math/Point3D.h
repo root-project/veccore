@@ -200,7 +200,7 @@ template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
 Point3D<T> operator -(const Point3D<T> &p, const Vector3D<T> &v)
 {
-  return Vector3D<T>(p[0] - v[0], p[1] - v[1], p[2] - v[2]);
+  return Point3D<T>(p[0] - v[0], p[1] - v[1], p[2] - v[2]);
 }
 
 template <typename T>
@@ -241,7 +241,7 @@ T Norm(const Point3D<T>& p)
     case 2:
       return Dot(p, p);
     default:
-      return pow(Dot(p, p), n/2.0);
+      return pow(pow(p[0],n) + pow(p[1],n) + pow(p[2],n), 1.0/n);
   }
 }
 
