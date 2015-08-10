@@ -10,7 +10,9 @@
 
 #include <cstdio>
 
-template <class Backend> void test_backend()
+template <class Backend>
+__attribute__((noinline))
+void test_backend()
 {
     typedef typename Backend::Real_t Real_t;
     typedef typename Backend::Real_v Real_v;
@@ -24,14 +26,22 @@ template <class Backend> void test_backend()
     printf("Real_v::Size       == %d\n\n", Real_v::Size);
     printf("Real_v::Mask::Size == %d\n\n", Real_v::Size);
 
-    Real_v x(0.0);
+    Real_v x(0.0), y(3.0), z(2.0);
+
+    z = z + y;
+    x = z + y;
+
+    Real_t *xptr = (Real_t*)(&x);
+    Mask_t mask = x > Real_v(Real_v::Size/2.0);
+
+    for (int i = 0; i < Real_v::Size; i++)
+	    printf("x[%d] = %.1f, x[i] > %d == %s\n",
+	        i, xptr[i], Real_v::Size/2, mask[i] ? "true" : "false");
 
     for (int i = 0; i < Real_v::Size; i++)
 	    x[i] = i;
 
-    Mask_t mask = x > Real_v(Real_v::Size/2.0);
-
-    Real_t *xptr = (Real_t*)(&x);
+    mask = x > Real_v(Real_v::Size/2.0);
 
     for (int i = 0; i < Real_v::Size; i++)
 	    printf("x[%d] = %.1f, x[i] > %d == %s\n",
