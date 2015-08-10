@@ -220,7 +220,7 @@ Matrix3x3<T> Transpose(const Matrix3x3<T>& M)
 template <typename T>
 Matrix3x3<T> Inverse(const Matrix3x3<T>& M)
 {
-  return T(1.0/Det(M)) * Matrix3x3<T>(M[1][1]*M[2][2] - M[1][2]*M[2][1],
+  return T(1.0)/Det(M) * Matrix3x3<T>(M[1][1]*M[2][2] - M[1][2]*M[2][1],
                                       M[0][2]*M[2][1] - M[0][1]*M[2][2],
                                       M[0][1]*M[1][2] - M[0][2]*M[1][1],
                                       M[1][2]*M[2][0] - M[1][0]*M[2][2],
