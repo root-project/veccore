@@ -27,17 +27,23 @@ public:
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Quaternion(const T * q) : fData{q[0], q[1], q[2], q[3]} {}
 
+  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+  Quaternion(Point3D<T> const &p) : fData{T(p[0]), T(p[1]), T(p[2]), T(0.0)} {}
+
+  VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+  Quaternion(Vector3D<T> const &v) : fData{T(v[0]), T(v[1]), T(v[2]), T(0.0)} {}
+
   template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Quaternion(Quaternion<Type> const &q) : fData{T(q[0]), T(q[1]), T(q[2]), T(q[3])} {}
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Quaternion(const Vector3D<T>& axis, const T& angle) {
-    T s = sin(angle / 2.0) / Norm(axis);
+    T s = sin(angle / T(2.0)) / Norm(axis);
     fData[0] = axis[0] * s;
     fData[1] = axis[1] * s;
     fData[2] = axis[2] * s;
-    fData[3] = cos(angle / 2.0);
+    fData[3] = cos(angle / T(2.0));
   }
 
   template <typename Type>
@@ -239,6 +245,22 @@ VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
 Quaternion<T> operator *(const Quaternion<T> &q1, const Quaternion<T> &q2)
 {
   return Dot(q1, q2);
+}
+
+template <typename T>
+VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+Point3D<T> operator *(const Quaternion<T> &q, const Point3D<T> &p)
+{
+  Quaternion<T> result = q ^ Quaternion<T>(p) ^ (~q);
+  return Point3D<T>(result[0], result[1], result[2]);
+}
+
+template <typename T>
+VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+Vector3D<T> operator *(const Quaternion<T> &q, const Vector3D<T> &v)
+{
+  Quaternion<T> result = q ^ Quaternion<T>(v) ^ (~q);
+  return Vector3D<T>(result[0], result[1], result[2]);
 }
 
 template <typename T>
