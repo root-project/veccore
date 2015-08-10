@@ -72,11 +72,11 @@ public:
 };
 
 template <typename T, template <typename> class Rotation>
-Transform<T, Rotation>
-Inverse(const Transform<T, Rotation>& t)
+Transform<T, Rotation> Inverse(const Transform<T, Rotation>& t)
 {
-  Rotation<T> InvR = Inverse(t.fRotation);
-  return Transform<T, Rotation>(InvR, -(InvR * t.fOrigin));
+  T s = T(1.0)/t.GetScaling();
+  Rotation<T> InvR = Inverse(t.GetRotation());
+  return Transform<T, Rotation>(-(InvR * (s * t.GetOrigin())), InvR, s);
 }
 
 } // namespace Math
