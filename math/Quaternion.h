@@ -226,7 +226,6 @@ Quaternion<T> Inverse(const Quaternion<T>& q)
   return Conjugate(q) / Dot(q, q);
 }
 
-#ifdef QUATERNION_SIMPLE_SYNTAX_OPERATORS
 // denote conjugate of q as ~q in code
 template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
@@ -256,7 +255,6 @@ Quaternion<T>& operator^=(Quaternion<T>& q1, const Quaternion<T>& q2)
   q1 = Cross(q1, q2);
   return q1;
 }
-#endif
 
 } // namespace Math
 } // namespace VecCore
