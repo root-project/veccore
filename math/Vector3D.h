@@ -257,7 +257,11 @@ T Norm(const Vector3D<T>& v)
     case 2:
       return Dot(v, v);
     default:
-      return pow(pow(v[0],n) + pow(v[1],n) + pow(v[2],n), 1.0/n);
+      #if 0
+      return pow(pow(v[0],T(n)) + pow(v[1],T(n)) + pow(v[2],T(n)), T(1.0/n));
+      #else
+      return sqrt(Dot(v, v)); // Vc has problems with pow()
+      #endif
   }
 }
 
