@@ -84,10 +84,9 @@ private:
 
     ScalarWrapper() { /* uninitialized */ }
     ScalarWrapper(T val) : fVal(val) {}
-    ScalarWrapper(T &ref) : fVal(ref) {}
 
-    operator T &()       { return fVal; }
-    operator T &() const { return fVal; }
+    operator T       &()       { return fVal; }
+    operator T const &() const { return fVal; }
 
     // mimic Vc library interface
 
