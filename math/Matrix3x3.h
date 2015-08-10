@@ -38,7 +38,12 @@ public:
   Matrix3x3(const Vector3D<T>& v1, const Vector3D<T>& v2, const Vector3D<T>& v3)
     : fData{{v1[0], v1[1], v1[2]}, {v2[0], v2[1], v2[2]}, {v3[0], v3[1], v3[2]}} {}
 
-  Matrix3x3(const Matrix3x3& M) : fData(M.fData) {}
+  Matrix3x3(const Matrix3x3& M)
+  {
+    for (int i = 0; i < 3; ++i)
+      for (int j = 0; j < 3; ++j)
+        fData[i][j] = M.fData[i][j];
+  }
 
   Matrix3x3(const Quaternion<T>& q)
   {
@@ -53,15 +58,8 @@ public:
     fData[2][0] =  2*(xz-wy);  fData[2][1] =  2*(yz+wx);  fData[2][2] = 1-2*(x2+y2);
   }
 
-  Vector3D<T> & operator[](int i)
-  {
-    return reinterpret_cast<Vector3D<T> >(fData[i]);
-  }
-
-  Vector3D<T> const & operator[](int i) const
-  {
-    return reinterpret_cast<Vector3D<T> >(fData[i]);
-  }
+  Vector3D<T>       & operator[](int i)       { return (Vector3D<T>&)(fData[i]); }
+  Vector3D<T> const & operator[](int i) const { return (Vector3D<T>&)(fData[i]); }
 
   operator const Vector3D<T> *() const
   {
@@ -167,6 +165,14 @@ MATRIX3x3_MATRIX3x3_BINARY_OPERATOR(-)
 #undef MATRIX3x3_MATRIX3x3_BINARY_OPERATOR
 
 template <typename T>
+Point3D<T> operator*(const Matrix3x3<T>& A, const Point3D<T>& v)
+{
+  return Point3D<T>(A[0][0]*v[0] + A[0][1]*v[1] + A[0][2]*v[2],
+                    A[1][0]*v[0] + A[1][1]*v[1] + A[1][2]*v[2],
+                    A[2][0]*v[0] + A[2][1]*v[1] + A[2][2]*v[2]);
+}
+
+template <typename T>
 Vector3D<T> operator*(const Matrix3x3<T>& A, const Vector3D<T>& v)
 {
   return Vector3D<T>(A[0][0]*v[0] + A[0][1]*v[1] + A[0][2]*v[2],
@@ -196,7 +202,7 @@ Matrix3x3<T>& operator*=(const Matrix3x3<T>& A, const Matrix3x3<T>& B)
 }
 
 template <typename T>
-T det(const Matrix3x3<T>& M)
+T Det(const Matrix3x3<T>& M)
 {
   return M[0][0] * (M[1][1]*M[2][2] - M[2][1]*M[1][2])
        + M[0][1] * (M[2][0]*M[1][2] - M[1][0]*M[2][2])
@@ -204,7 +210,7 @@ T det(const Matrix3x3<T>& M)
 }
 
 template <typename T>
-Matrix3x3<T> transpose(const Matrix3x3<T>& M)
+Matrix3x3<T> Transpose(const Matrix3x3<T>& M)
 {
   return Matrix3x3<T>(M[0][0], M[1][0], M[2][0],
                       M[0][1], M[1][1], M[2][1],
@@ -212,9 +218,9 @@ Matrix3x3<T> transpose(const Matrix3x3<T>& M)
 }
 
 template <typename T>
-Matrix3x3<T> inverse(const Matrix3x3<T>& M)
+Matrix3x3<T> Inverse(const Matrix3x3<T>& M)
 {
-  return T(1.0/det(M)) * Matrix3x3<T>(M[1][1]*M[2][2] - M[1][2]*M[2][1],
+  return T(1.0/Det(M)) * Matrix3x3<T>(M[1][1]*M[2][2] - M[1][2]*M[2][1],
                                       M[0][2]*M[2][1] - M[0][1]*M[2][2],
                                       M[0][1]*M[1][2] - M[0][2]*M[1][1],
                                       M[1][2]*M[2][0] - M[1][0]*M[2][2],
