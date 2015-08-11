@@ -155,7 +155,7 @@ namespace VecCore {
       {
          // Releases the space allocated for the object
          obj->~Cont();
-         if (obj->GetVariableData().fSelfAlloc) delete obj;
+         if (obj->GetVariableData().fSelfAlloc) delete [] (char*)obj;
       }
 
       // Equivalent of sizeof function
