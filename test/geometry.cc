@@ -111,20 +111,29 @@ template <class Backend> void test() {
 
   Point3D<Real_t> origin(Real_t(0.0), Real_t(0.0), Real_t(5.0));
 
-  Transform<Real_t, Matrix3x3> T(origin, orientation, 0.5);
-  Transform<Real_t, Matrix3x3> invT = Inverse(T);
+  Transform<Real_t, Quaternion> T(origin, orientation, 0.5);
+  Transform<Real_t, Quaternion> invT = Inverse(T);
 
-  Point3D<Real_t>  test_p;
-  Vector3D<Real_t> test_v;
+  Point3D<Real_t>  test_p = px + py + pz;
+  Vector3D<Real_t> test_v = vx + vy + vz;
 
 #if 1
 #define PRINT(name, q) printf("%s [% .4f, % .4f, % .4f]\n", #name, q[0], q[1], q[2])
 
-    test_p = T(px); PRINT(test_p, test_p);
-    test_v = T(vx); PRINT(test_v, test_v);
+    PRINT(test_p, test_p);
+    PRINT(test_v, test_v);
 
-    test_p = invT(T(px+py+pz)); PRINT(test_p, test_p);
-    test_v = invT(T(vx+vy+vz)); PRINT(test_v, test_v);
+    Quaternion<Real_t> q = Cross(Cross(orientation, Quaternion<Real_t>(test_p)), ~orientation);
+
+    test_p = orientation * test_p; //Point3D<Real_t>(q[0], q[1], q[2]);
+    PRINT(test_p, test_p);
+    test_v = T(test_v); PRINT(test_v, test_v);
+
+    // test_p = T(test_p); PRINT(test_p, test_p);
+    // test_v = T(test_v); PRINT(test_v, test_v);
+
+    // test_p = invT(T(px+py+pz)); PRINT(test_p, test_p);
+    // test_v = invT(T(vx+vy+vz)); PRINT(test_v, test_v);
 
 #undef PRINT
 #endif
