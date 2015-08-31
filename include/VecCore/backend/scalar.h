@@ -2,7 +2,6 @@
 #define VECCORE_SCALAR_BACKEND_H
 
 #include <cassert>
-
 #include <cmath>
 #include <cstdint>
 
@@ -20,8 +19,7 @@ private:
 
   class BoolWrapper {
   public:
-    BoolWrapper() { /* uninitialized */
-    }
+    BoolWrapper() { /* uninitialized */ }
     BoolWrapper(bool val) : fBool(val) {}
 
     bool isFull() { return fBool; }
@@ -49,27 +47,27 @@ private:
     MaskedScalar() = delete;
     MaskedScalar(T &ref, Mask mask = true) : fRef(ref), fMask(mask) {}
 
-#define MASK_ASSIGN_OPERATOR(OP)                                               \
-  T &operator OP(const T &ref) {                                               \
-    if (fMask)                                                                 \
-      fRef OP ref;                                                             \
-                                                                               \
-    return fRef;                                                               \
-  }
+    #define MASK_ASSIGN_OPERATOR(OP)                                           \
+    T &operator OP(const T &ref)                                               \
+    {                                                                          \
+      if (fMask)                                                               \
+        fRef OP ref;                                                           \
+      return fRef;                                                             \
+    }
 
-    MASK_ASSIGN_OPERATOR(= )
-    MASK_ASSIGN_OPERATOR(+= )
-    MASK_ASSIGN_OPERATOR(-= )
-    MASK_ASSIGN_OPERATOR(*= )
-    MASK_ASSIGN_OPERATOR(/= )
-    MASK_ASSIGN_OPERATOR(%= )
-    MASK_ASSIGN_OPERATOR(&= )
-    MASK_ASSIGN_OPERATOR(^= )
-    MASK_ASSIGN_OPERATOR(|= )
-    MASK_ASSIGN_OPERATOR(<<= )
-    MASK_ASSIGN_OPERATOR(>>= )
+    MASK_ASSIGN_OPERATOR(=)
+    MASK_ASSIGN_OPERATOR(+=)
+    MASK_ASSIGN_OPERATOR(-=)
+    MASK_ASSIGN_OPERATOR(*=)
+    MASK_ASSIGN_OPERATOR(/=)
+    MASK_ASSIGN_OPERATOR(%=)
+    MASK_ASSIGN_OPERATOR(&=)
+    MASK_ASSIGN_OPERATOR(^=)
+    MASK_ASSIGN_OPERATOR(|=)
+    MASK_ASSIGN_OPERATOR(<<=)
+    MASK_ASSIGN_OPERATOR(>>=)
 
-#undef MASK_ASSIGN_OPERATOR
+    #undef MASK_ASSIGN_OPERATOR
 
   private:
     T &fRef;
@@ -88,9 +86,10 @@ private:
     operator T       &()       { return fVal; }
     operator T const &() const { return fVal; }
 
-    // mimic Vc library interface
-
-    MaskedScalar<T> operator()(Mask m) { return MaskedScalar<T>(fVal, m); }
+    MaskedScalar<T> operator()(Mask m)
+	{
+		return MaskedScalar<T>(fVal, m);
+	}
 
     T &operator[](int index)
     {
@@ -107,11 +106,11 @@ private:
     void load(T const *const src) { fVal = *src; }
     void store(T const &val) { val = fVal; }
 
-#define SCALAR_WRAPPER_OPERATOR(OP)                                            \
-  ScalarWrapper operator OP(const ScalarWrapper &x) const                      \
-  {                                                                            \
-    return ScalarWrapper(fVal OP x.fVal);                                      \
-  }                                                                            \
+    #define SCALAR_WRAPPER_OPERATOR(OP)                                        \
+    ScalarWrapper operator OP(const ScalarWrapper &x) const                    \
+    {                                                                          \
+      return ScalarWrapper(fVal OP x.fVal);                                    \
+    }                                                                          \
 
     SCALAR_WRAPPER_OPERATOR(+)
     SCALAR_WRAPPER_OPERATOR(-)
@@ -119,7 +118,7 @@ private:
     SCALAR_WRAPPER_OPERATOR(/)
     SCALAR_WRAPPER_OPERATOR(%)
 
-#undef SCALAR_WRAPPER_OPERATOR
+    #undef SCALAR_WRAPPER_OPERATOR
 
   private:
     T fVal;
@@ -161,9 +160,13 @@ public:
   typedef ScalarWrapper<UInt64_t> UInt64_v;
 };
 
+#if defined(VECCORE_ENABLE_CUDA)
 /* CUDABackend is simply a scalar backend that cannot use early returns */
+#include <core/cuda.h>
 
 template <typename T> using CUDA = Scalar<T, false>;
+
+#endif
 
 }
 }
