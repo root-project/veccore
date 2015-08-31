@@ -2,37 +2,64 @@
 # VecCore Library                                                              #
 ################################################################################
 
-cmake_minimum_required(VERSION 3.0)
-
 project(VecCore)
 
-set("${CMAKE_CXX_COMPILER_ID}" TRUE CACHE STRING "C++ Compiler")
+cmake_minimum_required(VERSION 3.0.2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(RequireCXX11)
 
-option(TEST "Enable testing" OFF)
+set(VECCORE_VERSION_MAJOR 0)
+set(VECCORE_VERSION_MINOR 1)
+set(VECCORE_VERSION_PATCH 0)
 
-option(SIMD "Enable SIMD vectorization (using Vc library)" ON)
+set(VECCORE_VERSION ${VECCORE_VERSION_MAJOR}.${VECCORE_VERSION_MINOR}.${VECCORE_VERSION_PATCH})
+
+option(CUDA "Enable support for CUDA.")
+option(EXAMPLES "Enable installation of code examples.")
+option(MIC "Enable support for Intel Xeon Phi coprocessor.")
+option(SIMD "Enable support for SIMD instructions (using Vc library)." ON)
+option(TEST "Build VecCore unit tests and benchmarks.")
+
+include(CMakeDependentOption)
+cmake_dependent_option(OFFLOAD "Enable Xeon Phi offload support." ON "MIC" OFF)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Specifies the build type." FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo")
+endif()
+
+set(TARGET_ISA "native" CACHE STRING "Selects target instruction set architecture to support.")
+set_property(CACHE TARGET_ISA PROPERTY STRINGS native sse sse2 sse3 ssse3 sse41 sse42 avx avx2 avx512)
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    include (gcc)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    include (clang)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
+    include (icc)
+else()
+    message(WARNING "Unsupported compiler")
+endif()
+
+if (CUDA)
+    find_package(CUDA REQUIRED)
+endif()
 
 if (SIMD)
-	find_package(Vc REQUIRED)
-	if (NOT GNU)
-	  set(VECCORE_CXX_FLAGS "${VECCORE_CXX_FLAGS} -march=native -O3")
-	else()
-	  set(VECCORE_CXX_FLAGS "${VECCORE_CXX_FLAGS} -fabi-version=6 -march=native -O3")
-	endif()
-else()
-	set(VECCORE_CXX_FLAGS "${VECCORE_CXX_FLAGS} -DVECCORE_DISABLE_SIMD")
+    find_package(Vc REQUIRED)
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+configure_file(${PROJECT_SOURCE_DIR}/config/VecCore.h.in "${PROJECT_BINARY_DIR}/include/VecCore.h")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VECCORE_CXX_FLAGS}")
+if (EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 if (TEST)
-	add_subdirectory(test)
+    add_subdirectory(test)
 endif()
 
-install(DIRECTORY include/VecCore DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(DIRECTORY include/ DESTINATION include)

@@ -9,14 +9,14 @@
 
 #include <cstdio>
 
-#include "math/Point3D.h"
-#include "math/Vector3D.h"
-#include "math/Matrix3x3.h"
-#include "math/Quaternion.h"
-#include "math/Transform.h"
+#include "VecCore/math/Point3D.h"
+#include "VecCore/math/Vector3D.h"
+#include "VecCore/math/Matrix3x3.h"
+#include "VecCore/math/Quaternion.h"
+#include "VecCore/math/Transform.h"
 
-#include "backend/scalar.h"
-#include "backend/vector.h"
+#include "VecCore/backend/scalar.h"
+#include "VecCore/backend/vector.h"
 
 using namespace VecCore::Math;
 
@@ -36,9 +36,6 @@ template <class Backend> void test() {
   Vector3D<Real_t> vx(Real_t(1.0), Real_t(0.0), Real_t(0.0));
   Vector3D<Real_t> vy(Real_t(0.0), Real_t(1.0), Real_t(0.0));
   Vector3D<Real_t> vz(Real_t(0.0), Real_t(0.0), Real_t(1.0));
-
-  Point3D<Real_t> tmp1 = Real_t(3.0) * px + (py / Real_t(2.0)) - vz;
-  Vector3D<Real_t> tmp2 = Real_t(3.0) * px + (py / Real_t(2.0)) - pz;
 
   // dot and cross products
 
@@ -123,17 +120,15 @@ template <class Backend> void test() {
     PRINT(test_p, test_p);
     PRINT(test_v, test_v);
 
-    Quaternion<Real_t> q = Cross(Cross(orientation, Quaternion<Real_t>(test_p)), ~orientation);
-
     test_p = orientation * test_p; //Point3D<Real_t>(q[0], q[1], q[2]);
     PRINT(test_p, test_p);
     test_v = T(test_v); PRINT(test_v, test_v);
 
-    // test_p = T(test_p); PRINT(test_p, test_p);
-    // test_v = T(test_v); PRINT(test_v, test_v);
+    test_p = T(test_p); PRINT(test_p, test_p);
+    test_v = T(test_v); PRINT(test_v, test_v);
 
-    // test_p = invT(T(px+py+pz)); PRINT(test_p, test_p);
-    // test_v = invT(T(vx+vy+vz)); PRINT(test_v, test_v);
+    test_p = invT(T(px+py+pz)); PRINT(test_p, test_p);
+    test_v = invT(T(vx+vy+vz)); PRINT(test_v, test_v);
 
 #undef PRINT
 #endif

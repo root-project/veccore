@@ -1,10 +1,10 @@
 #ifndef VECCORE_MATH_TRANSFORM_H
 #define VECCORE_MATH_TRANSFORM_H
 
-#include "math/Point3D.h"
-#include "math/Vector3D.h"
-#include "math/Quaternion.h"
-#include "math/Matrix3x3.h"
+#include "VecCore/math/Point3D.h"
+#include "VecCore/math/Vector3D.h"
+#include "VecCore/math/Quaternion.h"
+#include "VecCore/math/Matrix3x3.h"
 
 namespace VecCore {
 namespace Math {

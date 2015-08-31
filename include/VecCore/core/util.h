@@ -1,16 +1,12 @@
 #ifndef VECCORE_UTIL_H
 #define VECCORE_UTIL_H
 
-#if __cplusplus <= 201100L
-#   error "VecCore requires a compiler with support for C++11 standard"
-#endif
-
 #include <cmath>
 #include <limits>
 #include <type_traits>
 
-#include <core/simd.h>
-#include <core/cuda.h>
+#include <VecCore/core/simd.h>
+#include <VecCore/core/cuda.h>
 
 namespace VecCore {
 

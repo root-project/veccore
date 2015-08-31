@@ -3,7 +3,7 @@
 
 #ifdef VECCORE_CUDA
 
-#include <backend/scalar.h>
+#include <VecCore/backend/scalar.h>
 
 namespace VecCore {
 namespace Backend {

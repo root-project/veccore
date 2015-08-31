@@ -5,8 +5,8 @@
 #undef NDEBUG
 #include <cassert>
 
-#include "backend/scalar.h"
-#include "backend/vector.h"
+#include "VecCore/backend/scalar.h"
+#include "VecCore/backend/vector.h"
 
 #include <cstdio>
 

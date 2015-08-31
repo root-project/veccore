@@ -1,8 +1,8 @@
 #ifndef VECCORE_BASE_H
 #define VECCORE_BASE_H
 
-#include <core/cuda.h>
-#include <core/simd.h>
+#include <VecCore/core/cuda.h>
+#include <VecCore/core/simd.h>
 
 #ifndef VECCORE_NO_FORCED_INLINING
 #    define VECCORE_FORCE_NOINLINE __attribute__((noinline))

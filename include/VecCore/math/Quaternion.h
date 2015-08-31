@@ -1,7 +1,7 @@
 #ifndef VECCORE_QUATERNION_H
 #define VECCORE_QUATERNION_H
 
-#include <math/Vector3D.h>
+#include <VecCore/math/Vector3D.h>
 
 namespace VecCore {
 namespace Math {
@@ -267,7 +267,7 @@ template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
 Quaternion<T> operator ^(const Quaternion<T> &q1, const Quaternion<T> &q2)
 {
-  Cross(q1, q2);
+  return Cross(q1, q2);
 }
 
 template <typename T>

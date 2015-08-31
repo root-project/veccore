@@ -1,17 +1,17 @@
 
-find_package(Vc REQUIRED)
-
-add_executable(backend backend.cc)
-target_link_libraries(backend Vc)
-
 include_directories(${PROJECT_SOURCE_DIR})
 
+add_executable(backend backend.cc)
 add_executable(geometry geometry.cc)
 add_executable(transform transform.cc)
-add_executable(new-backend new_backend_test.cc)
+
+string(TOUPPER "FLAGS_${TARGET_ISA}" _target_isa_flags)
+
+set_target_properties(backend geometry transform
+    PROPERTIES COMPILE_FLAGS "${${_target_isa_flags}}")
 
 if (SIMD)
-	target_link_libraries(geometry Vc)
-	target_link_libraries(transform Vc)
-	target_link_libraries(new-backend Vc)
+    target_link_libraries(geometry Vc)
+    target_link_libraries(transform Vc)
+    target_link_libraries(backend Vc)
 endif()

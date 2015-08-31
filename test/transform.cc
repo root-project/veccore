@@ -9,21 +9,20 @@
 
 #include <cstdio>
 
-#include "math/Point3D.h"
-#include "math/Vector3D.h"
-#include "math/Matrix3x3.h"
-#include "math/Quaternion.h"
-#include "math/Transform.h"
+#include "VecCore/math/Point3D.h"
+#include "VecCore/math/Vector3D.h"
+#include "VecCore/math/Matrix3x3.h"
+#include "VecCore/math/Quaternion.h"
+#include "VecCore/math/Transform.h"
 
-#include "backend/scalar.h"
-#include "backend/vector.h"
+#include "VecCore/backend/scalar.h"
+#include "VecCore/backend/vector.h"
 
 using namespace VecCore::Math;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
   typedef typename Backend::Real_v Real_v;
-  typedef typename Backend::Real_v::Mask Mask_t;
 
   Point3D<Real_t> px(Real_t(1.0), Real_t(0.0), Real_t(0.0));
   Point3D<Real_t> py(Real_t(0.0), Real_t(1.0), Real_t(0.0));

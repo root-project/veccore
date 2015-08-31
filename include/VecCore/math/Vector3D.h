@@ -1,7 +1,7 @@
 #ifndef VECCORE_MATH_VECTOR3D_H
 #define VECCORE_MATH_VECTOR3D_H
 
-#include <math/base.h>
+#include <VecCore/math/base.h>
 
 namespace VecCore {
 namespace Math {

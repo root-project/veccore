@@ -1,7 +1,7 @@
 #ifndef VECCORE_VECTOR_BACKEND_H
 #define VECCORE_VECTOR_BACKEND_H
 
-#include <core/simd.h>
+#include <VecCore/core/simd.h>
 
 #ifdef VECCORE_ENABLE_SIMD
 
