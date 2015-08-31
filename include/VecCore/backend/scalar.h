@@ -160,6 +160,11 @@ public:
   typedef ScalarWrapper<UInt32_t> UInt32_v;
   typedef ScalarWrapper<UInt64_t> UInt64_v;
 };
+
+/* CUDABackend is simply a scalar backend that cannot use early returns */
+
+template <typename T> using CUDA = Scalar<T, false>;
+
 }
 }
 
