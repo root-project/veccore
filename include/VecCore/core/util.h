@@ -1,12 +1,7 @@
 #ifndef VECCORE_UTIL_H
 #define VECCORE_UTIL_H
 
-#include <cmath>
-#include <limits>
 #include <type_traits>
-
-#include <VecCore/core/simd.h>
-#include <VecCore/core/cuda.h>
 
 namespace VecCore {
 
