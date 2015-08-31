@@ -1,13 +1,8 @@
-#ifndef VECCORE_VECTOR_BACKEND_H
-#define VECCORE_VECTOR_BACKEND_H
-
-#include <VecCore/core/simd.h>
-
-#ifdef VECCORE_ENABLE_SIMD
+#ifndef VECCORE_VC_BACKEND_H
+#define VECCORE_VC_BACKEND_H
 
 #include <cmath>
 #include <cstdint>
-
 #include <Vc/Vc>
 
 namespace VecCore {
@@ -54,19 +49,4 @@ class Vector {
 }
 }
 
-#else
-
-// fallback to scalar backend if Vc is not available
-
-#include <backend/scalar.h>
-
-namespace VecCore {
-namespace Backend {
-
-template <typename T> using Vector = Scalar<T, true>;
-
-}
-}
-
-#endif
 #endif
