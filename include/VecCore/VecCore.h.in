@@ -1,3 +1,6 @@
+#ifndef __VECCORE_H_INCLUDED
+#define __VECCORE_H_INCLUDED
+
 #define VECCORE_VERSION_MAJOR @VECCORE_VERSION_MAJOR@
 #define VECCORE_VERSION_MINOR @VECCORE_VERSION_MINOR@
 #define VECCORE_VERSION_PATCH @VECCORE_VERSION_PATCH@
@@ -9,3 +12,15 @@
 #cmakedefine MIC
 #cmakedefine OFFLOAD
 
+#ifndef VECCORE_NO_FORCED_INLINING
+#    define VECCORE_FORCE_NOINLINE __attribute__((noinline))
+#    define VECCORE_FORCE_INLINE   inline __attribute__((always_inline))
+#else
+#    define VECCORE_FORCE_NOINLINE
+#    define VECCORE_FORCE_INLINE
+#endif
+
+#include <core/cuda.h>
+#include <core/simd.h>
+
+#endif
