@@ -45,14 +45,26 @@ endif()
 
 if (CUDA)
     find_package(CUDA REQUIRED)
+    set(VECCORE_ENABLE_CUDA)
 endif()
 
 if (SIMD)
     find_package(Vc REQUIRED)
+else()
+    set(VECCORE_DISABLE_SIMD)
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-configure_file(${PROJECT_SOURCE_DIR}/config/VecCore.h.in "${PROJECT_BINARY_DIR}/include/VecCore.h")
+if (MIC)
+    set(VECCORE_ENABLE_MIC)
+    if (OFFLOAD)
+        set(VECCORE_ENABLE_OFFLOAD)
+    endif()
+endif()
+
+include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
+
+configure_file(${PROJECT_SOURCE_DIR}/include/VecCore/VecCore.in
+              "${PROJECT_BINARY_DIR}/include/VecCore/VecCore")
 
 if (EXAMPLES)
     add_subdirectory(examples)

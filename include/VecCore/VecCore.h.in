@@ -1,16 +1,20 @@
 #ifndef __VECCORE_H_INCLUDED
 #define __VECCORE_H_INCLUDED
 
+#include <cmath>
+#include <cstdint>
+#include <limits>
+
 #define VECCORE_VERSION_MAJOR @VECCORE_VERSION_MAJOR@
 #define VECCORE_VERSION_MINOR @VECCORE_VERSION_MINOR@
 #define VECCORE_VERSION_PATCH @VECCORE_VERSION_PATCH@
 
 #define VECCORE_VERSION "@VECCORE_VERSION_MAJOR@.@VECCORE_VERSION_MINOR@.@VECCORE_VERSION_PATCH@"
 
-#cmakedefine CUDA
-#cmakedefine SIMD
-#cmakedefine MIC
-#cmakedefine OFFLOAD
+#cmakedefine VECCORE_ENABLE_CUDA
+#cmakedefine VECCORE_DISABLE_SIMD
+#cmakedefine VECCORE_ENABLE_MIC
+#cmakedefine VECCORE_ENABLE_OFFLOAD
 
 #ifndef VECCORE_NO_FORCED_INLINING
 #    define VECCORE_FORCE_NOINLINE __attribute__((noinline))
@@ -20,7 +24,16 @@
 #    define VECCORE_FORCE_INLINE
 #endif
 
-#include <core/cuda.h>
-#include <core/simd.h>
+#include "core/cuda.h"
+#include "core/simd.h"
+
+#include "backend/scalar.h"
+#include "backend/vector.h"
+
+#include "Point3D.h"
+#include "Vector3D.h"
+#include "Quaternion.h"
+#include "Matrix3x3.h"
+#include "Transform.h"
 
 #endif
