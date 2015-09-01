@@ -4,11 +4,9 @@
 
 #undef NDEBUG
 #include <cassert>
-
-#include "VecCore/backend/scalar.h"
-#include "VecCore/backend/vector.h"
-
 #include <cstdio>
+
+#include <VecCore>
 
 template <class Backend>
 __attribute__((noinline))

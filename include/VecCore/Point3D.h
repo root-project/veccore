@@ -1,7 +1,7 @@
 #ifndef VECCORE_POINT3D_H
 #define VECCORE_POINT3D_H
 
-#include <VecCore/math/Vector3D.h>
+#include "Vector3D.h"
 
 namespace VecCore {
 namespace Math {

@@ -1,7 +1,7 @@
 #ifndef VECCORE_QUATERNION_H
 #define VECCORE_QUATERNION_H
 
-#include <VecCore/math/Vector3D.h>
+#include "Vector3D.h"
 
 namespace VecCore {
 namespace Math {

@@ -1,8 +1,8 @@
 #ifndef VECCORE_MATRIX_3X3_H
 #define VECCORE_MATRIX_3X3_H
 
-#include <VecCore/math/Vector3D.h>
-#include <VecCore/math/Quaternion.h>
+#include "Vector3D.h"
+#include "Quaternion.h"
 
 namespace VecCore {
 namespace Math {

@@ -9,14 +9,7 @@
 
 #include <cstdio>
 
-#include "VecCore/math/Point3D.h"
-#include "VecCore/math/Vector3D.h"
-#include "VecCore/math/Matrix3x3.h"
-#include "VecCore/math/Quaternion.h"
-#include "VecCore/math/Transform.h"
-
-#include "VecCore/backend/scalar.h"
-#include "VecCore/backend/vector.h"
+#include <VecCore>
 
 using namespace VecCore::Math;
 

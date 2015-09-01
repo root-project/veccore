@@ -61,10 +61,12 @@ if (MIC)
     endif()
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
+configure_file(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}.in
+    "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}")
+file(COPY include/${PROJECT_NAME} DESTINATION ${PROJECT_BINARY_DIR}/include)
 
-configure_file(${PROJECT_SOURCE_DIR}/include/VecCore/VecCore.in
-              "${PROJECT_BINARY_DIR}/include/VecCore/VecCore")
+include_directories(${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
+install(DIRECTORY ${PROJECT_BINARY_DIR}/include/ DESTINATION include)
 
 if (EXAMPLES)
     add_subdirectory(examples)
@@ -73,5 +75,3 @@ endif()
 if (TEST)
     add_subdirectory(test)
 endif()
-
-install(DIRECTORY include/ DESTINATION include)
