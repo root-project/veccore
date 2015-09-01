@@ -1,6 +1,3 @@
-
-include_directories(${PROJECT_SOURCE_DIR})
-
 add_executable(backend backend.cc)
 add_executable(geometry geometry.cc)
 add_executable(transform transform.cc)
