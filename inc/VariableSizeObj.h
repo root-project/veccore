@@ -12,7 +12,7 @@
 
 class TRootIOCtor;
 
-namespace VecCore {
+namespace veccore{
 
 /**
  * @brief   Array/vector of items with all information stored contiguously in memory.
