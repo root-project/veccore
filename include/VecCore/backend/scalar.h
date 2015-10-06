@@ -13,7 +13,7 @@
 namespace VecCore {
 namespace Backend {
 
-template <typename FloatT = double, bool EExit = true> class Scalar {
+template <typename FloatT = float, bool EExit = true> class Scalar {
 private:
   // auxiliary classes declared private, so they are not exposed
 
@@ -81,15 +81,21 @@ private:
     enum { Size = 1 };
 
     ScalarWrapper() { /* uninitialized */ }
-    ScalarWrapper(T val) : fVal(val) {}
 
-    operator T       &()       { return fVal; }
+	/* allow type conversion at initialization */
+
+    ScalarWrapper(int val) : fVal(static_cast<T>(val)) {}
+    ScalarWrapper(unsigned int val) : fVal(static_cast<T>(val)) {}
+    ScalarWrapper(float val) : fVal(static_cast<T>(val)) {}
+    ScalarWrapper(double val) : fVal(static_cast<T>(val)) {}
+
+    operator T() { return fVal; }
     operator T const &() const { return fVal; }
 
     MaskedScalar<T> operator()(Mask m)
-	{
-		return MaskedScalar<T>(fVal, m);
-	}
+    {
+        return MaskedScalar<T>(fVal, m);
+    }
 
     T &operator[](int index)
     {
