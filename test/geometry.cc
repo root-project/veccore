@@ -1,7 +1,3 @@
-//
-// Geometry Test (Vector, Point, Quaternion, Matrix)
-//
-
 #undef NDEBUG
 #include <cassert>
 #include <cstdio>
@@ -12,20 +8,19 @@ using namespace VecCore::Math;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
-  typedef typename Backend::Real_v Real_v;
-  typedef typename Backend::Real_v::Mask Mask_t;
+  typedef typename Backend::Real_t Real_t;
 
   // test points and vectors (scalar test)
 
   // constructors
 
-  Point3D<Real_t> px(Real_t(1.0), Real_t(0.0), Real_t(0.0));
-  Point3D<Real_t> py(Real_t(0.0), Real_t(1.0), Real_t(0.0));
-  Point3D<Real_t> pz(Real_t(0.0), Real_t(0.0), Real_t(1.0));
+  Point3D<Real_t> px(1.0, 0.0, 0.0);
+  Point3D<Real_t> py(0.0, 1.0, 0.0);
+  Point3D<Real_t> pz(0.0, 0.0, 1.0);
 
-  Vector3D<Real_t> vx(Real_t(1.0), Real_t(0.0), Real_t(0.0));
-  Vector3D<Real_t> vy(Real_t(0.0), Real_t(1.0), Real_t(0.0));
-  Vector3D<Real_t> vz(Real_t(0.0), Real_t(0.0), Real_t(1.0));
+  Vector3D<Real_t> vx(1.0, 0.0, 0.0);
+  Vector3D<Real_t> vy(0.0, 1.0, 0.0);
+  Vector3D<Real_t> vz(0.0, 0.0, 1.0);
 
   // dot and cross products
 
@@ -52,24 +47,6 @@ template <class Backend> void test() {
   assert(abs(Norm<Real_t, 2>(Point3D<Real_t>(1.0, 2.0, 3.0)) - 14.0) < 1.0e-6);
   assert(abs(Norm<Real_t, 3>(Point3D<Real_t>(1.0, 2.0, 3.0)) - pow(36.0, 1.0 / 3.0)) < 1.0e-6);
 
-  // test points and vectors (vector test)
-
-  // constructors
-
-  Point3D<Real_v> px_v(Real_v(1.0), Real_v(0.0), Real_v(0.0));
-  Point3D<Real_v> py_v(Real_v(0.0), Real_v(1.0), Real_v(0.0));
-  Point3D<Real_v> pz_v(Real_v(0.0), Real_v(0.0), Real_v(1.0));
-
-  Vector3D<Real_v> vx_v(Real_v(1.0), Real_v(0.0), Real_v(0.0));
-  Vector3D<Real_v> vy_v(Real_v(0.0), Real_v(1.0), Real_v(0.0));
-  Vector3D<Real_v> vz_v(Real_v(0.0), Real_v(0.0), Real_v(1.0));
-
-  Mask_t m(false);
-
-  m = abs(Dot(px_v, px_v) - Real_v(1.0)) < Real_v(1e-6);
-
-  assert(m.isFull());
-
   // test quaternion
 
   Quaternion<Real_t> qi(1.0, 0.0, 0.0, 0.0);
@@ -78,69 +55,55 @@ template <class Backend> void test() {
 
   Quaternion<Real_t> q1, q2, q3, q4, q5;
 
-#if 1
-#define PRINT(name, q) printf("%s [% .2f, % .2f, % .2f, % .2g]\n", #name, q[0], q[1], q[2], q[3])
+  Real_t angle = 45.0;
 
-    q1 = Cross(qi, qj); PRINT(ij, q1);
-    q5 = Cross(qj, qi); PRINT(ji, q5);
-    q2 = Cross(qj, qk); PRINT(jk, q2);
-    q3 = Cross(qk, qi); PRINT(ki, q3);
-    q4 = Cross(qk, qk); PRINT(kk, q4);
+  Vector3D<Real_t> axis(0.0, 0.0, 1.0);
 
-#undef PRINT
-#endif
+  Quaternion<Real_t> orientation(axis, angle * Real_t(3.1415926535 / 180.0));
 
-  Real_t angle = 30.0 * 3.1415926535 / 180.0;
+  Point3D<Real_t> origin(0.0, 2.0, 5.0);
 
-  Vector3D<Real_t> axis(Real_t(0.0), Real_t(0.0), Real_t(1.0));
+  Real_t scaling = 0.25;
 
-  Quaternion<Real_t> orientation(axis, angle);
-
-  Point3D<Real_t> origin(Real_t(0.0), Real_t(0.0), Real_t(5.0));
-
-  Transform<Real_t, Quaternion> T(origin, orientation, 0.5);
+  Transform<Real_t, Quaternion> T(origin, orientation, scaling);
   Transform<Real_t, Quaternion> invT = Inverse(T);
 
   Point3D<Real_t>  test_p = px + py + pz;
   Vector3D<Real_t> test_v = vx + vy + vz;
 
-#if 1
-#define PRINT(name, q) printf("%s [% .4f, % .4f, % .4f]\n", #name, q[0], q[1], q[2])
+  printf("\nTransform: origin = (%f, %f, %f),\n"
+         "            axis  = (%f, %f, %f),\n"
+		 "            angle = %f, scaling = %f\n\n",
+	origin[0], origin[1], origin[2], axis[0], axis[1], axis[2], angle, scaling);
 
-    PRINT(test_p, test_p);
-    PRINT(test_v, test_v);
+  printf("original point:    (% 6.3f, % 6.3f, % 6.3f)\n", test_p[0], test_p[1], test_p[2]);
 
-    test_p = orientation * test_p; //Point3D<Real_t>(q[0], q[1], q[2]);
-    PRINT(test_p, test_p);
-    test_v = T(test_v); PRINT(test_v, test_v);
+  test_p = T(test_p);
 
-    test_p = T(test_p); PRINT(test_p, test_p);
-    test_v = T(test_v); PRINT(test_v, test_v);
+  printf("transformed point: (% 6.3f, % 6.3f, % 6.3f)\n", test_p[0], test_p[1], test_p[2]);
 
-    test_p = invT(T(px+py+pz)); PRINT(test_p, test_p);
-    test_v = invT(T(vx+vy+vz)); PRINT(test_v, test_v);
+  test_p = invT(test_p);
 
-#undef PRINT
-#endif
+  printf("transformed back:  (% 6.3f, % 6.3f, % 6.3f)\n", test_p[0], test_p[1], test_p[2]);
 
+  printf("\n\n");
 
-}
+  printf("original vector:    (% 6.3f, % 6.3f, % 6.3f)\n", test_v[0], test_v[1], test_v[2]);
 
-void test_all() {
-  printf("test (scalar, float):\n");
-  test<VecCore::Backend::Scalar<float>>();
-  printf("\n");
-  printf("test (scalar, double):\n");
-  test<VecCore::Backend::Scalar<double>>();
-  printf("\n");
-  printf("test (vector, float):\n");
-  test<VecCore::Backend::Vector<float>>();
-  printf("\n");
-  printf("test (vector, double):\n");
-  test<VecCore::Backend::Vector<double>>();
+  test_v = T(test_v);
+
+  printf("transformed vector: (% 6.3f, % 6.3f, % 6.3f)\n", test_v[0], test_v[1], test_v[2]);
+
+  test_v = invT(test_v);
+
+  printf("transformed back:   (% 6.3f, % 6.3f, % 6.3f)\n", test_v[0], test_v[1], test_v[2]);
 }
 
 int main(int argc, char *argv[]) {
-  test_all();
+  printf("\ntest (float):\n\n");
+  test<VecCore::Backend::Scalar<float> >();
+
+  printf("\ntest (double):\n\n");
+  test<VecCore::Backend::Scalar<double> >();
   return 0;
 }
