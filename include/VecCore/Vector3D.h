@@ -25,16 +25,14 @@ public:
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Vector3D(const T a, const T b, const T c) : fVec{a, b, c} {}
 
-  template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  Vector3D(Vector3D<Type> const &v) : fVec{T(v[0]), T(v[1]), T(v[2])} {}
+  Vector3D(Vector3D const &v) : fVec{v[0], v[1], v[2]} {}
 
-  template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  Vector3D &operator=(Vector3D<Type> const &v) {
-    fVec[0] = static_cast<T>(v[0]);
-    fVec[1] = static_cast<T>(v[1]);
-    fVec[2] = static_cast<T>(v[2]);
+  Vector3D &operator=(Vector3D const &v) {
+    fVec[0] = v[0];
+    fVec[1] = v[1];
+    fVec[2] = v[2];
     return *this;
   }
 

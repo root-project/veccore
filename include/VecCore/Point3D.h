@@ -23,16 +23,14 @@ public:
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Point3D(const T a, const T b, const T c) : fData{a, b, c} {}
 
-  template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  Point3D(Point3D<Type> const &p) : fData{T(p[0]), T(p[1]), T(p[2])} {}
+  Point3D(Point3D const &p) : fData{p[0], p[1], p[2]} {}
 
-  template <typename Type>
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  Point3D &operator=(Point3D<Type> const &p) {
-    fData[0] = static_cast<T>(p[0]);
-    fData[1] = static_cast<T>(p[1]);
-    fData[2] = static_cast<T>(p[2]);
+  Point3D &operator=(Point3D const p) {
+    fData[0] = p[0];
+    fData[1] = p[1];
+    fData[2] = p[2];
     return *this;
   }
 
