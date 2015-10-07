@@ -773,6 +773,7 @@ namespace veccore{
          }
          return fNbits;
       }
+      VECGEOM_CUDA_HEADER_BOTH
       size_t  GetNbits()      const { return fNbits; }
 
       VECGEOM_CUDA_HEADER_BOTH
