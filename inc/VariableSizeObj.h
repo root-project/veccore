@@ -163,6 +163,13 @@ namespace veccore{
       static size_t SizeOf(size_t nvalues)
       { return (sizeof(Cont)+sizeof(V)*(nvalues-1)); }
 
+      // a templated constexpr variant of SizeOf (useful when we know nvalues at compilation time)
+      VECGEOM_CUDA_HEADER_BOTH
+      template <size_t nvalues>
+      static constexpr size_t ConstExprSizeOf(){
+        return (sizeof(Cont)+sizeof(V)*(nvalues-1));
+      }
+
    };
 
 }
