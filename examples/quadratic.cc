@@ -3,10 +3,12 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <malloc.h>
+
 #include <VecCore>
 #include "Timer.h"
 
-using namespace VecCore;
+using namespace veccore;
 
 static const int N = (8 * 1024 * 1024);
 
@@ -59,10 +61,10 @@ void quadsolve_vc(typename Backend::Float_v const &a,
 	Mask_t no_roots(delta < Float_v(0.0));
 	Mask_t two_roots(delta >= epsilon);
 
-	roots(two_roots) = 2;
+	roots(two_roots) = Int_v(2);
 	Mask_t mask = (b >= Float_v(0.0));
-	x1(two_roots &&  mask) = Float_v(-0.5) * (b + sqrt(delta))/a;
-	x2(two_roots && !mask) = Float_v(-0.5) * (b - sqrt(delta))/a;
+	x1(two_roots &&  mask) = -Float_v(0.5) * (b + math::Sqrt(delta))/a;
+	x2(two_roots && !mask) = -Float_v(0.5) * (b - math::Sqrt(delta))/a;
 
 	x2(two_roots &&  mask) = c/(a*x1);
 	x1(two_roots && !mask) = c/(a*x2);
@@ -72,20 +74,20 @@ void quadsolve_vc(typename Backend::Float_v const &a,
 	if (one_root.isEmpty())
 		return;
 
-	roots(one_root) = 1;
+	roots(one_root) = Int_v(1);
 	x1(one_root) = Float_v(-0.5) * b/a;
 	x2(one_root) = Float_v(-0.5) * b/a;
 }
 
 int main(int argc, char *argv[])
 {
-	float *a = (float*) _mm_malloc(N * sizeof(float), 64);
-	float *b = (float*) _mm_malloc(N * sizeof(float), 64);
-	float *c = (float*) _mm_malloc(N * sizeof(float), 64);
+	float *a = (float*) memalign(64, N * sizeof(float));
+	float *b = (float*) memalign(64, N * sizeof(float));
+	float *c = (float*) memalign(64, N * sizeof(float));
 
-	int *roots = (int*) _mm_malloc(N * sizeof(int), 64);
-	float *x1 = (float*) _mm_malloc(N * sizeof(float), 64);
-	float *x2 = (float*) _mm_malloc(N * sizeof(float), 64);
+	int *roots = (int*)  memalign(64, N * sizeof(int));
+	float *x1 = (float*) memalign(64, N * sizeof(float));
+	float *x2 = (float*) memalign(64, N * sizeof(float));
 
 	srand48(time(NULL));
 	int index = (int)((N - 100) * drand48());
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
 	// print random result to ensure scalar and vector backends give same result
 
 	for (int i = index; i < index+10; i++) {
-		printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", 
+		printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
 			i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 	}
 
@@ -116,19 +118,19 @@ int main(int argc, char *argv[])
 
 	timer.Start();
 
-	for (int i = 0; i < N; i+= Backend::Vector<float>::Float_v::Size) {
-		quadsolve_vc<Backend::Vector<float> >((Backend::Vector<float>::Float_v&)(a[i]), 
-  		                              (Backend::Vector<float>::Float_v&)(b[i]),
-					 	              (Backend::Vector<float>::Float_v&)(c[i]),
-						              (Backend::Vector<float>::Float_v&)(x1[i]), 
-						              (Backend::Vector<float>::Float_v&)(x2[i]),
-						              (Backend::Vector<float>::Int_v&)(roots[i]));
+	for (int i = 0; i < N; i+= backend::Vector<float>::Float_v::Size) {
+		quadsolve_vc<backend::Vector<float> >((backend::Vector<float>::Float_v&)(a[i]),
+                                              (backend::Vector<float>::Float_v&)(b[i]),
+                                              (backend::Vector<float>::Float_v&)(c[i]),
+                                              (backend::Vector<float>::Float_v&)(x1[i]),
+                                              (backend::Vector<float>::Float_v&)(x2[i]),
+                                              (backend::Vector<float>::Int_v&)(roots[i]));
 	}
 
 	t = timer.Elapsed();
 
 	for (int i = index; i < index+10; i++) {
-		printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", 
+		printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
 			i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 	}
 

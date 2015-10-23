@@ -45,19 +45,19 @@ void backend_syntax_example()
 int main(int argc, char *argv[])
 {
     printf("Scalar Backend (float):\n\n");
-    backend_syntax_example<VecCore::Backend::Scalar<float>>();
+    backend_syntax_example<veccore::backend::Scalar<float>>();
     printf("\n\n");
 
     printf("Scalar Backend (double):\n\n");
-    backend_syntax_example<VecCore::Backend::Scalar<double>>();
+    backend_syntax_example<veccore::backend::Scalar<double>>();
     printf("\n\n");
 
     printf("Vector Backend (float):\n\n");
-    backend_syntax_example<VecCore::Backend::Vector<float>>();
+    backend_syntax_example<veccore::backend::Vector<float>>();
     printf("\n\n");
 
     printf("Vector Backend (double):\n\n");
-    backend_syntax_example<VecCore::Backend::Vector<double>>();
+    backend_syntax_example<veccore::backend::Vector<double>>();
 
     return 0;
 }
