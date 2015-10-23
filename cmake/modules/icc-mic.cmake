@@ -1,5 +1,0 @@
-set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -DDEBUG -fp-model precise -w1")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O3   -DNDEBUG -fp-model fast -fma")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DDEBUG -fp-model fast -fma")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -mmic -restrict")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-intel")
