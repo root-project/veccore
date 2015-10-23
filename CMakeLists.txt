@@ -14,7 +14,8 @@ set(VECCORE_VERSION_MAJOR 0)
 set(VECCORE_VERSION_MINOR 1)
 set(VECCORE_VERSION_PATCH 0)
 
-set(VECCORE_VERSION ${VECCORE_VERSION_MAJOR}.${VECCORE_VERSION_MINOR}.${VECCORE_VERSION_PATCH})
+set(VECCORE_VERSION
+    "${VECCORE_VERSION_MAJOR}.${VECCORE_VERSION_MINOR}.${VECCORE_VERSION_PATCH}")
 
 option(CUDA "Enable support for CUDA.")
 option(EXAMPLES "Enable installation of code examples.")
@@ -27,42 +28,17 @@ cmake_dependent_option(OFFLOAD "Enable Xeon Phi offload support." ON "MIC" OFF)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Specifies the build type." FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo")
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo)
 endif()
 
-set(TARGET_ISA "native" CACHE STRING "Selects target instruction set architecture to support.")
-set_property(CACHE TARGET_ISA PROPERTY STRINGS native sse sse2 sse3 ssse3 sse41 sse42 avx avx2 avx512)
+include(CompilerSetup)
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    include (GCC)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    include (Clang)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
-    include (Intel)
-else()
-    message(WARNING "Unsupported compiler")
+if (NOT SIMD)
+    set(VECCORE_DISABLE_SIMD True)
 endif()
 
-if (CUDA)
-    find_package(CUDA REQUIRED)
-    set(VECCORE_ENABLE_CUDA)
-endif()
-
-if (SIMD)
-    find_package(Vc REQUIRED)
-else()
-    set(VECCORE_DISABLE_SIMD)
-endif()
-
-if (MIC)
-    set(VECCORE_ENABLE_MIC)
-    if (OFFLOAD)
-        set(VECCORE_ENABLE_OFFLOAD)
-    endif()
-endif()
-
-configure_file(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}.in
-    "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}")
+configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
+    "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/Config.h")
 file(COPY include/${PROJECT_NAME} DESTINATION ${PROJECT_BINARY_DIR}/include)
 
 include_directories(${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
