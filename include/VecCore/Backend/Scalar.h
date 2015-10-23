@@ -1,19 +1,14 @@
-#ifndef VECCORE_SCALAR_BACKEND_H
-#define VECCORE_SCALAR_BACKEND_H
+#ifndef VECCORE_BACKEND_SCALAR_H
+#define VECCORE_BACKEND_SCALAR_H
 
 #include <cassert>
-#include <cmath>
 #include <cstdint>
 
-#ifdef __APPLE__
-#define sincos(x) __sincos(x)
-#define sincosf(x) __sincosf(x)
-#endif
+namespace veccore {
+namespace backend {
 
-namespace VecCore {
-namespace Backend {
-
-template <typename FloatT = float, bool EExit = true> class Scalar {
+template <typename FloatT = float, bool EReturns = true>
+class Scalar {
 private:
   // auxiliary classes declared private, so they are not exposed
 
@@ -131,13 +126,14 @@ private:
   };
 
 public:
-  static const bool EarlyExit = EExit;
+  static const bool EarlyReturns = EReturns;
 
   // floating point types
 
+  typedef bool Bool_t;
   typedef FloatT Real_t;
-  typedef float_t Float_t;
-  typedef double_t Double_t;
+  typedef float Float_t;
+  typedef double Double_t;
 
   typedef ScalarWrapper<Real_t> Real_v;
   typedef ScalarWrapper<Float_t> Float_v;
@@ -166,15 +162,7 @@ public:
   typedef ScalarWrapper<UInt64_t> UInt64_v;
 };
 
-#if defined(VECCORE_ENABLE_CUDA)
-/* CUDABackend is simply a scalar backend that cannot use early returns */
-#include <core/cuda.h>
-
-template <typename T> using CUDA = Scalar<T, false>;
-
-#endif
-
-}
-}
+} // namespace backend
+} // namespace veccore
 
 #endif

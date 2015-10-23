@@ -1,12 +1,12 @@
-#ifndef VECCORE_VC_BACKEND_H
-#define VECCORE_VC_BACKEND_H
+#ifndef VECCORE_BACKEND_VC_H
+#define VECCORE_BACKEND_VC_H
 
-#include <cmath>
 #include <cstdint>
+
 #include <Vc/Vc>
 
-namespace VecCore {
-namespace Backend {
+namespace veccore {
+namespace backend {
 
 template <typename FloatT = double>
 class Vector {
@@ -15,6 +15,7 @@ class Vector {
 
     // floating point types
 
+    typedef bool                 Bool_t;
     typedef FloatT               Real_t;
     typedef float_t              Float_t;
     typedef double_t             Double_t;

@@ -1,25 +1,25 @@
-#ifndef VECCORE_VECTOR_BACKEND_H
-#define VECCORE_VECTOR_BACKEND_H
+#ifndef VECCORE_BACKEND_VECTOR_H
+#define VECCORE_BACKEND_VECTOR_H
 
-#include "core/simd.h"
+#include "SIMD.h"
 
 #ifdef VECCORE_ENABLE_SIMD
 
 // default to Vc backend
 
-#include "backend/vc.h"
+#include "Backend/Vc.h"
 
 #else
 
 // fallback to scalar backend if SIMD is disabled
 
-#include "backend/scalar.h"
+#include "Backend/Scalar.h"
 
-namespace VecCore { namespace Backend {
-
+namespace veccore {
+namespace backend {
 template <typename T> using Vector = Scalar<T, true>;
-
-} }
+} // namespace backend
+} // namespace veccore
 
 #endif
 #endif
