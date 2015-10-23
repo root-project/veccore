@@ -6,32 +6,31 @@
 #include "Quaternion.h"
 #include "Matrix3x3.h"
 
-namespace VecCore {
-namespace Math {
+namespace veccore {
 
 template <typename T, template <typename> class Rotation>
-class Transform {
+class Transform3D {
 private:
   Point3D<T> fOrigin;
   Rotation<T> fRotation;
   T fScaling;
 
 public:
-  Transform()
+  Transform3D()
     : fOrigin(Point3D<T>(T(0.0), T(0.0), T(0.0))),
       fRotation(Rotation<T>::Identity()),
       fScaling(T(1.0)) {}
 
-  Transform(const Point3D<T>& x, const Rotation<T>& R)
+  Transform3D(const Point3D<T>& x, const Rotation<T>& R)
     : fOrigin(x), fRotation(R), fScaling(T(1.0)) {}
 
-  Transform(const Point3D<T>& x, const Rotation<T>& R, const T s)
+  Transform3D(const Point3D<T>& x, const Rotation<T>& R, const T s)
     : fOrigin(x), fRotation(R), fScaling(s) {}
 
-  Transform(const Transform& t)
+  Transform3D(const Transform3D& t)
     : fOrigin(t.fOrigin), fRotation(t.fRotation), fScaling(t.fScaling) {}
 
-  Transform& operator=(const Transform& t)
+  Transform3D& operator=(const Transform3D& t)
   {
     fOrigin = t.fOrigin;
     fRotation = t.fRotation;
@@ -72,14 +71,13 @@ public:
 };
 
 template <typename T, template <typename> class Rotation>
-Transform<T, Rotation> Inverse(const Transform<T, Rotation>& t)
+Transform3D<T, Rotation> Inverse(const Transform3D<T, Rotation>& t)
 {
   T s = T(1.0)/t.GetScaling();
   Rotation<T> InvR = Inverse(t.GetRotation());
-  return Transform<T, Rotation>(-(InvR * (s * t.GetOrigin())), InvR, s);
+  return Transform3D<T, Rotation>(-(InvR * (s * t.GetOrigin())), InvR, s);
 }
 
-} // namespace Math
-} // namespace VecCore
+} // namespace veccore
 
 #endif
