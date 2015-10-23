@@ -1,0 +1,15 @@
+#ifndef __VECCORE_INCLUDED
+#define __VECCORE_INCLUDED
+
+#include "Config.h"
+#include "Common.h"
+#include "Backend.h"
+#include "Math.h"
+
+#include "Point3D.h"
+#include "Vector3D.h"
+#include "Quaternion.h"
+#include "Matrix3x3.h"
+#include "Transform3D.h"
+
+#endif
