@@ -4,7 +4,7 @@
 
 #include <VecCore>
 
-using namespace VecCore::Math;
+using namespace veccore;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
@@ -65,13 +65,13 @@ template <class Backend> void test() {
 
   Real_t scaling = 0.25;
 
-  Transform<Real_t, Quaternion> T(origin, orientation, scaling);
-  Transform<Real_t, Quaternion> invT = Inverse(T);
+  Transform3D<Real_t, Quaternion> T(origin, orientation, scaling);
+  Transform3D<Real_t, Quaternion> invT = Inverse(T);
 
   Point3D<Real_t>  test_p = px + py + pz;
   Vector3D<Real_t> test_v = vx + vy + vz;
 
-  printf("\nTransform: origin = (%f, %f, %f),\n"
+  printf("\nTransform3D: origin = (%f, %f, %f),\n"
          "            axis  = (%f, %f, %f),\n"
 		 "            angle = %f, scaling = %f\n\n",
 	origin[0], origin[1], origin[2], axis[0], axis[1], axis[2], angle, scaling);
@@ -101,9 +101,9 @@ template <class Backend> void test() {
 
 int main(int argc, char *argv[]) {
   printf("\ntest (float):\n\n");
-  test<VecCore::Backend::Scalar<float> >();
+  test<veccore::backend::Scalar<float> >();
 
   printf("\ntest (double):\n\n");
-  test<VecCore::Backend::Scalar<double> >();
+  test<veccore::backend::Scalar<double> >();
   return 0;
 }

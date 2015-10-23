@@ -1,5 +1,5 @@
 //
-// Transform test
+// Transform3D test
 //
 
 #undef NDEBUG
@@ -11,7 +11,7 @@
 
 #include <VecCore>
 
-using namespace VecCore::Math;
+using namespace veccore;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
@@ -60,14 +60,14 @@ template <class Backend> void test() {
 
   // create a coordinate transformation using a matrix
 
-  Transform<Real_t, Matrix3x3> Tm(origin, orientation, scaling);
+  Transform3D<Real_t, Matrix3x3> Tm(origin, orientation, scaling);
 
   // create a coordinate transformation using a quaternion
 
-  Transform<Real_t, Quaternion> Tq(origin, orientation, scaling);
+  Transform3D<Real_t, Quaternion> Tq(origin, orientation, scaling);
 
-  Transform<Real_t, Matrix3x3> invTm = Inverse(Tm);
-  Transform<Real_t, Quaternion> invTq = Inverse(Tq);
+  Transform3D<Real_t, Matrix3x3> invTm = Inverse(Tm);
+  Transform3D<Real_t, Quaternion> invTq = Inverse(Tq);
 
   Point3D<Real_t>  test_p = px + py + pz;
   Vector3D<Real_t> test_v = vx + vy + vz;
@@ -78,11 +78,11 @@ template <class Backend> void test() {
   Quaternion<Real_v> orientation_v(vz_v, Real_v(angle));
   Real_v scaling_v = Real_v(0.5);
 
-  Transform<Real_v, Matrix3x3> Tm_v(origin_v, orientation_v, scaling_v);
-  Transform<Real_v, Quaternion> Tq_v(origin_v, orientation_v, scaling_v); 
+  Transform3D<Real_v, Matrix3x3> Tm_v(origin_v, orientation_v, scaling_v);
+  Transform3D<Real_v, Quaternion> Tq_v(origin_v, orientation_v, scaling_v); 
 
-  Transform<Real_v, Matrix3x3> invTm_v = Inverse(Tm_v);
-  Transform<Real_v, Quaternion> invTq_v = Inverse(Tq_v);
+  Transform3D<Real_v, Matrix3x3> invTm_v = Inverse(Tm_v);
+  Transform3D<Real_v, Quaternion> invTq_v = Inverse(Tq_v);
 
   // test that forward and inverse transformations work
 
@@ -104,16 +104,16 @@ template <class Backend> void test() {
 
 void test_all() {
   printf("test (scalar, float):\n");
-  test<VecCore::Backend::Scalar<float>>();
+  test<veccore::backend::Scalar<float>>();
   printf("\n");
   printf("test (scalar, double):\n");
-  test<VecCore::Backend::Scalar<double>>();
+  test<veccore::backend::Scalar<double>>();
   printf("\n");
   printf("test (vector, float):\n");
-  test<VecCore::Backend::Vector<float>>();
+  test<veccore::backend::Vector<float>>();
   printf("\n");
   printf("test (vector, double):\n");
-  test<VecCore::Backend::Vector<double>>();
+  test<veccore::backend::Vector<double>>();
 }
 
 int main(int argc, char *argv[]) {

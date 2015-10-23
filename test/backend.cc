@@ -61,22 +61,22 @@ int main(int argc, char *argv[])
 {
 
     printf("Scalar Backend Test (float):\n\n");
-    test_backend<VecCore::Backend::Scalar<float>>();
+    test_backend<veccore::backend::Scalar<float>>();
 
     printf("\n\n");
 
     printf("Scalar Backend Test (double):\n\n");
-    test_backend<VecCore::Backend::Scalar<double>>();
+    test_backend<veccore::backend::Scalar<double>>();
 
     printf("\n\n");
 
     printf("Vector Backend Test (float):\n\n");
-    test_backend<VecCore::Backend::Vector<float>>();
+    test_backend<veccore::backend::Vector<float>>();
 
     printf("\n\n");
 
     printf("Vector Backend Test (double):\n\n");
-    test_backend<VecCore::Backend::Vector<double>>();
+    test_backend<veccore::backend::Vector<double>>();
 
     return 0;
 }
