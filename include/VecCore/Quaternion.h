@@ -3,8 +3,7 @@
 
 #include "Vector3D.h"
 
-namespace VecCore {
-namespace Math {
+namespace veccore {
 
 template <typename T> class Quaternion {
 private:
@@ -278,7 +277,6 @@ Quaternion<T>& operator^=(Quaternion<T>& q1, const Quaternion<T>& q2)
   return q1;
 }
 
-} // namespace Math
-} // namespace VecCore
+} // namespace veccore
 
 #endif

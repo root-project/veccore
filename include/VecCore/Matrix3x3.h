@@ -4,8 +4,7 @@
 #include "Vector3D.h"
 #include "Quaternion.h"
 
-namespace VecCore {
-namespace Math {
+namespace veccore {
 
 template <typename T> class Matrix3x3 {
 private:
@@ -231,7 +230,6 @@ Matrix3x3<T> Inverse(const Matrix3x3<T>& M)
                                       M[0][0]*M[1][1] - M[0][1]*M[1][0]);
 }
 
-} // namespace Math
-} // namespace VecCore
+} // namespace veccore
 
 #endif

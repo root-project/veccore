@@ -3,8 +3,7 @@
 
 #include "Vector3D.h"
 
-namespace VecCore {
-namespace Math {
+namespace veccore {
 
 template <typename T> class Point3D {
 public:
@@ -243,7 +242,6 @@ T Norm(const Point3D<T>& p)
   }
 }
 
-}
 }
 
 #endif
