@@ -78,6 +78,7 @@ public:
   T Det() const;
   Matrix3x3 Transpose() const;
   Matrix3x3 Inverse() const;
+  void Compose(const Matrix3x3& M) { *this *= M; }
 };
 
 template <typename T>
@@ -194,7 +195,13 @@ Matrix3x3<T> operator*(const Matrix3x3<T>& A, const Matrix3x3<T>& B)
 }
 
 template <typename T>
-Matrix3x3<T>& operator*=(const Matrix3x3<T>& A, const Matrix3x3<T>& B)
+Matrix3x3<T> Compose(const Matrix3x3<T>& A, const Matrix3x3<T>& B)
+{
+	return A * B;
+}
+
+template <typename T>
+Matrix3x3<T>& operator*=(Matrix3x3<T>& A, const Matrix3x3<T>& B)
 {
   A = A * B;
   return A;

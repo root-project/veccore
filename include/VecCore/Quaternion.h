@@ -105,6 +105,8 @@ public:
   }
 
   static Quaternion Identity() { return Quaternion(T(0.0), T(0.0), T(0.0), T(1.0)); }
+
+  void Compose(const Quaternion& q) { *this ^= q; }
 };
 
 template <typename T>
@@ -250,7 +252,7 @@ template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
 Point3D<T> operator *(const Quaternion<T> &q, const Point3D<T> &p)
 {
-  Quaternion<T> result = q ^ Quaternion<T>(p) ^ (~q);
+  Quaternion<T> result = Cross(q, Cross(Quaternion<T>(p), ~q));
   return Point3D<T>(result[0], result[1], result[2]);
 }
 
@@ -265,6 +267,13 @@ Vector3D<T> operator *(const Quaternion<T> &q, const Vector3D<T> &v)
 template <typename T>
 VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
 Quaternion<T> operator ^(const Quaternion<T> &q1, const Quaternion<T> &q2)
+{
+  return Cross(q1, q2);
+}
+
+template <typename T>
+VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
+Quaternion<T> Compose(const Quaternion<T> &q1, const Quaternion<T> &q2)
 {
   return Cross(q1, q2);
 }
