@@ -8,7 +8,7 @@
 #include <VecCore>
 #include "Timer.h"
 
-using namespace veccore;
+using namespace vecCore;
 
 static const int N = (8 * 1024 * 1024);
 

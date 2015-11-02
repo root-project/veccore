@@ -11,7 +11,7 @@
 
 #include <VecCore>
 
-using namespace veccore;
+using namespace vecCore;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
@@ -104,16 +104,16 @@ template <class Backend> void test() {
 
 void test_all() {
   printf("test (scalar, float):\n");
-  test<veccore::backend::Scalar<float>>();
+  test<vecCore::backend::Scalar<float>>();
   printf("\n");
   printf("test (scalar, double):\n");
-  test<veccore::backend::Scalar<double>>();
+  test<vecCore::backend::Scalar<double>>();
   printf("\n");
   printf("test (vector, float):\n");
-  test<veccore::backend::Vector<float>>();
+  test<vecCore::backend::Vector<float>>();
   printf("\n");
   printf("test (vector, double):\n");
-  test<veccore::backend::Vector<double>>();
+  test<vecCore::backend::Vector<double>>();
 }
 
 int main(int argc, char *argv[]) {

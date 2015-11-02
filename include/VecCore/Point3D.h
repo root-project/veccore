@@ -3,7 +3,7 @@
 
 #include "Vector3D.h"
 
-namespace veccore {
+namespace vecCore {
 
 template <typename T> class Point3D {
 public:

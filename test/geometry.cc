@@ -4,7 +4,7 @@
 
 #include <VecCore>
 
-using namespace veccore;
+using namespace vecCore;
 
 template <class Backend> void test() {
   typedef typename Backend::Real_t Real_t;
@@ -101,9 +101,9 @@ template <class Backend> void test() {
 
 int main(int argc, char *argv[]) {
   printf("\ntest (float):\n\n");
-  test<veccore::backend::Scalar<float> >();
+  test<vecCore::backend::Scalar<float> >();
 
   printf("\ntest (double):\n\n");
-  test<veccore::backend::Scalar<double> >();
+  test<vecCore::backend::Scalar<double> >();
   return 0;
 }

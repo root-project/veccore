@@ -5,11 +5,11 @@
 
 #include "Backend/Scalar.h"
 
-namespace veccore {
+namespace vecCore {
 namespace backend {
 template <typename T> using CUDA = Scalar<T, false>;
 } // namespace backend
-} // namespace veccore
+} // namespace vecCore
 
 #endif
 #endif

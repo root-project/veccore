@@ -4,7 +4,7 @@
 #include <VecCore>
 #include <Timer.h>
 
-using namespace veccore;
+using namespace vecCore;
 
 // performance benchmark: matrix vs quaternion transformations
 

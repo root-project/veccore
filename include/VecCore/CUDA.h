@@ -41,7 +41,7 @@
 #        define VECCORE_DECLARE_CUDA(T) T; namespace cuda { T; }
 
 #        define VECCORE_DECLARE_CUDA_TYPE(T)                                   \
-             namespace veccore {                                               \
+             namespace vecCore {                                               \
                  template <> struct cuda_t<T> {                                \
                          using value_type = cuda::T;                           \
                      };                                                        \
@@ -55,13 +55,13 @@
 
 #        define VECCORE_DECLARE_CUDA_TEMPLATE(x, arg_t)                        \
              VECCORE_DECLARE_CUDA(template <arg_t arg> class x)                \
-             namespace veccore {                                               \
+             namespace vecCore {                                               \
                  template <arg_t arg> struct cuda_t< x<arg> > {                \
                      using value_type = cuda::x< cuda_t<arg> >;                \
                  };                                                            \
              }                                                                 \
 
-         namespace veccore {
+         namespace vecCore {
              template <typename T> struct cuda_t;
 
              template <> struct cuda_t<float>    { using type = float;    };

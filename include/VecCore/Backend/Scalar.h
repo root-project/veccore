@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cstdint>
 
-namespace veccore {
+namespace vecCore {
 namespace backend {
 
 template <typename FloatT = float, bool EReturns = true>
@@ -163,6 +163,6 @@ public:
 };
 
 } // namespace backend
-} // namespace veccore
+} // namespace vecCore
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-namespace veccore {
+namespace vecCore {
 
 using namespace std;
 
@@ -262,6 +262,6 @@ T Norm(const Vector3D<T>& v)
   }
 }
 
-} // namespace veccore
+} // namespace vecCore
 
 #endif

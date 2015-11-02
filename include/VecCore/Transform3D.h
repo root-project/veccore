@@ -6,7 +6,7 @@
 #include "Quaternion.h"
 #include "Matrix3x3.h"
 
-namespace veccore {
+namespace vecCore {
 
 template <typename T, template <typename> class Rotation>
 class Transform3D {
@@ -78,6 +78,6 @@ Transform3D<T, Rotation> Inverse(const Transform3D<T, Rotation>& t)
   return Transform3D<T, Rotation>(-(InvR * (s * t.GetOrigin())), InvR, s);
 }
 
-} // namespace veccore
+} // namespace vecCore
 
 #endif

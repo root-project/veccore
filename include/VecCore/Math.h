@@ -10,7 +10,7 @@
 #define sincosf(x) __sincosf(x)
 #endif
 
-namespace veccore {
+namespace vecCore {
 namespace math {
 
 // Abs, Min, Max, Sign
@@ -125,6 +125,6 @@ T Clamp(const T& x, const T& xmin, const T& xmax)
 }
 
 } // namespace math
-} // namespace veccore
+} // namespace vecCore
 
 #endif

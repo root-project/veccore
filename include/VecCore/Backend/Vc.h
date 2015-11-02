@@ -5,7 +5,7 @@
 
 #include <Vc/Vc>
 
-namespace veccore {
+namespace vecCore {
 namespace backend {
 
 template <typename FloatT = double>

@@ -15,11 +15,11 @@
 
 #include "Backend/Scalar.h"
 
-namespace veccore {
+namespace vecCore {
 namespace backend {
 template <typename T> using Vector = Scalar<T, true>;
 } // namespace backend
-} // namespace veccore
+} // namespace vecCore
 
 #endif
 #endif
