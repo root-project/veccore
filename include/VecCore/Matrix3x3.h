@@ -57,6 +57,8 @@ public:
     fData[2][0] =  2*(xz-wy);  fData[2][1] =  2*(yz+wx);  fData[2][2] = 1-2*(x2+y2);
   }
 
+  Matrix3x3(const Vector3D<T>& axis, const T angle) : Matrix3x3(Quaternion<T>(axis, angle)) { }
+
   Vector3D<T>       & operator[](int i)       { return (Vector3D<T>&)(fData[i]); }
   Vector3D<T> const & operator[](int i) const { return (Vector3D<T>&)(fData[i]); }
 
