@@ -15,7 +15,7 @@ void transformation_benchmark() {
 	const Real_t L = 1.0;
 
 	// generate random points
-	
+
 	std::vector<Point3D<Real_t> > points;
 
 	srand48(1); // use the same seed
@@ -31,7 +31,7 @@ void transformation_benchmark() {
 	}
 
 	// transform all points with the transformation
-	
+
 	Point3D<Real_t> origin;
 	Vector3D<Real_t> axis;
 	Real_t angle;
@@ -53,7 +53,7 @@ void transformation_benchmark() {
 	Timer<microseconds> timer;
 
 	timer.Start();
-	
+
 	for (int i = 0; i < 1024*1024; i++) {
 		origin = origin + T(points[i]);
 	}
@@ -65,11 +65,20 @@ void transformation_benchmark() {
 
 int main(int argc, char *argv[])
 {
+	printf("Single precision:\n\n");
+
+	printf("Matrix3x3:  ");
+	transformation_benchmark<backend::Scalar<float>, Matrix3x3>();
+
+	printf("Quaternion: ");
+	transformation_benchmark<backend::Scalar<float>, Quaternion>();
+
+	printf("Double precision:\n\n");
+
 	printf("Matrix3x3:  ");
 	transformation_benchmark<backend::Scalar<double>, Matrix3x3>();
 
 	printf("Quaternion: ");
 	transformation_benchmark<backend::Scalar<double>, Quaternion>();
-
 	return 0;
 }
