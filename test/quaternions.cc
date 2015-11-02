@@ -1,10 +1,13 @@
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 
 #include <VecCore>
 #include <Timer.h>
 
 using namespace vecCore;
+
+const int N = 1024*1024;
 
 // performance benchmark: matrix vs quaternion transformations
 
@@ -20,7 +23,7 @@ void transformation_benchmark() {
 
 	srand48(1); // use the same seed
 
-	for (int i = 0; i < 1024*1024; i++) {
+	for (int i = 0; i < N; i++) {
 		Real_t x, y, z;
 
 		x = (Real_t) (L * (drand48() - 0.5));
@@ -50,11 +53,20 @@ void transformation_benchmark() {
 
 	Transform3D<Real_t, Rotation> T(origin, Quaternion<Real_t>(axis, angle));
 
+	/* warm up cache */
+	Point3D<Real_t> p(0,0,0);
+
+	for (int j = 0; j < 1024; j++) {
+		for (int i = 0; i < N; i++) {
+			p = p + T(points[i]);
+		}
+	}
+
 	Timer<microseconds> timer;
 
 	timer.Start();
 
-	for (int i = 0; i < 1024*1024; i++) {
+	for (int i = 0; i < N; i++) {
 		origin = origin + T(points[i]);
 	}
 
