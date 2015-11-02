@@ -58,7 +58,7 @@ public:
   T Norm2() const { return Dot(*this, *this); }
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
-  void Normalize() { *this *= (1. / Norm()); }
+  void Normalize() { *this *= static_cast<T>(1. / Norm()); }
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   Vector3D Normalized() const { return Vector3D(*this) * (1. / Norm()); }
@@ -144,7 +144,7 @@ Vector3D<T> operator-(Vector3D<T> const &v)
                                                                                \
   template <typename T>                                                        \
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE                                \
-  Vector3D<T> operator OP(const Vector3D<T> &v, const T &s)                    \
+  Vector3D<T> operator OP(const Vector3D<T> &v, const T s)                     \
   {                                                                            \
     return Vector3D<T>(v[0] OP s, v[1] OP s, v[2] OP s);                       \
   }                                                                            \
@@ -152,7 +152,7 @@ Vector3D<T> operator-(Vector3D<T> const &v)
 #define VECTOR3D_SCALAR_COMPOUND_ASSIGNMENT_OPERATOR(OP)                       \
   template <typename T>                                                        \
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE                                \
-  Vector3D<T> &operator OP(Vector3D<T> &v, const T &s)                         \
+  Vector3D<T> &operator OP(Vector3D<T> &v, const T s)                          \
   {                                                                            \
     v[0] OP s; v[1] OP s; v[2] OP s;                                           \
     return v;                                                                  \
