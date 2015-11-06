@@ -7,6 +7,8 @@
 
 using namespace vecCore;
 
+const int N = 100000000;
+
 // performance benchmark: matrix vs quaternion transformations
 
 template <class Backend, template <typename> class Rotation>
@@ -21,7 +23,7 @@ void transformation_benchmark() {
 
 	srand48(1); // use the same seed
 
-	for (int i = 0; i < 1024*1024; i++) {
+	for (int i = 0; i < N; i++) {
 		Real_t x, y, z, w, s;
 
 		x = (Real_t) (L * (drand48() - 0.5));
@@ -45,7 +47,7 @@ void transformation_benchmark() {
 
 	timer.Start();
 
-	for (int i = 0; i < 1024*1024; i++) {
+	for (int i = 0; i < N; i++) {
 		R0.Compose(R[i]);
 	}
 
@@ -61,10 +63,10 @@ void transformation_benchmark() {
 int main(int argc, char *argv[])
 {
 	printf("Matrix3x3:  ");
-	transformation_benchmark<backend::Scalar<double>, Matrix3x3>();
+	transformation_benchmark<backend::Scalar<float>, Matrix3x3>();
 
 	printf("Quaternion: ");
-	transformation_benchmark<backend::Scalar<double>, Quaternion>();
+	transformation_benchmark<backend::Scalar<float>, Quaternion>();
 
 	return 0;
 }
