@@ -21,8 +21,8 @@ void test_backend()
     assert( m_true.isFull()  == true);
     assert(m_false.isEmpty() == true);
 
-    printf("Real_v::Size       == %d\n\n", Real_v::Size);
-    printf("Real_v::Mask::Size == %d\n\n", Real_v::Size);
+    printf("Real_v::Size       == %d\n\n", (int) Real_v::Size);
+    printf("Real_v::Mask::Size == %d\n\n", (int) Real_v::Size);
 
     Real_v x(0.0), y(3.0), z(2.0);
 
@@ -32,29 +32,29 @@ void test_backend()
     Real_t *xptr = (Real_t*)(&x);
     Mask_t mask = x > Real_v(Real_v::Size/2.0);
 
-    for (int i = 0; i < Real_v::Size; i++)
-	    printf("x[%d] = %.1f, x[i] > %d == %s\n",
-	        i, xptr[i], Real_v::Size/2, mask[i] ? "true" : "false");
+    for (size_t i = 0; i < Real_v::Size; i++)
+	    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
+	        i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
 
-    for (int i = 0; i < Real_v::Size; i++)
+    for (size_t i = 0; i < Real_v::Size; i++)
 	    x[i] = i;
 
     mask = x > Real_v(Real_v::Size/2.0);
 
-    for (int i = 0; i < Real_v::Size; i++)
-	    printf("x[%d] = %.1f, x[i] > %d == %s\n",
-	        i, xptr[i], Real_v::Size/2, mask[i] ? "true" : "false");
+    for (size_t i = 0; i < Real_v::Size; i++)
+	    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
+	        i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
 
     printf("\n");
 
-    for (int i = 0; i < Real_v::Size; i++)
+    for (size_t i = 0; i < Real_v::Size; i++)
 	    x[i] = Real_v::Size - i;
 
     mask = x > Real_v(Real_v::Size/2.0);
 
-    for (int i = 0; i < Real_v::Size; i++)
-	    printf("x[%d] = %.1f, x[i] > %d == %s\n",
-	        i, xptr[i], Real_v::Size/2, mask[i] ? "true" : "false");
+    for (size_t i = 0; i < Real_v::Size; i++)
+	    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
+	        i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
 }
 
 int main(int argc, char *argv[])
