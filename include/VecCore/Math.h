@@ -15,12 +15,13 @@ namespace math {
 
 // Abs, Min, Max, Sign
 
-template <typename T> T Abs(T x) { return std::abs(x); }
+template <typename T> VECCORE_FORCE_INLINE T Abs(T x) { return std::abs(x); }
 
-template <typename T> constexpr T Min(T a, T b) { return a < b ? a : b; }
-template <typename T> constexpr T Max(T a, T b) { return a > b ? a : b; }
-template <typename T> constexpr T Min(T a, T b, T c) { return a < b ? Min(a, c) : Min(b, c); }
-template <typename T> constexpr T Max(T a, T b, T c) { return a > b ? Max(a, c) : Max(b, c); }
+template <class T> VECCORE_FORCE_INLINE T Min(T a, T b) { return Blend(a < b, a, b); }
+template <class T> VECCORE_FORCE_INLINE T Max(T a, T b) { return Blend(a > b, a, b); }
+
+template <typename T> T Min(T a, T b, T c) { return Min(a, Min(b,c)); }
+template <typename T> T Max(T a, T b, T c) { return Max(a, Max(b,c)); }
 
 template <typename T> void SetMin(T& a, const T& b) { if (a > b) a = b; }
 template <typename T> void SetMax(T& a, const T& b) { if (a < b) a = b; }
