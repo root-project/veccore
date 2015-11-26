@@ -89,17 +89,14 @@ template <class Backend> void test() {
   Point3D<Real_v>  test_v_p = px_v + py_v + pz_v;
   Vector3D<Real_v> test_v_v = vx_v + vy_v + vz_v;
 
-  assert(Norm(invTm(Tm(test_p)) - test_p) < Real_t(1.0e-3));
-  assert(Norm(invTm(Tm(test_v)) - test_v) < Real_t(1.0e-3));
-                                              
-  assert(Norm(invTq(Tq(test_p)) - test_p) < Real_t(1.0e-3));
-  assert(Norm(invTq(Tq(test_v)) - test_v) < Real_t(1.0e-3));
-                                              
-  assert(Norm(invTm_v(Tm_v(test_v_p)) - test_v_p) < Real_v(1.0e-3));
-  assert(Norm(invTm_v(Tm_v(test_v_v)) - test_v_v) < Real_v(1.0e-3));
-                                              
-  assert(Norm(invTq_v(Tq_v(test_v_p)) - test_v_p) < Real_v(1.0e-3));
-  assert(Norm(invTq_v(Tq_v(test_v_v)) - test_v_v) < Real_v(1.0e-3));
+  assert(IsFull(Norm(invTm(Tm(test_p)) - test_p) < Real_t(1.0e-3)));
+  assert(IsFull(Norm(invTm(Tm(test_v)) - test_v) < Real_t(1.0e-3)));
+  assert(IsFull(Norm(invTq(Tq(test_p)) - test_p) < Real_t(1.0e-3)));
+  assert(IsFull(Norm(invTq(Tq(test_v)) - test_v) < Real_t(1.0e-3)));
+  assert(IsFull(Norm(invTm_v(Tm_v(test_v_p)) - test_v_p) < Real_v(1.0e-3)));
+  assert(IsFull(Norm(invTm_v(Tm_v(test_v_v)) - test_v_v) < Real_v(1.0e-3)));
+  assert(IsFull(Norm(invTq_v(Tq_v(test_v_p)) - test_v_p) < Real_v(1.0e-3)));
+  assert(IsFull(Norm(invTq_v(Tq_v(test_v_v)) - test_v_v) < Real_v(1.0e-3)));
 }
 
 void test_all() {
