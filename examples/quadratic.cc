@@ -49,34 +49,36 @@ void quadsolve_vc(typename Backend::Float_v const &a,
                   typename Backend::Float_v &x2,
                   typename Backend::Int_v &roots)
 {
-	typedef typename Backend::Int_v         Int_v;
-	typedef typename Backend::Float_t       Float_t;
-	typedef typename Backend::Float_v       Float_v;
-	typedef typename Backend::Float_v::Mask Mask_t;
+	using Int_v   = typename Backend::Int_v;
+	using Float_t = typename Backend::Float_t;
+	using Float_v = typename Backend::Float_v;
 
-	roots = Int_v(0);
+	roots = 0;
 	Float_v epsilon = Float_v(std::numeric_limits<Float_t>::epsilon());
 	Float_v delta = b*b - Float_v(4.0)*a*c;
 
-	Mask_t no_roots(delta < Float_v(0.0));
-	Mask_t two_roots(delta >= epsilon);
+	typename Float_v::Mask no_roots(delta < Float_v(0.0));
+	typename Float_v::Mask two_roots(delta >= epsilon);
 
-	roots(two_roots) = Int_v(2);
-	Mask_t mask = (b >= Float_v(0.0));
+	roots((typename Int_v::Mask)two_roots) = 2;
+
+	typename Float_v::Mask mask = (b >= Float_v(0.0));
+
 	x1(two_roots &&  mask) = -Float_v(0.5) * (b + math::Sqrt(delta))/a;
 	x2(two_roots && !mask) = -Float_v(0.5) * (b - math::Sqrt(delta))/a;
 
 	x2(two_roots &&  mask) = c/(a*x1);
 	x1(two_roots && !mask) = c/(a*x2);
 
-	Mask_t one_root = !(no_roots || two_roots);
+	typename Float_v::Mask one_root = !(no_roots || two_roots);
 
 	if (one_root.isEmpty())
 		return;
 
-	roots(one_root) = Int_v(1);
-	x1(one_root) = Float_v(-0.5) * b/a;
-	x2(one_root) = Float_v(-0.5) * b/a;
+	roots((typename Int_v::Mask)one_root) = 1;
+	Float_v root1 = Float_v(-0.5) * b/a;
+	x1(one_root) = root1;
+	x2(one_root) = root1;
 }
 
 int main(int argc, char *argv[])

@@ -16,11 +16,11 @@ void backend_syntax_example()
 
 	// Note: Masks and associated types have same size
 
-    printf("Real_v::Size == %d\n\n", Real_v::Size);
+    printf("Real_v::Size == %d\n\n", (int) Real_v::Size);
 
     Real_v x(0.0);
 
-    for (int i = 0; i < Real_v::Size; i++)
+    for (size_t i = 0; i < Real_v::Size; i++)
 	    x[i] = i;
 
     Mask_t mask = x >= Real_v(Real_v::Size/2.0);
@@ -29,17 +29,17 @@ void backend_syntax_example()
 
     Real_t *xptr = (Real_t*)(&x);
 
-    for (int i = 0; i < Real_v::Size; i++)
-	    printf("x[%d] = %.1f, mask[%d] = x[%i] >= %.2f == %s\n",
-	        i, xptr[i], i, i, Real_v::Size/2.0, mask[i] ? "true" : "false");
+    for (size_t i = 0; i < Real_v::Size; i++)
+	    printf("x[%lu] = %.1f, mask[%lu] = x[%lu] >= %.2f == %s\n",
+	        i, xptr[i], i, i, (int) Real_v::Size/2.0, mask[i] ? "true" : "false");
 
     printf("\nafter x(mask) = -1;\n\n");
 
 	x(mask) = Real_v(-1.0);
 
-    for (int i = 0; i < Real_v::Size; i++)
-	    printf("x[%d] = %.1f, mask[%d] = x[%i] >= %.2f == %s\n",
-	        i, xptr[i], i, i, Real_v::Size/2.0, mask[i] ? "true" : "false");
+    for (size_t i = 0; i < Real_v::Size; i++)
+	    printf("x[%lu] = %.1f, mask[%lu] = x[%lu] >= %.2f == %s\n",
+	        i, xptr[i], i, i, (int) Real_v::Size/2.0, mask[i] ? "true" : "false");
 }
 
 int main(int argc, char *argv[])
