@@ -96,16 +96,12 @@ public:
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   T Min() const {
-    T min = (fVec[1] < fVec[0]) ? fVec[1] : fVec[0];
-    min = (fVec[2] < min) ? fVec[2] : min;
-    return min;
+    return math::Min(fVec[0], fVec[1], fVec[2]);
   }
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
   T Max() const {
-    T max = (fVec[1] > fVec[0]) ? fVec[1] : fVec[0];
-    max = (fVec[2] > max) ? fVec[2] : max;
-    return max;
+    return math::Max(fVec[0], fVec[1], fVec[2]);
   }
 
   VECCORE_CUDA_HOST_DEVICE VECCORE_FORCE_INLINE
