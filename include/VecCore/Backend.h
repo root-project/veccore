@@ -5,9 +5,25 @@
 
 #include "Common.h"
 
+#include "Backend/Basic.h"
 #include "Backend/CUDA.h"
-#include "Backend/Scalar.h"
-#include "Backend/Vector.h"
+#include "Backend/VcScalar.h"
+#include "Backend/VcVector.h"
+
+// default backends
+
+namespace vecCore {
+namespace backend {
+#ifndef VECCORE_ENABLE_VC
+	using Scalar = Basic;
+	using Vector = Basic;
+#else
+	using Scalar = VcScalar;
+	using Vector = VcVector;
+#endif
+}
+
+}
 
 template <class T, class Mask>
 VECCORE_FORCE_INLINE
