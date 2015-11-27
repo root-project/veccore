@@ -3,11 +3,11 @@
 
 #if defined(VECCORE_ENABLE_CUDA)
 
-#include "Backend/Scalar.h"
+#include "Backend/Basic.h"
 
 namespace vecCore {
 namespace backend {
-template <typename T> using CUDA = Scalar<T, false>;
+template <typename T> using CUDA = Basic<T, false>;
 } // namespace backend
 } // namespace vecCore
 
