@@ -126,37 +126,42 @@ private:
   };
 
 public:
-  static const bool EarlyReturns = EReturns;
+  static constexpr bool EarlyReturns = EReturns;
 
-  // floating point types
+  typedef bool     Bool_t;
+  typedef FloatT   Real_t;
+  typedef float    Float_t;
+  typedef double   Double_t;
 
-  typedef bool Bool_t;
-  typedef FloatT Real_t;
-  typedef float Float_t;
-  typedef double Double_t;
+  template <typename T> IntFor;
+  template <> IntFor<float>  { typedef int32_t type; }
+  template <> IntFor<double> { typedef int64_t type; }
 
-  typedef ScalarWrapper<Real_t> Real_v;
-  typedef ScalarWrapper<Float_t> Float_v;
-  typedef ScalarWrapper<Double_t> Double_v;
+  template <typename T> UIntFor;
+  template <> UIntFor<float>  { typedef uint32_t type; }
+  template <> UIntFor<double> { typedef uint64_t type; }
 
-  // integer types
+  typedef typename IntFor<Real_t>::type  Int_t;
+  typedef typename UIntFor<Real_t>::type UInt_t;
 
-  typedef int Int_t;
-  typedef int16_t Int16_t;
-  typedef int32_t Int32_t;
-  typedef int64_t Int64_t;
+  typedef int16_t  Int16_t;
+  typedef int32_t  Int32_t;
+  typedef int64_t  Int64_t;
 
-  typedef ScalarWrapper<Int_t> Int_v;
-  typedef ScalarWrapper<Int16_t> Int16_v;
-  typedef ScalarWrapper<Int32_t> Int32_v;
-  typedef ScalarWrapper<Int64_t> Int64_v;
-
-  typedef unsigned int UInt_t;
   typedef uint16_t UInt16_t;
   typedef uint32_t UInt32_t;
   typedef uint64_t UInt64_t;
 
-  typedef ScalarWrapper<UInt_t> UInt_v;
+  typedef ScalarWrapper<Real_t>   Real_v;
+  typedef ScalarWrapper<Float_t>  Float_v;
+  typedef ScalarWrapper<Double_t> Double_v;
+
+  typedef ScalarWrapper<Int_t>    Int_v;
+  typedef ScalarWrapper<Int16_t>  Int16_v;
+  typedef ScalarWrapper<Int32_t>  Int32_v;
+  typedef ScalarWrapper<Int64_t>  Int64_v;
+
+  typedef ScalarWrapper<UInt_t>   UInt_v;
   typedef ScalarWrapper<UInt16_t> UInt16_v;
   typedef ScalarWrapper<UInt32_t> UInt32_v;
   typedef ScalarWrapper<UInt64_t> UInt64_v;
