@@ -35,6 +35,9 @@ include(CompilerSetup)
 
 if (NOT SIMD)
     set(VECCORE_DISABLE_SIMD True)
+else()
+    find_package(Vc REQUIRED)
+    set(VECCORE_ENABLE_VC True)
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
