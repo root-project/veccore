@@ -7,6 +7,14 @@
 namespace vecCore {
 namespace backend {
 
+template <typename T> struct IntFor;
+template <> struct IntFor<float>  { typedef int32_t type; };
+template <> struct IntFor<double> { typedef int64_t type; };
+
+template <typename T> struct UIntFor;
+template <> struct UIntFor<float>  { typedef uint32_t type; };
+template <> struct UIntFor<double> { typedef uint64_t type; };
+
 template <typename FloatT = float, bool EReturns = true>
 class Basic {
 private:
@@ -132,14 +140,6 @@ public:
   typedef FloatT   Real_t;
   typedef float    Float_t;
   typedef double   Double_t;
-
-  template <typename T> IntFor;
-  template <> IntFor<float>  { typedef int32_t type; }
-  template <> IntFor<double> { typedef int64_t type; }
-
-  template <typename T> UIntFor;
-  template <> UIntFor<float>  { typedef uint32_t type; }
-  template <> UIntFor<double> { typedef uint64_t type; }
 
   typedef typename IntFor<Real_t>::type  Int_t;
   typedef typename UIntFor<Real_t>::type UInt_t;
