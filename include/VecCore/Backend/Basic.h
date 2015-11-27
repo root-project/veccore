@@ -8,7 +8,7 @@ namespace vecCore {
 namespace backend {
 
 template <typename FloatT = float, bool EReturns = true>
-class Scalar {
+class Basic {
 private:
   // auxiliary classes declared private, so they are not exposed
 
