@@ -45,17 +45,21 @@ document), the following types, interfaces, and operations must be defined:
     operations supported by their associated scalar types (e.g. Int_t vs Int_v)
   - Similarly, overloading should be defined for bitwise and logical operations
 
-- Standard Math Functions
-  - Backend types must be convertible to SIMD types in such a way as to be acceptable
-    as a parameter to standard math functions such as std::min(), std::sin(), etc.
-
-- Supporting Interface Functions
+- External Interface and Standard Math Functions
+  - Backend types must be convertible to SIMD types in such a way as to be
+    acceptable as a parameter to standard math functions such as std::min(),
+    std::sin(), etc.
   - In order to allow generic treatment of SIMD code, a few functions must be
-    defined: IsEmpty(Mask&), IsFull(Mask&), Blend(Mask&, val1, val2), that allow
-    checking if a Mask has any active/inactive lanes, and to allow blending two
-    variables into a third using a mask. If the generic templates don't work,
-    specializations must be provided in the backend header in such a way that
-    it does not conflict with other backends
+    defined:
+    - `template <class Mask> bool IsFull(Mask&);`
+    - `template <class Mask> bool IsEmpty(Mask&);`
+    - `template <typename T> T Blend(T::Mask&, T val1, T val2);`
+    These functions are used for checking if a Mask has any active/inactive SIMD
+    lanes, and to allow blending two variables into a third using a mask.
+  - Generic templates are provided in VecCore for some of these functions. If
+    the generic template don't work for a specific backend, specializations must
+    be provided in the backend header for these interface functions in such a way
+    as to not conflict with other backends.
 
 - Testing
   - Backend compatibility/conformance is to be checked via unit tests
