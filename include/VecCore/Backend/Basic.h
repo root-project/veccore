@@ -25,10 +25,10 @@ private:
     BoolWrapper() { /* uninitialized */ }
     BoolWrapper(bool val) : fBool(val) {}
 
-    bool isFull() { return fBool; }
-    bool isEmpty() { return !fBool; }
+    bool isFull() const { return fBool; }
+    bool isEmpty() const { return !fBool; }
 
-    operator bool &() noexcept { return fBool; }
+    operator bool const &() noexcept { return fBool; }
 
     bool &operator[](int index) {
       assert(index == 0);
