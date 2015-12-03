@@ -32,7 +32,8 @@ document), the following types, interfaces, and operations must be defined:
   - From a similar vector type constant or another variable
 
 - Load/Store
-  - Vector classes must provide load() and store() into a memory address
+  - Backend types (Int_v, Real_v, etc) must provide member functions load()
+    and store() to allow reading from and writing into a memory address
 
 - Basic interface
   - Each vector class must define a Size constant that returns the number of
@@ -45,7 +46,7 @@ document), the following types, interfaces, and operations must be defined:
   - Similarly, overloading should be defined for bitwise and logical operations
 
 - Standard Math Functions
-  - Vector types must be convertible to SIMD types in such a way as to be acceptable
+  - Backend types must be convertible to SIMD types in such a way as to be acceptable
     as a parameter to standard math functions such as std::min(), std::sin(), etc.
 
 - Supporting Interface Functions
