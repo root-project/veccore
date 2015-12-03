@@ -27,6 +27,7 @@ document), the following types, interfaces, and operations must be defined:
 
 - Constructor
   - From a constant literal (with auto-promotion in arithmetic expressions)
+  - From a compatible scalar variable (e.g. auto-promotion of Real_t to Real_v)
   - From a reference or pointer (e.g. pointer to float or double for Real_v)
   - From a similar vector type constant or another variable
 
