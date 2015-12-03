@@ -8,52 +8,53 @@ to satisfy in order to be used in VecGeom/GeantV from VecCore.
 
 A backend is simply a type traits structure used to group vector types to be
 used together in generic algorithm implementations. A backend provides the basic
-scalar types, namely, Bool_t, Float_t, Double_t, Real_t (configurable to either
-float or double), Int_t (matching Real_t), and vector types that are the SIMD
-equivalents of the scalar types (with the exception of Bool_v, since masks can
-have different types). The vector types are Real_v, Int_v, etc. Their respective
-mask types need to be provided as Real_v::Mask, Int_v::Mask, and so on, so that
+scalar types, namely, `Bool_t`, `Float_t`, `Double_t`, `Real_t` (configurable to either
+`float` or `double`), `Int_t` (matching `Real_t`), and vector types that are the SIMD
+equivalents of the scalar types (with the exception of `Bool_v`, since masks can
+have different types). The vector types are `Real_`v, `Int_v`, etc. Their respective
+mask types need to be provided as `Real_v::Mask`, `Int_v::Mask`, and so on, so that
 the mask size matches the number of elements of its associated type. The basic
 requirements and interfaces for the vector types are described below.
 
-For each vector type (we will use Real_v as an example throughout this
+For each vector type (we will use `Real_v` as an example throughout this
 document), the following types, interfaces, and operations must be defined:
 
 - Backend Structure
   - The backend structure must accept a parameter template that determines
     the default precision for floating point calculations (i.e., the type
-    of Real_t), and it must choose types for Int_t, and UInt_t that match
-    the size of Real_t
+    of `Real_t`), and it must choose types for `Int_t`, and `UInt_t` that match
+    the size of `Real_t`
 
 - Constructor
   - From a constant literal (with auto-promotion in arithmetic expressions)
-  - From a compatible scalar variable (e.g. auto-promotion of Real_t to Real_v)
-  - From a reference or pointer (e.g. pointer to float or double for Real_v)
+  - From a compatible scalar variable (e.g. auto-promotion of `Real_t` to `Real_v`)
+  - From a reference or pointer (e.g. pointer to `float` or `double` for `Real_v`)
   - From a similar vector type constant or another variable
 
 - Load/Store
-  - Backend types (Int_v, Real_v, etc) must provide member functions load()
-    and store() to allow reading from and writing into a memory address
+  - Backend types (`Int_v`, `Real_v`, etc) must provide member functions `load()`
+    and `store()` to allow reading from and writing into a memory address
 
 - Basic interface
-  - Each vector class must define a Size constant that returns the number of
-    elements (e.g. Real_v::Size)
-  - Each vector class should provide operator[] for indexing
-  - Additionally, operator()(Mask&) should allow for assignments with a
-    mask (e.g.: Real_v x, y; x(y < 0.0) = 0.0; should be possible)
-  - Each vector class should provide operator overloading for common arithmetic
-    operations supported by their associated scalar types (e.g. Int_t vs Int_v)
+  - Each backend type must define a Size constant that returns the number of
+    elements (e.g. `Real_v::Size`)
+  - Each backend type should provide `operator[]` for indexing
+  - Additionally, `operator()(Mask&)` should allow for assignments with a
+    mask (e.g.: `Real_v x, y; x(y < 0.0) = 0.0;` should be possible)
+  - Each backend type should provide operator overloading for common arithmetic
+    operations supported by their associated scalar types (e.g. `Int_t` vs `Int_v`)
   - Similarly, overloading should be defined for bitwise and logical operations
 
 - External Interface and Standard Math Functions
   - Backend types must be convertible to SIMD types in such a way as to be
-    acceptable as a parameter to standard math functions such as std::min(),
-    std::sin(), etc.
-  - In order to allow generic treatment of SIMD code, a few functions must be
-    defined:
-    - `template <class Mask> bool IsFull(Mask&);`
-    - `template <class Mask> bool IsEmpty(Mask&);`
-    - `template <typename T> T Blend(T::Mask&, T val1, T val2);`
+    acceptable as a parameter to standard math functions such as `std::min()`,
+    `std::sin()`, etc.
+  - In order to allow generic treatment of SIMD code, a few functions must be defined:
+    ```cpp
+    template <class Mask> bool IsFull(const Mask&);
+    template <class Mask> bool IsEmpty(const Mask&);
+    template <typename T> T Blend(const T::Mask&, const T& val1, const T& val2);  
+    ```
     These functions are used for checking if a Mask has any active/inactive SIMD
     lanes, and to allow blending two variables into a third using a mask.
   - Generic templates are provided in VecCore for some of these functions. If
