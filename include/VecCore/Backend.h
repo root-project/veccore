@@ -63,4 +63,12 @@ template <>
 VECCORE_FORCE_INLINE
 bool IsFull<bool>(const bool mask) { return mask; }
 
+template <class Mask>
+VECCORE_FORCE_INLINE
+bool IsEmpty(const Mask mask) { return mask.isEmpty(); }
+
+template <>
+VECCORE_FORCE_INLINE
+bool IsEmpty<bool>(const bool mask) { return !mask; }
+
 #endif
