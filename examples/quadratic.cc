@@ -64,21 +64,27 @@ void quadsolve_vc(typename Backend::Float_v const &a,
 
 	typename Float_v::Mask mask = (b >= Float_v(0.0));
 
-	x1(two_roots &&  mask) = -Float_v(0.5) * (b + math::Sqrt(delta))/a;
-	x2(two_roots && !mask) = -Float_v(0.5) * (b - math::Sqrt(delta))/a;
+	Float_v sign = Blend(mask, Float_v(-1.0), Float_v(1.0));
+	Float_v root = (-b + sign * math::Sqrt(delta))/(Float_v(2.0)*a);
 
-	x2(two_roots &&  mask) = c/(a*x1);
-	x1(two_roots && !mask) = c/(a*x2);
+	x1(two_roots &&  mask) = root;
+	x2(two_roots && !mask) = root;
 
-	typename Float_v::Mask one_root = !(no_roots || two_roots);
+	root = c/(a * Blend(mask, x1, x2));
 
-	if (one_root.isEmpty())
+	x2(two_roots &&  mask) = root;
+	x1(two_roots && !mask) = root;
+
+	mask = !(no_roots || two_roots);
+
+	if (IsEmpty(mask))
 		return;
 
-	roots((typename Int_v::Mask)one_root) = 1;
-	Float_v root1 = Float_v(-0.5) * b/a;
-	x1(one_root) = root1;
-	x2(one_root) = root1;
+	roots((typename Int_v::Mask)mask) = 1;
+
+	root = -Float_v(0.5) * b/a;
+	x1(mask) = root;
+	x2(mask) = root;
 }
 
 int main(int argc, char *argv[])
