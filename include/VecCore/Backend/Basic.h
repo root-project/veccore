@@ -120,6 +120,11 @@ private:
     {                                                                          \
       return ScalarWrapper(fVal OP x.fVal);                                    \
     }                                                                          \
+                                                                               \
+    ScalarWrapper operator OP(const T &x) const                                \
+    {                                                                          \
+      return ScalarWrapper(fVal OP x);                                         \
+    }                                                                          \
 
     SCALAR_WRAPPER_OPERATOR(+)
     SCALAR_WRAPPER_OPERATOR(-)
