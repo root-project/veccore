@@ -11,7 +11,7 @@
 namespace vecCore {
 namespace backend {
 
-template <typename FloatT = double, bool EReturns = true>
+template <typename FloatT = float, bool EReturns = true>
 struct VcVector {
   static constexpr bool EarlyReturns = EReturns;
 
