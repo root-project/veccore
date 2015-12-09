@@ -15,11 +15,11 @@
 namespace vecCore {
 namespace backend {
 #ifndef VECCORE_ENABLE_VC
-	template <typename T> using Scalar = Basic<T>;
-	template <typename T> using Vector = Basic<T>;
+template <typename T> using Scalar = Basic<T>;
+template <typename T> using Vector = Basic<T>;
 #else
-	template <typename T> using Scalar = VcScalar<T>;
-	template <typename T> using Vector = VcVector<T>;
+template <typename T> using Scalar = VcScalar<T>;
+template <typename T> using Vector = VcVector<T>;
 #endif
 } // namespace backend
 } // namespace vecCore
