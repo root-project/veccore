@@ -13,6 +13,7 @@ namespace backend {
 
 template <typename FloatT = float, bool EReturns = true>
 class VcVector {
+public:
   static constexpr bool EarlyReturns = EReturns;
 
   typedef bool Bool_t;
