@@ -92,40 +92,39 @@ template <typename T> VECCORE_FORCE_INLINE constexpr T Rad(const T& x) { return 
 
 template <typename T>
 VECCORE_FORCE_INLINE
-bool Infinitesimal(const T& x)
+bool Infinitesimal(const T& x, const T epsilon = T(1.0e-6))
 {
-    static_assert(std::is_floating_point<T>::value,
-        "Infinitesimal() is intended only for floating point types");
+  static_assert(std::is_floating_point<T>::value,
+                "Infinitesimal() is intended only for floating point types");
 
-    return std::abs(x) < std::numeric_limits<T>::epsilon();
+  return Abs(x) < epsilon;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-bool AlmostEqual(const T& x, const T& y)
+bool AlmostEqual(const T& x, const T& y, const T epsilon = T(1.0e-6))
 {
-    static_assert(std::is_floating_point<T>::value,
-        "AlmostEqual() is intended only for floating point types");
+  static_assert(std::is_floating_point<T>::value,
+                "AlmostEqual() is intended only for floating point types");
 
-    if (x == y)
-        return true;
+  if (x == y)
+    return true;
 
-    return std::abs(x - y) < (std::abs(x) + std::abs(y)) * std::numeric_limits<T>::epsilon();
+  return Abs(x - y) < (Abs(x) + Abs(y)) * epsilon;
 }
 
 template <class T>
 VECCORE_FORCE_INLINE
 bool InRange(const T& x, const T& min, const T& max)
 {
-    return min < max ? (x >= min) && (x <= max)
-                     : (x >= max) && (x <= min);
+  return Blend(min < max, (x >= min) && (x <= max), (x >= max) && (x <= min));
 }
 
 template <class T>
 VECCORE_FORCE_INLINE
 T Clamp(const T& x, const T& xmin, const T& xmax)
 {
-    return Max<T>(xmin, Min<T>(x, xmax));
+  return Max<T>(xmin, Min<T>(x, xmax));
 }
 
 } // namespace math
