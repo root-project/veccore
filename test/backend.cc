@@ -4,75 +4,101 @@
 
 #include <VecCore>
 
-template <class Backend>
-VECCORE_FORCE_NOINLINE
-void TestBackend()
-{
-  typedef typename Backend::Real_t Real_t;
-  typedef typename Backend::Real_v Real_v;
-  typedef typename Backend::Real_v::Mask Mask_t;
+using namespace vecCore;
 
-  Mask_t m_true(true), m_false(false);
+template <class T>
+void TestMask() {
+  using Mask = typename T::Mask;
 
-  assert( m_true.isFull()  == true);
-  assert(m_false.isEmpty() == true);
+  Mask mtrue(true), mfalse(false);
 
-  printf("Real_v::Size       == %d\n\n", (int) Real_v::Size);
-  printf("Real_v::Mask::Size == %d\n\n", (int) Real_v::Size);
+  assert(IsFull(mtrue));
+  assert(IsEmpty(mfalse));
 
-  Real_v x(0.0), y(3.0), z(2.0);
-
-  z = z + y;
-  x = z + y;
-
-  Real_t *xptr = (Real_t*)(&x);
-  Mask_t mask = x > Real_v(Real_v::Size/2.0);
-
-  for (size_t i = 0; i < Real_v::Size; i++)
-    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
-      i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
-
-  for (size_t i = 0; i < Real_v::Size; i++)
-    x[i] = i;
-
-  mask = x > Real_v(Real_v::Size/2.0);
-
-  for (size_t i = 0; i < Real_v::Size; i++)
-    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
-      i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
-
-  printf("\n");
-
-  for (size_t i = 0; i < Real_v::Size; i++)
-    x[i] = Real_v::Size - i;
-
-  mask = x > Real_v(Real_v::Size/2.0);
-
-  for (size_t i = 0; i < Real_v::Size; i++)
-    printf("x[%lu] = %.1f, x[i] > %d == %s\n",
-      i, xptr[i], (int) Real_v::Size/2, mask[i] ? "true" : "false");
+  assert(IsFull(mtrue || mfalse));
+  assert(IsEmpty(mtrue && mfalse));
 }
 
-int main(int argc, char *argv[])
-{
+template <class T>
+void TestReal() {
+  using Mask = typename T::Mask;
 
-  printf("Scalar Backend Test (float):\n\n");
-  TestBackend<vecCore::backend::Scalar<float>>();
+  TestMask<T>();
 
-  printf("\n\n");
+  printf("T::Size = %d\n\n", (int)T::Size);
 
-  printf("Scalar Backend Test (double):\n\n");
-  TestBackend<vecCore::backend::Scalar<double>>();
+  T x(0.0), y(1.0), z(2.0);
 
-  printf("\n\n");
+  x = y + z;
+  x = y - z;
+  x = y * z;
+  x = y / z;
 
-  printf("Vector Backend Test (float):\n\n");
-  TestBackend<vecCore::backend::Vector<float>>();
+  for (size_t i = 0; i < T::Size; i++)
+    x[i] = i + 1;
 
-  printf("\n\n");
+  Mask mask = (x > T(T::Size) / T(2));
 
-  printf("Vector Backend Test (double):\n\n");
-  TestBackend<vecCore::backend::Vector<double>>();
+  for (size_t i = 0; i < T::Size; i++)
+    printf("x[%lu] = %g, x[%lu] > %lu == %s\n", i, (double)x[i], i,
+           (size_t)T::Size / 2, mask[i] ? "true" : "false");
+
+  printf("\n");
+}
+
+template <class T>
+void TestInteger() {
+  using Mask = typename T::Mask;
+
+  TestMask<T>();
+
+  printf("T::Size = %d\n\n", (int)T::Size);
+
+  T x(0), y(1), z(2);
+
+  x = y + z;
+  x = y - z;
+  x = y * z;
+  x = y / z;
+
+  for (size_t i = 0; i < T::Size; i++)
+    x[i] = i + 1;
+
+  Mask mask = (x > T(T::Size) / T(2));
+
+  for (size_t i = 0; i < T::Size; i++)
+    printf("x[%lu] = %d, x[%lu] > %d == %s\n", i, (int)x[i], i,
+           (int)T::Size / 2, mask[i] ? "true" : "false");
+
+  printf("\n");
+}
+
+template <class Backend>
+void TestBackend() {
+  TestReal<typename Backend::Float_v>();
+  TestReal<typename Backend::Double_v>();
+  TestInteger<typename Backend::Int32_v>();
+  TestInteger<typename Backend::UInt32_v>();
+}
+
+int main(int argc, char *argv[]) {
+
+  printf("Backend Test: %s\n\n", "Basic");
+  TestBackend<backend::Basic<float> >();
+
+#ifdef VECCORE_ENABLE_VC
+  printf("Backend Test: %s\n\n", "Vc (Scalar)");
+  TestBackend<backend::VcScalar<float> >();
+
+  printf("Backend Test: %s\n\n", "Vc (Vector)");
+  TestBackend<backend::VcVector<float> >();
+
+  printf("Backend Test: %s\n\n", "Vc (SimdArray, float)");
+  TestBackend<backend::VcSimdArray<float, 8> >();
+
+  printf("Backend Test: %s\n\n", "Vc (SimdArray, double)");
+  TestBackend<backend::VcSimdArray<double, 8> >();
+#endif
 
   return 0;
 }
