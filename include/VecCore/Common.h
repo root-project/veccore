@@ -88,12 +88,14 @@ void CondAssign(const Mask &mask, const T &tval, const T &fval, T *const var)
 // Blend
 
 template <typename T>
+VECCORE_FORCE_INLINE
 T Blend(const bool& mask, const T& tval, const T& fval)
 {
   return mask ? tval : fval;
 }
 
 template <class T, class Mask>
+VECCORE_FORCE_INLINE
 T Blend(const Mask& mask, const T& tval, const T& fval)
 {
   T tmp = fval;
