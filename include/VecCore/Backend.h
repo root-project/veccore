@@ -9,6 +9,7 @@
 #include "Backend/CUDA.h"
 #include "Backend/VcScalar.h"
 #include "Backend/VcVector.h"
+#include "Backend/VcSimdArray.h"
 
 // default backends
 
