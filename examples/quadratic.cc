@@ -14,7 +14,8 @@ static const int N = (8 * 1024 * 1024);
 
 // solve ax2 + bx + c = 0, return number of roots found
 
-template <typename T> int quadsolve(T a, T b, T c, T &x1, T &x2) {
+template <typename T>
+int quadsolve(T a, T b, T c, T &x1, T &x2) {
   T delta = b * b - 4.0 * a * c;
 
   if (delta < 0.0)
@@ -45,7 +46,7 @@ template <class Backend>
 void quadsolve_vc(typename Backend::Float_v const &a,
                   typename Backend::Float_v const &b,
                   typename Backend::Float_v const &c,
-				  typename Backend::Float_v &x1, typename Backend::Float_v &x2,
+                  typename Backend::Float_v &x1, typename Backend::Float_v &x2,
                   typename Backend::Int_v &roots) {
   using Int_v = typename Backend::Int_v;
   using Float_t = typename Backend::Float_t;
@@ -117,8 +118,8 @@ int main(int argc, char *argv[]) {
   // print random result to ensure scalar and vector backends give same result
 
   for (int i = index; i < index + 10; i++) {
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
-           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
+            i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
   }
 
   printf("\nelapsed time = %.3lfms (scalar code)\n", t / 1.0e6);
@@ -127,16 +128,20 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < N; i += backend::Vector<float>::Float_v::Size) {
     quadsolve_vc<backend::Vector<float>>(
-        (backend::Vector<float>::Float_v &)(a[i]), (backend::Vector<float>::Float_v &)(b[i]),
-        (backend::Vector<float>::Float_v &)(c[i]), (backend::Vector<float>::Float_v &)(x1[i]),
-        (backend::Vector<float>::Float_v &)(x2[i]), (backend::Vector<float>::Int_v &)(roots[i]));
+        (backend::Vector<float>::Float_v &)(a[i]),
+        (backend::Vector<float>::Float_v &)(b[i]),
+        (backend::Vector<float>::Float_v &)(c[i]),
+        (backend::Vector<float>::Float_v &)(x1[i]),
+        (backend::Vector<float>::Float_v &)(x2[i]),
+        (backend::Vector<float>::Int_v &)(roots[i])
+    );
   }
 
   t = timer.Elapsed();
 
   for (int i = index; i < index + 10; i++) {
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
-           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
+            i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
   }
 
   printf("\nelapsed time = %.3lfms (vector backend)\n", t / 1.0e6);
