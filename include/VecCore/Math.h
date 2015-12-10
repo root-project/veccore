@@ -2,8 +2,6 @@
 #define VECCORE_MATH_H
 
 #include <cmath>
-#include <limits>
-#include <type_traits>
 
 #ifdef __APPLE__
 #define sincos(x) __sincos(x)
@@ -92,21 +90,15 @@ template <typename T> VECCORE_FORCE_INLINE constexpr T Rad(const T& x) { return 
 
 template <typename T>
 VECCORE_FORCE_INLINE
-bool Infinitesimal(const T& x, const T epsilon = T(1.0e-6))
+bool Infinitesimal(const T& x, const T epsilon = NumericLimits<T>::Epsilon())
 {
-  static_assert(std::is_floating_point<T>::value,
-                "Infinitesimal() is intended only for floating point types");
-
   return Abs(x) < epsilon;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-bool AlmostEqual(const T& x, const T& y, const T epsilon = T(1.0e-6))
+bool AlmostEqual(const T& x, const T& y, const T epsilon = NumericLimits<T>::Epsilon())
 {
-  static_assert(std::is_floating_point<T>::value,
-                "AlmostEqual() is intended only for floating point types");
-
   if (x == y)
     return true;
 
