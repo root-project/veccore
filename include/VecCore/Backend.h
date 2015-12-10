@@ -1,9 +1,8 @@
 #ifndef VECCORE_BACKEND_H
 #define VECCORE_BACKEND_H
 
-#include <type_traits>
-
 #include "Common.h"
+#include "Limits.h"
 
 #include "Backend/Basic.h"
 #include "Backend/CUDA.h"
