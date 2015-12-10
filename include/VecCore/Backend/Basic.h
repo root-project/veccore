@@ -1,5 +1,5 @@
-#ifndef VECCORE_BACKEND_SCALAR_H
-#define VECCORE_BACKEND_SCALAR_H
+#ifndef VECCORE_BACKEND_BASIC_H
+#define VECCORE_BACKEND_BASIC_H
 
 #include <cassert>
 #include <cstdint>
