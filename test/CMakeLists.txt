@@ -7,3 +7,4 @@ if (SIMD)
 endif()
 
 add_executable(backend backend.cc)
+add_executable(limits limits.cc)
