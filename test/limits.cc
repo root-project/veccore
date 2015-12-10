@@ -1,7 +1,3 @@
-//
-// New backend tests
-//
-
 #undef NDEBUG
 #include <cassert>
 #include <cstdio>
@@ -9,12 +5,7 @@
 
 #include <VecCore>
 
-#define TEST_BACKEND(x)                  \
-  printf("Testing Backend: %s\n\n", #x); \
-  test<backend::x >();
-
 using namespace vecCore;
-using namespace vecCore::backend;
 
 template <typename T>
 void print(const T& x)
@@ -70,18 +61,18 @@ void test(const char* name)
 
 int main(int argc, char *argv[])
 {
-  test<Basic<float> >("Basic (single precision)");
-  test<Basic<double> >("Basic (double precision)");
+  test<backend::Basic<float> >("Basic (single precision)");
+  test<backend::Basic<double> >("Basic (double precision)");
 
 #ifdef VECCORE_ENABLE_VC
-  test<VcScalar<float> >("VcScalar (single precision)");
-  test<VcScalar<double> >("VcScalar (double precision)");
+  test<backend::VcScalar<float> >("VcScalar (single precision)");
+  test<backend::VcScalar<double> >("VcScalar (double precision)");
 
-  test<VcVector<float> >("VcVector (single precision)");
-  test<VcVector<double> >("VcVector (double precision)");
+  test<backend::VcVector<float> >("VcVector (single precision)");
+  test<backend::VcVector<double> >("VcVector (double precision)");
 
-  test<VcSimdArray<float> >("VcSimdArray (single precision)");
-  test<VcSimdArray<double> >("VcSimdArray (double precision)");
+  test<backend::VcSimdArray<float> >("VcSimdArray (single precision)");
+  test<backend::VcSimdArray<double> >("VcSimdArray (double precision)");
 #endif
 
   return 0;
