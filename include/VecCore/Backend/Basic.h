@@ -87,6 +87,8 @@ private:
 
     ScalarWrapper(int val) : fVal(static_cast<T>(val)) {}
     ScalarWrapper(unsigned int val) : fVal(static_cast<T>(val)) {}
+    ScalarWrapper(long int val) : fVal(static_cast<T>(val)) {}
+    ScalarWrapper(unsigned long int val) : fVal(static_cast<T>(val)) {}
     ScalarWrapper(float val) : fVal(static_cast<T>(val)) {}
     ScalarWrapper(double val) : fVal(static_cast<T>(val)) {}
 
