@@ -8,3 +8,4 @@ endif()
 
 add_executable(backend backend.cc)
 add_executable(limits limits.cc)
+add_executable(wrapper wrapper.cc)
