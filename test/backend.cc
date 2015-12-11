@@ -6,7 +6,7 @@
 
 template <class Backend>
 VECCORE_FORCE_NOINLINE
-void test_backend()
+void TestBackend()
 {
   typedef typename Backend::Real_t Real_t;
   typedef typename Backend::Real_v Real_v;
@@ -57,22 +57,22 @@ int main(int argc, char *argv[])
 {
 
   printf("Scalar Backend Test (float):\n\n");
-  test_backend<vecCore::backend::Scalar<float>>();
+  TestBackend<vecCore::backend::Scalar<float>>();
 
   printf("\n\n");
 
   printf("Scalar Backend Test (double):\n\n");
-  test_backend<vecCore::backend::Scalar<double>>();
+  TestBackend<vecCore::backend::Scalar<double>>();
 
   printf("\n\n");
 
   printf("Vector Backend Test (float):\n\n");
-  test_backend<vecCore::backend::Vector<float>>();
+  TestBackend<vecCore::backend::Vector<float>>();
 
   printf("\n\n");
 
   printf("Vector Backend Test (double):\n\n");
-  test_backend<vecCore::backend::Vector<double>>();
+  TestBackend<vecCore::backend::Vector<double>>();
 
   return 0;
 }

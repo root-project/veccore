@@ -8,7 +8,7 @@
 using namespace vecCore;
 
 template <typename T>
-void print(const T& x)
+void Print(const T& x)
 {
   const size_t N = T::Size;
   printf("[ ");
@@ -18,7 +18,7 @@ void print(const T& x)
 }
 
 template <class Backend>
-void test(const char* name)
+void Test(const char* name)
 {
   typedef typename Backend::Real_t Real_t;
   typedef typename Backend::Real_v Real_v;
@@ -30,49 +30,49 @@ void test(const char* name)
 
   printf("NumericLimits::Min()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Min());
-  print<Real_v>(NumericLimits<Real_v>::Min());
+  Print<Real_v>(NumericLimits<Real_v>::Min());
   printf("\n\n");
 
   printf("NumericLimits::Max()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Max());
-  print<Real_v>(NumericLimits<Real_v>::Max());
+  Print<Real_v>(NumericLimits<Real_v>::Max());
   printf("\n\n");
 
   printf("NumericLimits::Lowest()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Lowest());
-  print<Real_v>(NumericLimits<Real_v>::Lowest());
+  Print<Real_v>(NumericLimits<Real_v>::Lowest());
   printf("\n\n");
 
   printf("NumericLimits::Highest()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Highest());
-  print<Real_v>(NumericLimits<Real_v>::Highest());
+  Print<Real_v>(NumericLimits<Real_v>::Highest());
   printf("\n\n");
 
   printf("NumericLimits::Epsilon()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Epsilon());
-  print<Real_v>(NumericLimits<Real_v>::Epsilon());
+  Print<Real_v>(NumericLimits<Real_v>::Epsilon());
   printf("\n\n");
 
   printf("NumericLimits::Infinity()\n Real_t: [ %g ]\n Real_v: ",
     NumericLimits<Real_t>::Infinity());
-  print<Real_v>(NumericLimits<Real_v>::Infinity());
+  Print<Real_v>(NumericLimits<Real_v>::Infinity());
   printf("\n\n");
 }
 
 int main(int argc, char *argv[])
 {
-  test<backend::Basic<float> >("Basic (single precision)");
-  test<backend::Basic<double> >("Basic (double precision)");
+  Test<backend::Basic<float> >("Basic (single precision)");
+  Test<backend::Basic<double> >("Basic (double precision)");
 
 #ifdef VECCORE_ENABLE_VC
-  test<backend::VcScalar<float> >("VcScalar (single precision)");
-  test<backend::VcScalar<double> >("VcScalar (double precision)");
+  Test<backend::VcScalar<float> >("VcScalar (single precision)");
+  Test<backend::VcScalar<double> >("VcScalar (double precision)");
 
-  test<backend::VcVector<float> >("VcVector (single precision)");
-  test<backend::VcVector<double> >("VcVector (double precision)");
+  Test<backend::VcVector<float> >("VcVector (single precision)");
+  Test<backend::VcVector<double> >("VcVector (double precision)");
 
-  test<backend::VcSimdArray<float> >("VcSimdArray (single precision)");
-  test<backend::VcSimdArray<double> >("VcSimdArray (double precision)");
+  Test<backend::VcSimdArray<float> >("VcSimdArray (single precision)");
+  Test<backend::VcSimdArray<double> >("VcSimdArray (double precision)");
 #endif
 
   return 0;
