@@ -25,8 +25,8 @@ public:
   typedef float Float_t;
   typedef double Double_t;
 
-  typedef typename IntFor<Real_t>::type Int_t;
-  typedef typename UIntFor<Real_t>::type UInt_t;
+  typedef typename IntFor<Real_t>::Type Int_t;
+  typedef typename UIntFor<Real_t>::Type UInt_t;
 
   typedef int16_t Int16_t;
   typedef int32_t Int32_t;
