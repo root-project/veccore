@@ -23,7 +23,7 @@ void Test(const char* name)
   typedef typename Backend::Real_t Real_t;
   typedef typename Backend::Real_v Real_v;
 
-  static_assert(std::is_same<typename ScalarType<Real_v>::Type, Real_t>::value == true,
+  static_assert(std::is_same<typename backend::ScalarType<Real_v>::Type, Real_t>::value,
     "conversion of vector type to scalar type failed");
 
   printf("Backend: %s\n\n", name);
