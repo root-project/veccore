@@ -15,22 +15,22 @@ static const int N = (8 * 1024 * 1024);
 // solve ax2 + bx + c = 0, return number of roots found
 
 template <typename T>
-int quadsolve(T a, T b, T c, T &x1, T &x2) {
+int QuadSolve(T a, T b, T c, T &x1, T &x2) {
   T delta = b * b - 4.0 * a * c;
 
   if (delta < 0.0)
     return 0;
 
-  if (delta < std::numeric_limits<T>::epsilon()) {
+  if (delta < NumericLimits<T>::Epsilon()) {
     x1 = x2 = -0.5 * b / a;
     return 1;
   }
 
   if (b >= 0.0) {
-    x1 = -0.5 * (b + std::sqrt(delta)) / a;
+    x1 = -0.5 * (b + math::Sqrt(delta)) / a;
     x2 = c / (a * x1);
   } else {
-    x2 = -0.5 * (b - std::sqrt(delta)) / a;
+    x2 = -0.5 * (b - math::Sqrt(delta)) / a;
     x1 = c / (a * x2);
   }
 
@@ -43,23 +43,23 @@ int quadsolve(T a, T b, T c, T &x1, T &x2) {
 // solves many equation simultaneously, depending on value of Float_v::Size
 
 template <class Backend>
-void quadsolve_vc(typename Backend::Float_v const &a,
-                  typename Backend::Float_v const &b,
-                  typename Backend::Float_v const &c,
-                  typename Backend::Float_v &x1, typename Backend::Float_v &x2,
-                  typename Backend::Int_v &roots) {
-  using Int_v = typename Backend::Int_v;
-  using Float_t = typename Backend::Float_t;
+void QuadSolveVc(typename Backend::Float_v const &a,
+                 typename Backend::Float_v const &b,
+                 typename Backend::Float_v const &c,
+                 typename Backend::Float_v &x1,
+                 typename Backend::Float_v &x2,
+                 typename Backend::Int32_v &roots)
+{
+  using Int32_v = typename Backend::Int32_v;
   using Float_v = typename Backend::Float_v;
 
   roots = 0;
-  Float_v epsilon = Float_v(std::numeric_limits<Float_t>::epsilon());
   Float_v delta = b * b - Float_v(4.0) * a * c;
 
   typename Float_v::Mask no_roots(delta < Float_v(0.0));
-  typename Float_v::Mask two_roots(delta >= epsilon);
+  typename Float_v::Mask two_roots(delta >= NumericLimits<Float_v>::Epsilon());
 
-  roots((typename Int_v::Mask)two_roots) = 2;
+  roots((typename Int32_v::Mask)two_roots) = 2;
 
   typename Float_v::Mask mask = (b >= Float_v(0.0));
 
@@ -79,7 +79,7 @@ void quadsolve_vc(typename Backend::Float_v const &a,
   if (IsEmpty(mask))
     return;
 
-  roots((typename Int_v::Mask)mask) = 1;
+  roots((typename Int32_v::Mask)mask) = 1;
 
   root = -Float_v(0.5) * b / a;
   x1(mask) = root;
@@ -107,10 +107,10 @@ int main(int argc, char *argv[]) {
     roots[i] = 0;
   }
 
-  Timer<> timer;
+  Timer<milliseconds> timer;
 
   for (int i = 0; i < N; i++) {
-    roots[i] = quadsolve(a[i], b[i], c[i], x1[i], x2[i]);
+    roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
   }
 
   double t = timer.Elapsed();
@@ -122,12 +122,12 @@ int main(int argc, char *argv[]) {
             i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
   }
 
-  printf("\nelapsed time = %.3lfms (scalar code)\n", t / 1.0e6);
+  printf("\nelapsed time = %.3lfms (scalar code)\n", t);
 
   timer.Start();
 
   for (int i = 0; i < N; i += backend::Vector<float>::Float_v::Size) {
-    quadsolve_vc<backend::Vector<float>>(
+    QuadSolveVc<backend::Vector<float>>(
         (backend::Vector<float>::Float_v &)(a[i]),
         (backend::Vector<float>::Float_v &)(b[i]),
         (backend::Vector<float>::Float_v &)(c[i]),
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
             i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
   }
 
-  printf("\nelapsed time = %.3lfms (vector backend)\n", t / 1.0e6);
+  printf("\nelapsed time = %.3lfms (vector backend)\n", t);
 
   return 0;
 }
