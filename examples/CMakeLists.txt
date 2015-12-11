@@ -6,5 +6,4 @@ if (SIMD)
     link_libraries(Vc)
 endif()
 
-add_executable(simple simple.cc)
 add_executable(quadratic quadratic.cc)
