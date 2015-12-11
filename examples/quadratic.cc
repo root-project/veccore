@@ -43,47 +43,49 @@ int QuadSolve(T a, T b, T c, T &x1, T &x2) {
 // solves many equation simultaneously, depending on value of Float_v::Size
 
 template <class Backend>
-void QuadSolveVc(typename Backend::Float_v const &a,
+void QuadSolveSIMD(typename Backend::Float_v const &a,
                  typename Backend::Float_v const &b,
                  typename Backend::Float_v const &c,
                  typename Backend::Float_v &x1,
                  typename Backend::Float_v &x2,
                  typename Backend::Int32_v &roots)
 {
-  using Int32_v = typename Backend::Int32_v;
   using Float_v = typename Backend::Float_v;
+  using FMask = typename Backend::Float_v::Mask;
+  using IMask = typename Backend::Int32_v::Mask;
 
   roots = 0;
   Float_v delta = b * b - Float_v(4.0) * a * c;
 
-  typename Float_v::Mask no_roots(delta < Float_v(0.0));
-  typename Float_v::Mask two_roots(delta >= NumericLimits<Float_v>::Epsilon());
+  FMask mask0(delta < Float_v(0.0));
+  FMask mask2(delta >= NumericLimits<Float_v>::Epsilon());
 
-  roots((typename Int32_v::Mask)two_roots) = 2;
+  roots((IMask)mask2) = 2;
 
-  typename Float_v::Mask mask = (b >= Float_v(0.0));
+  FMask mask = (b >= Float_v(0.0));
 
   Float_v sign = Blend(mask, Float_v(-1.0), Float_v(1.0));
   Float_v root = (-b + sign * math::Sqrt(delta)) / (Float_v(2.0) * a);
 
-  x1(two_roots && mask) = root;
-  x2(two_roots && !mask) = root;
+  x1(mask2 && mask) = root;
+  x2(mask2 && !mask) = root;
 
   root = c / (a * Blend(mask, x1, x2));
 
-  x2(two_roots && mask) = root;
-  x1(two_roots && !mask) = root;
+  x2(mask2 && mask) = root;
+  x1(mask2 && !mask) = root;
 
-  mask = !(no_roots || two_roots);
+  FMask mask1 = !(mask0 || mask2);
 
-  if (IsEmpty(mask))
+  if (IsEmpty(mask1))
     return;
 
-  roots((typename Int32_v::Mask)mask) = 1;
+  roots((IMask)mask1) = 1;
 
   root = -Float_v(0.5) * b / a;
-  x1(mask) = root;
-  x2(mask) = root;
+
+  x1(mask1) = root;
+  x2(mask1) = root;
 }
 
 int main(int argc, char *argv[]) {
@@ -127,13 +129,13 @@ int main(int argc, char *argv[]) {
   timer.Start();
 
   for (int i = 0; i < N; i += backend::Vector<float>::Float_v::Size) {
-    QuadSolveVc<backend::Vector<float>>(
-        (backend::Vector<float>::Float_v &)(a[i]),
-        (backend::Vector<float>::Float_v &)(b[i]),
-        (backend::Vector<float>::Float_v &)(c[i]),
-        (backend::Vector<float>::Float_v &)(x1[i]),
-        (backend::Vector<float>::Float_v &)(x2[i]),
-        (backend::Vector<float>::Int_v &)(roots[i])
+    QuadSolveSIMD<backend::Vector<float>>(
+      (backend::Vector<float>::Float_v &)(a[i]),
+      (backend::Vector<float>::Float_v &)(b[i]),
+      (backend::Vector<float>::Float_v &)(c[i]),
+      (backend::Vector<float>::Float_v &)(x1[i]),
+      (backend::Vector<float>::Float_v &)(x2[i]),
+      (backend::Vector<float>::Int32_v &)(roots[i])
     );
   }
 
