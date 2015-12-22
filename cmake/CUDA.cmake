@@ -1,17 +1,17 @@
 find_package(CUDA REQUIRED)
 
-set(VECCORE_ENABLE_CUDA)
+set(VECCORE_ENABLE_CUDA True)
 
-set(CUDA_ARCH 20 CACHE STRING "CUDA device architecture.")
-set(CUDA_ARCH "-arch=sm_${CUDA_ARCH}")
+if(CMAKE_CXX_STANDARD STREQUAL 11)
+  list(APPEND CUDA_NVCC_FLAGS -std=c++11)
+else()
+  message(FATAL_ERROR "CUDA compilation supports only ISO C++ 2011 standard")
+endif()
 
-set(CMAKE_CUDA_FLAGS_DEBUG          "-O2 -g -G")
-set(CMAKE_CUDA_FLAGS_RELEASE        "-O3 -use_fast_math")
-set(CMAKE_CUDA_FLAGS_RELWITHDEBINFO "-O3 -g -G -use_fast_math")
+set(CUDA_NVCC_FLAGS_DEBUG          "-O2 -g -G")
+set(CUDA_NVCC_FLAGS_RELEASE        "-O3 -use_fast_math")
+set(CUDA_NVCC_FLAGS_RELWITHDEBINFO "-O3 -g -G -use_fast_math")
 
-set(CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS} -Wall)
-set(CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS} -Xcudafe "--diag_suppress=code_is_unreachable")
-set(CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS} -Xcudafe "--diag_suppress=initialization_not_reachable")
-set(CMAKE_CUDA_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CUDA_FLAGS}")
+list(APPEND CUDA_NVCC_FLAGS "-gencode arch=compute_30,code=sm_30")
 
 message(STATUS "Compiling with CUDA enabled")
