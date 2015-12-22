@@ -13,9 +13,6 @@
 #define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
 #define VECCORE_DECLARE_CUDA_TEMPLATE(x) /* empty */
 #else
-#include <driver_types.h>
-#include <cuda_runtime.h>
-
 #if (defined(__CUDACC__) || defined(__NVCC__))
 #ifdef __CUDA_ARCH__
 #define VECCORE_CUDA_ARCH
