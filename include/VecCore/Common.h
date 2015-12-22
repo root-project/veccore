@@ -103,5 +103,16 @@ T Blend(const Mask& mask, const T& tval, const T& fval)
   return tmp;
 }
 
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+constexpr bool EarlyReturnAllowed()
+{
+#ifdef VECCORE_CUDA_ARCH
+  return false;
+#else
+  return true;
+#endif
+}
+
 } // namespace vecCore
 #endif

@@ -15,11 +15,9 @@ template <>
 template <typename T>
 struct ScalarType<Vc::Vector<T> > { typedef T Type; };
 
-template <typename FloatT = float, bool EReturns = true>
+template <typename FloatT = float>
 class VcVector {
 public:
-  static constexpr bool EarlyReturns = EReturns;
-
   typedef bool Bool_t;
   typedef FloatT Real_t;
   typedef float Float_t;

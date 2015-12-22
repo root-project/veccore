@@ -15,7 +15,8 @@ template <typename T> struct UIntFor;
 template <> struct UIntFor<float> { typedef uint32_t Type; };
 template <> struct UIntFor<double> { typedef uint64_t Type; };
 
-template <typename FloatT = float, bool EReturns = true> class Basic {
+template <typename FloatT = float>
+class Basic {
 private:
   // auxiliary classes declared private, so they are not exposed
 
@@ -132,8 +133,6 @@ private:
   };
 
 public:
-  static constexpr bool EarlyReturns = EReturns;
-
   typedef bool Bool_t;
   typedef FloatT Real_t;
   typedef float Float_t;

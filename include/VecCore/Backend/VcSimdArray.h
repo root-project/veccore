@@ -15,11 +15,9 @@ template <>
 template <typename T, std::size_t N>
 struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 
-template <typename FloatT = float, std::size_t N = 16, bool EReturns = true>
+template <typename FloatT = float, std::size_t N = 16>
 class VcSimdArray {
 public:
-  static constexpr bool EarlyReturns = EReturns;
-
   typedef bool Bool_t;
   typedef FloatT Real_t;
   typedef float Float_t;

@@ -7,7 +7,7 @@
 
 namespace vecCore {
 namespace backend {
-template <typename T> using CUDA = Basic<T, false>;
+template <typename T> using CUDA = Basic<T>;
 } // namespace backend
 } // namespace vecCore
 
