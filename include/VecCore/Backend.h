@@ -6,21 +6,19 @@
 
 #include "Backend/Basic.h"
 #include "Backend/CUDA.h"
+
+#ifndef __CUDACC__
 #include "Backend/VcScalar.h"
 #include "Backend/VcVector.h"
 #include "Backend/VcSimdArray.h"
+#endif
 
 // default backends
 
 namespace vecCore {
 namespace backend {
-#ifndef VECCORE_ENABLE_VC
 template <typename T> using Scalar = Basic<T>;
 template <typename T> using Vector = Basic<T>;
-#else
-template <typename T> using Scalar = VcScalar<T>;
-template <typename T> using Vector = VcVector<T>;
-#endif
 } // namespace backend
 } // namespace vecCore
 #endif

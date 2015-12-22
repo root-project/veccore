@@ -3,6 +3,8 @@
 #include <driver_types.h>
 #include <cuda_runtime.h>
 
+#include <VecCore>
+
 const int N = 16;
 const int blocksize = 16;
 
