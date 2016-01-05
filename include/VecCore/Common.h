@@ -107,7 +107,7 @@ VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 constexpr bool EarlyReturnAllowed()
 {
-#ifdef VECCORE_CUDA_ARCH
+#ifdef VECCORE_NVCC_DEVICE
   return false;
 #else
   return true;

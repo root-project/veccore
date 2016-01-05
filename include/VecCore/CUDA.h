@@ -14,8 +14,9 @@
 #define VECCORE_DECLARE_CUDA_TEMPLATE(x) /* empty */
 #else
 #if (defined(__CUDACC__) || defined(__NVCC__))
+#define VECCORE_NVCC
 #ifdef __CUDA_ARCH__
-#define VECCORE_CUDA_ARCH
+#define VECCORE_NVCC_DEVICE
 #endif
 #define VECCORE_CUDA_HOST __host__
 #define VECCORE_CUDA_DEVICE __device__

@@ -25,7 +25,7 @@ private:
   high_resolution_clock::time_point fStart, fStop;
 };
 
-#if !defined(VECCORE_CUDA_ARCH)
+#if !defined(VECCORE_NVCC_DEVICE)
 
 class cycles {};
 
