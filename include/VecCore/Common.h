@@ -55,7 +55,7 @@ bool IsEmpty<bool>(const bool& mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskedAssign(bool mask, const T &val, T *const var)
+void MaskedAssign(bool mask, const T &val, T& var)
 {
   if (mask)
     var = val;
@@ -63,26 +63,26 @@ void MaskedAssign(bool mask, const T &val, T *const var)
 
 template <class T, class Mask>
 VECCORE_FORCE_INLINE
-void MaskedAssign(const Mask &mask, const T &val, T *const var)
+void MaskedAssign(Mask mask, const T &val, T& var)
 {
-  (*var)(mask) = val;
+  var(mask) = val;
 }
 
 // CondAssign (for backward-compatibility, deprecated by Blend below)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void CondAssign(const bool &mask, const T &tval, const T &fval, T *const var)
+void CondAssign(const bool mask, const T &tval, const T &fval, T& var)
 {
-  (*var) = mask ? tval : fval;
+  var = mask ? tval : fval;
 }
 
 template <class T, class Mask>
 VECCORE_FORCE_INLINE
-void CondAssign(const Mask &mask, const T &tval, const T &fval, T *const var)
+void CondAssign(const Mask mask, const T &tval, const T &fval, T& var)
 {
-  (*var) = fval;
-  (*var)(mask) = tval;
+  var = fval;
+  var(mask) = tval;
 }
 
 // Blend
