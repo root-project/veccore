@@ -15,11 +15,19 @@ namespace math {
 
 template <typename T> VECCORE_FORCE_INLINE T Abs(T x) { return std::abs(x); }
 
-template <class T> VECCORE_FORCE_INLINE T Min(T a, T b) { return Blend(a < b, a, b); }
-template <class T> VECCORE_FORCE_INLINE T Max(T a, T b) { return Blend(a > b, a, b); }
+template <class T> VECCORE_FORCE_INLINE T Min(const T a, const T b) { return Blend(a < b, a, b); }
+template <class T> VECCORE_FORCE_INLINE T Max(const T a, const T b) { return Blend(a > b, a, b); }
 
 template <typename T> VECCORE_FORCE_INLINE T Min(T a, T b, T c) { return Min(a, Min(b,c)); }
 template <typename T> VECCORE_FORCE_INLINE T Max(T a, T b, T c) { return Max(a, Max(b,c)); }
+
+template <typename T, template <typename> class Wrapper>
+VECCORE_FORCE_INLINE
+Wrapper<T> Min(const Wrapper<T>& a, const Wrapper<T>& b) { return Blend(a < b, a, b); }
+
+template <typename T, template <typename> class Wrapper>
+VECCORE_FORCE_INLINE
+Wrapper<T> Max(const Wrapper<T>& a, const Wrapper<T>& b) { return Blend(a > b, a, b); }
 
 template <typename T> VECCORE_FORCE_INLINE void SetMin(T& a, const T& b) { if (a > b) a = b; }
 template <typename T> VECCORE_FORCE_INLINE void SetMax(T& a, const T& b) { if (a < b) a = b; }
