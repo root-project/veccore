@@ -28,7 +28,8 @@ private:
     bool isFull() const { return fBool; }
     bool isEmpty() const { return !fBool; }
 
-    operator bool const &() noexcept { return fBool; }
+    operator bool &() noexcept { return fBool; }
+    operator bool const &() const noexcept { return fBool; }
 
     bool &operator[](int index) {
       assert(index == 0);
@@ -93,8 +94,8 @@ private:
     ScalarWrapper(float val) : fVal(static_cast<T>(val)) {}
     ScalarWrapper(double val) : fVal(static_cast<T>(val)) {}
 
-    operator T() { return fVal; }
-    operator T const &() const { return fVal; }
+    operator T &() noexcept { return fVal; }
+    operator T const &() const noexcept { return fVal; }
 
     MaskedScalar<T> operator()(Mask m) { return MaskedScalar<T>(fVal, m); }
 
