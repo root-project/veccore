@@ -9,3 +9,6 @@ endif()
 add_executable(backend backend.cc)
 add_executable(limits limits.cc)
 add_executable(wrapper wrapper.cc)
+
+add_test(Backend backend)
+add_test(NumericLimits limits)

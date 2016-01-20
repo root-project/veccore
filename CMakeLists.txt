@@ -46,5 +46,6 @@ if (EXAMPLES)
 endif()
 
 if (ENABLE_TESTS)
+  enable_testing()
   add_subdirectory(test)
 endif()
