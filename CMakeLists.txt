@@ -2,20 +2,14 @@
 # VecCore Library                                                              #
 ################################################################################
 
-project(VecCore)
-
 cmake_minimum_required(VERSION 3.0.2)
+
+project(VecCore VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/modules)
-
-set(VECCORE_VERSION_MAJOR 0)
-set(VECCORE_VERSION_MINOR 1)
-set(VECCORE_VERSION_PATCH 0)
-
-set(VECCORE_VERSION "${VECCORE_VERSION_MAJOR}.${VECCORE_VERSION_MINOR}.${VECCORE_VERSION_PATCH}")
 
 option(CUDA "Enable support for CUDA.")
 option(EXAMPLES "Enable installation of code examples.")
