@@ -3,9 +3,6 @@
 
 #ifdef VECCORE_ENABLE_VC
 
-#include <cassert>
-#include <cstdint>
-
 #include <Vc/Vc>
 
 namespace vecCore {
