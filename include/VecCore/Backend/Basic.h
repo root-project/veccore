@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <type_traits>
 
 namespace vecCore {
 namespace backend {
@@ -85,14 +86,14 @@ private:
 
     ScalarWrapper() { /* uninitialized */ }
 
-    /* allow type conversion at initialization */
+    ScalarWrapper(const T& val) : fVal(val) {}
+    ScalarWrapper(const T* const val_ptr) : fVal(*val_ptr) {}
+    ScalarWrapper(const ScalarWrapper* const s) : fVal(s->val_ptr) {}
 
-    ScalarWrapper(int val) : fVal(static_cast<T>(val)) {}
-    ScalarWrapper(unsigned int val) : fVal(static_cast<T>(val)) {}
-    ScalarWrapper(long int val) : fVal(static_cast<T>(val)) {}
-    ScalarWrapper(unsigned long int val) : fVal(static_cast<T>(val)) {}
-    ScalarWrapper(float val) : fVal(static_cast<T>(val)) {}
-    ScalarWrapper(double val) : fVal(static_cast<T>(val)) {}
+    /* allow type conversion from other scalar types at initialization */
+    template <typename Type,
+    class = typename std::enable_if<std::is_integral<Type>::value>::type>
+    ScalarWrapper(const Type& val) : fVal(static_cast<T>(val)) {}
 
     operator T &() noexcept { return fVal; }
     operator T const &() const noexcept { return fVal; }
