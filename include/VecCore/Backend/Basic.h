@@ -23,6 +23,8 @@ private:
 
   class BoolWrapper {
   public:
+    static constexpr size_t Size = 1;
+
     BoolWrapper() { /* uninitialized */ }
     BoolWrapper(bool val) : fBool(val) {}
 
@@ -82,7 +84,7 @@ private:
   public:
     typedef T type;
     typedef BoolWrapper Mask;
-    enum { Size = 1 };
+    static constexpr size_t Size = 1;
 
     ScalarWrapper() { /* uninitialized */ }
 
