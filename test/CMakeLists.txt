@@ -6,11 +6,13 @@ if (SIMD)
   link_libraries(${Vc_LIBRARIES})
 endif()
 
+add_subdirectory(gtest)
+
 add_executable(backend backend.cc)
 add_executable(limits limits.cc)
 add_executable(wrapper wrapper.cc)
 
-target_link_libraries(backend gtest pthread)
+target_link_libraries(backend gtest)
 
 add_test(Backend backend)
 add_test(NumericLimits limits)
