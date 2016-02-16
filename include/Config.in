@@ -11,6 +11,6 @@
 #cmakedefine VECCORE_DISABLE_SIMD
 #cmakedefine VECCORE_ENABLE_VC
 #cmakedefine VECCORE_ENABLE_MIC
-#cmakedefine VECCORE_ENABLE_OFFLOAD
+#cmakedefine VECCORE_ENABLE_MIC_OFFLOAD
 
 #endif
