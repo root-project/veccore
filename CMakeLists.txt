@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(VecCore VERSION 0.1.0)
 
-set(CMAKE_CXX_STANDARD 11)
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
