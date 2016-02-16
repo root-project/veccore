@@ -42,10 +42,6 @@ file(COPY include/${PROJECT_NAME} DESTINATION ${PROJECT_BINARY_DIR}/include)
 include_directories(${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
 install(DIRECTORY ${PROJECT_BINARY_DIR}/include/ DESTINATION include)
 
-if (CUDA)
-  add_subdirectory(cuda)
-endif()
-
 if (EXAMPLES)
   add_subdirectory(examples)
 endif()
