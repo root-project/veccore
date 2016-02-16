@@ -8,7 +8,6 @@
 namespace vecCore {
 namespace backend {
 
-template <>
 template <typename T>
 struct ScalarType<Vc::Scalar::Vector<T> > { typedef T Type; };
 

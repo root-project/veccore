@@ -8,7 +8,6 @@
 namespace vecCore {
 namespace backend {
 
-template <>
 template <typename T, std::size_t N>
 struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 
