@@ -18,9 +18,9 @@ compiler with support for C++11. VecCore is tested with the following compilers:
 - Intel® C/C++ Compiler 15.0.3
 
 Additionally, you have to install CMake 3.0 or greater, and you may need to
-install a SIMD library such as [Vc](https://github.com/VcDevel/Vc) version 0.7.4
+install a SIMD library such as [Vc](https://github.com/VcDevel/Vc) version 1.0.0
 or greater, and/or [Nvidia's CUDA SDK](http://developer.nvidia.com/cuda) version
-7.0 or greater.
+7.5 or greater.
 
 VecCore Support and Contact
 ---------------------------
