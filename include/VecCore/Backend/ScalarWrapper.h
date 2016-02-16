@@ -16,6 +16,8 @@ public:
   bool isFull() const { return fBool; }
   bool isEmpty() const { return !fBool; }
 
+  static constexpr size_t size() { return 1; }
+
   operator bool &() noexcept { return fBool; }
   operator bool const &() const noexcept { return fBool; }
 
@@ -81,6 +83,8 @@ public:
   template <typename Type,
   class = typename std::enable_if<std::is_integral<Type>::value>::type>
   ScalarWrapper(const Type& val) : fVal(static_cast<T>(val)) {}
+
+  static constexpr size_t size() { return 1; }
 
   operator T &() noexcept { return fVal; }
   operator T const &() const noexcept { return fVal; }

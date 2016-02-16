@@ -25,7 +25,7 @@ void TestReal() {
 
   TestMask<T>();
 
-  printf("T::Size = %d\n\n", (int)T::Size);
+  printf("T::size() = %d\n\n", (int)T::size());
 
   T x(0.0), y(1.0), z(2.0);
 
@@ -34,14 +34,14 @@ void TestReal() {
   x = y * z;
   x = y / z;
 
-  for (size_t i = 0; i < T::Size; i++)
+  for (size_t i = 0; i < T::size(); i++)
     x[i] = i + 1;
 
-  Mask mask = (x > T(T::Size) / T(2));
+  Mask mask = (x > T(T::size()) / T(2));
 
-  for (size_t i = 0; i < T::Size; i++)
+  for (size_t i = 0; i < T::size(); i++)
     printf("x[%lu] = %g, x[%lu] > %lu == %s\n", i, (double)x[i], i,
-           (size_t)T::Size / 2, mask[i] ? "true" : "false");
+           (size_t)T::size() / 2, mask[i] ? "true" : "false");
 
   printf("\n");
 }
@@ -52,7 +52,7 @@ void TestInteger() {
 
   TestMask<T>();
 
-  printf("T::Size = %d\n\n", (int)T::Size);
+  printf("T::size() = %d\n\n", (int)T::size());
 
   T x(0), y(1), z(2);
 
@@ -61,14 +61,14 @@ void TestInteger() {
   x = y * z;
   x = y / z;
 
-  for (size_t i = 0; i < T::Size; i++)
+  for (size_t i = 0; i < T::size(); i++)
     x[i] = i + 1;
 
-  Mask mask = (x > T(T::Size) / T(2));
+  Mask mask = (x > T(T::size()) / T(2));
 
-  for (size_t i = 0; i < T::Size; i++)
+  for (size_t i = 0; i < T::size(); i++)
     printf("x[%lu] = %d, x[%lu] > %d == %s\n", i, (int)x[i], i,
-           (int)T::Size / 2, mask[i] ? "true" : "false");
+           (int)T::size() / 2, mask[i] ? "true" : "false");
 
   printf("\n");
 }
