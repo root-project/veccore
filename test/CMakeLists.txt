@@ -10,5 +10,7 @@ add_executable(backend backend.cc)
 add_executable(limits limits.cc)
 add_executable(wrapper wrapper.cc)
 
+target_link_libraries(backend gtest pthread)
+
 add_test(Backend backend)
 add_test(NumericLimits limits)
