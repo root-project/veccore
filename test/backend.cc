@@ -84,20 +84,17 @@ void TestBackend() {
 int main(int argc, char *argv[]) {
 
   printf("Backend Test: %s\n\n", "Basic");
-  TestBackend<backend::Basic<float> >();
+  TestBackend<backend::Basic>();
 
 #ifdef VECCORE_ENABLE_VC
   printf("Backend Test: %s\n\n", "Vc (Scalar)");
-  TestBackend<backend::VcScalar<float> >();
+  TestBackend<backend::VcScalar>();
 
   printf("Backend Test: %s\n\n", "Vc (Vector)");
-  TestBackend<backend::VcVector<float> >();
+  TestBackend<backend::VcVector>();
 
-  printf("Backend Test: %s\n\n", "Vc (SimdArray, float)");
-  TestBackend<backend::VcSimdArray<float, 8> >();
-
-  printf("Backend Test: %s\n\n", "Vc (SimdArray, double)");
-  TestBackend<backend::VcSimdArray<double, 8> >();
+  printf("Backend Test: %s\n\n", "Vc (SimdArray<16>)");
+  TestBackend<backend::VcSimdArray<16> >();
 #endif
 
   return 0;

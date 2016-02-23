@@ -17,11 +17,11 @@ void Print(const T& x)
   printf("%g ]", x[N-1]);
 }
 
-template <class Backend>
+template <class Backend, typename FloatT>
 void Test(const char* name)
 {
-  typedef typename Backend::Real_t Real_t;
-  typedef typename Backend::Real_v Real_v;
+  using Real_t = FloatT;
+  using Real_v = typename Backend::template Vector<Real_t>;
 
   static_assert(std::is_same<typename backend::ScalarType<Real_v>::Type, Real_t>::value,
     "conversion of vector type to scalar type failed");
@@ -61,18 +61,18 @@ void Test(const char* name)
 
 int main(int argc, char *argv[])
 {
-  Test<backend::Basic<float> >("Basic (single precision)");
-  Test<backend::Basic<double> >("Basic (double precision)");
+  Test<backend::Basic, float>("Basic (single precision)");
+  Test<backend::Basic, double>("Basic (double precision)");
 
 #ifdef VECCORE_ENABLE_VC
-  Test<backend::VcScalar<float> >("VcScalar (single precision)");
-  Test<backend::VcScalar<double> >("VcScalar (double precision)");
+  Test<backend::VcScalar, float>("VcScalar (single precision)");
+  Test<backend::VcScalar, double>("VcScalar (double precision)");
 
-  Test<backend::VcVector<float> >("VcVector (single precision)");
-  Test<backend::VcVector<double> >("VcVector (double precision)");
+  Test<backend::VcVector, float>("VcVector (single precision)");
+  Test<backend::VcVector, double>("VcVector (double precision)");
 
-  Test<backend::VcSimdArray<float> >("VcSimdArray (single precision)");
-  Test<backend::VcSimdArray<double> >("VcSimdArray (double precision)");
+  Test<backend::VcSimdArray<16>, float>("VcSimdArray (single precision)");
+  Test<backend::VcSimdArray<16>, double>("VcSimdArray (double precision)");
 #endif
 
   return 0;
