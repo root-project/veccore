@@ -19,11 +19,11 @@ namespace vecCore {
 namespace backend {
 
 #if defined(VECCORE_NVCC) || defined(VECCORE_DISABLE_SIMD)
-template <typename T> using Scalar = Basic<T>;
-template <typename T> using Vector = Basic<T>;
+using Scalar = Basic;
+using Vector = Basic;
 #elif defined(VECCORE_ENABLE_VC)
-template <typename T> using Scalar = VcScalar<T>;
-template <typename T> using Vector = VcVector<T>;
+using Scalar = VcScalar;
+using Vector = VcVector;
 #endif
 } // namespace backend
 } // namespace vecCore

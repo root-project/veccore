@@ -11,26 +11,11 @@ namespace backend {
 template <typename T>
 struct ScalarType<Vc::Vector<T> > { typedef T Type; };
 
-template <typename FloatT = float>
 class VcVector {
 public:
-  typedef bool Bool_t;
-  typedef FloatT Real_t;
-  typedef float Float_t;
-  typedef double Double_t;
+  template <typename T>
+  using Vector = Vc::Vector<T>;
 
-  typedef typename IntFor<Real_t>::Type Int_t;
-  typedef typename UIntFor<Real_t>::Type UInt_t;
-
-  typedef int16_t Int16_t;
-  typedef int32_t Int32_t;
-  typedef int64_t Int64_t;
-
-  typedef uint16_t UInt16_t;
-  typedef uint32_t UInt32_t;
-  typedef uint64_t UInt64_t;
-
-  typedef Vc::Vector<Real_t> Real_v;
   typedef Vc::Vector<Float_t> Float_v;
   typedef Vc::Vector<Double_t> Double_v;
 

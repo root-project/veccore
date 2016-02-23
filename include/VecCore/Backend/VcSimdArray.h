@@ -11,26 +11,12 @@ namespace backend {
 template <typename T, std::size_t N>
 struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 
-template <typename FloatT = float, std::size_t N = 16>
+template <std::size_t N = 16>
 class VcSimdArray {
 public:
-  typedef bool Bool_t;
-  typedef FloatT Real_t;
-  typedef float Float_t;
-  typedef double Double_t;
+  template <typename T>
+  using Vector = Vc::SimdArray<T, N>;
 
-  typedef typename IntFor<Real_t>::Type Int_t;
-  typedef typename UIntFor<Real_t>::Type UInt_t;
-
-  typedef int16_t Int16_t;
-  typedef int32_t Int32_t;
-  typedef int64_t Int64_t;
-
-  typedef uint16_t UInt16_t;
-  typedef uint32_t UInt32_t;
-  typedef uint64_t UInt64_t;
-
-  typedef Vc::SimdArray<Real_t, N> Real_v;
   typedef Vc::SimdArray<Float_t, N> Float_v;
   typedef Vc::SimdArray<Double_t, N> Double_v;
 
