@@ -12,6 +12,23 @@
 #define VECCORE_FORCE_INLINE
 #endif
 
+namespace vecCore {
+  using Bool_t    = bool;
+
+  using Int_t     = int32_t;
+  using Int16_t   = int16_t;
+  using Int32_t   = int32_t;
+  using Int64_t   = int64_t;
+
+  using UInt_t    = uint32_t;
+  using UInt16_t  = uint16_t;
+  using UInt32_t  = uint32_t;
+  using UInt64_t  = uint64_t;
+
+  using Float_t   = float;
+  using Double_t  = double;
+}
+
 #include "CUDA.h"
 #include "SIMD.h"
 
