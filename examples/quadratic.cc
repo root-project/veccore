@@ -44,11 +44,11 @@ int QuadSolve(T a, T b, T c, T &x1, T &x2) {
 
 template <class Backend>
 void QuadSolveSIMD(typename Backend::Float_v const &a,
-                 typename Backend::Float_v const &b,
-                 typename Backend::Float_v const &c,
-                 typename Backend::Float_v &x1,
-                 typename Backend::Float_v &x2,
-                 typename Backend::Int32_v &roots)
+                   typename Backend::Float_v const &b,
+                   typename Backend::Float_v const &c,
+                   typename Backend::Float_v &x1,
+                   typename Backend::Float_v &x2,
+                   typename Backend::Int32_v &roots)
 {
   using Float_v = typename Backend::Float_v;
   using FMask = typename Backend::Float_v::Mask;
@@ -128,14 +128,14 @@ int main(int argc, char *argv[]) {
 
   timer.Start();
 
-  for (int i = 0; i < N; i += backend::Vector<float>::Float_v::Size) {
-    QuadSolveSIMD<backend::Vector<float>>(
-      (backend::Vector<float>::Float_v &)(a[i]),
-      (backend::Vector<float>::Float_v &)(b[i]),
-      (backend::Vector<float>::Float_v &)(c[i]),
-      (backend::Vector<float>::Float_v &)(x1[i]),
-      (backend::Vector<float>::Float_v &)(x2[i]),
-      (backend::Vector<float>::Int32_v &)(roots[i])
+  for (int i = 0; i < N; i += backend::Vector::Float_v::Size) {
+    QuadSolveSIMD<backend::Vector>(
+      (backend::Vector::Float_v &)(a[i]),
+      (backend::Vector::Float_v &)(b[i]),
+      (backend::Vector::Float_v &)(c[i]),
+      (backend::Vector::Float_v &)(x1[i]),
+      (backend::Vector::Float_v &)(x2[i]),
+      (backend::Vector::Int32_v &)(roots[i])
     );
   }
 
