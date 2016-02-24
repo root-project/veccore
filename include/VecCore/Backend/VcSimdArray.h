@@ -8,10 +8,10 @@
 namespace vecCore {
 namespace backend {
 
-template <typename T, std::size_t N>
+template <typename T, size_t N>
 struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 
-template <std::size_t N = 16>
+template <size_t N = 16>
 class VcSimdArray {
 public:
   using Float_v = Vc::SimdArray<Float_t, N>;
@@ -31,6 +31,41 @@ public:
 };
 
 } // namespace backend
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+Bool_t IsEmpty(const Vc::SimdMaskArray<T, N> mask)
+{
+  return mask.isEmpty();
+}
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+Bool_t IsFull(const Vc::SimdMaskArray<T, N> mask)
+{
+  return mask.isFull();
+}
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+void MaskAssign(Vc::SimdArray<T, N>& dest,
+                Vc::SimdMaskArray<T, N> mask,
+                const Vc::SimdArray<T, N> &src)
+{
+  dest(mask) = src;
+}
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> mask,
+                          const Vc::SimdArray<T, N>& tval,
+                          const Vc::SimdArray<T, N>& fval)
+{
+  typename Vc::SimdArray<T, N> tmp(fval);
+  tmp(mask) = tval;
+  return tmp;
+}
+
 } // namespace vecCore
 
 #endif
