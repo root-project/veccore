@@ -9,34 +9,6 @@
 
 namespace vecCore {
 
-template <>
-VECCORE_FORCE_INLINE
-Bool_t IsEmpty<Bool_t>(const Bool_t mask)
-{
-  return !mask;
-}
-
-template <>
-VECCORE_FORCE_INLINE
-Bool_t IsFull<Bool_t>(const Bool_t mask)
-{
-  return mask;
-}
-
-template <typename T, typename = std::enable_if<std::is_scalar<T>::value>>
-VECCORE_FORCE_INLINE
-void MaskAssign(T& dest, Bool_t mask, const T &src)
-{
-  if (mask) dest = src;
-}
-
-template <typename T, typename = std::enable_if<std::is_scalar<T>::value>>
-VECCORE_FORCE_INLINE
-T Blend(const Bool_t mask, const T& tval, const T& fval)
-{
-  return mask ? tval : fval;
-}
-
 namespace backend {
 
 class Basic {
