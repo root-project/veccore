@@ -14,21 +14,20 @@ struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 template <std::size_t N = 16>
 class VcSimdArray {
 public:
-  template <typename T>
-  using Vector = Vc::SimdArray<T, N>;
+  using Float_v = Vc::SimdArray<Float_t, N>;
+  using Double_v = Vc::SimdArray<Double_t, N>;
 
-  typedef Vc::SimdArray<Float_t, N> Float_v;
-  typedef Vc::SimdArray<Double_t, N> Double_v;
+  using Int_v = Vc::SimdArray<Int_t, N>;
+  using Int16_v = Vc::SimdArray<Int16_t, N>;
+  using Int32_v = Vc::SimdArray<Int32_t, N>;
+  using Int64_v = Vc::SimdArray<Int64_t, N>;
 
-  typedef Vc::SimdArray<Int_t, N> Int_v;
-  typedef Vc::SimdArray<Int16_t, N> Int16_v;
-  typedef Vc::SimdArray<Int32_t, N> Int32_v;
-  typedef Vc::SimdArray<Int64_t, N> Int64_v;
+  using UInt_v = Vc::SimdArray<UInt_t, N>;
+  using UInt16_v = Vc::SimdArray<UInt16_t, N>;
+  using UInt32_v = Vc::SimdArray<UInt32_t, N>;
+  using UInt64_v = Vc::SimdArray<UInt64_t, N>;
 
-  typedef Vc::SimdArray<UInt_t, N> UInt_v;
-  typedef Vc::SimdArray<UInt16_t, N> UInt16_v;
-  typedef Vc::SimdArray<UInt32_t, N> UInt32_v;
-  typedef Vc::SimdArray<UInt64_t, N> UInt64_v;
+  template <typename T> using Vector = Vc::SimdArray<T, N>;
 };
 
 } // namespace backend

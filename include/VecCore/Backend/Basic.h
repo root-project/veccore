@@ -12,21 +12,20 @@ namespace backend {
 
 class Basic {
 public:
-  template <typename T>
-  using Vector = details::ScalarWrapper<T>;
+  using Float_v  = ScalarWrapper<Float_t>;
+  using Double_v = ScalarWrapper<Double_t>;
 
-  typedef details::ScalarWrapper<Float_t> Float_v;
-  typedef details::ScalarWrapper<Double_t> Double_v;
+  using Int_v    = ScalarWrapper<Int_t>;
+  using Int16_v  = ScalarWrapper<Int16_t>;
+  using Int32_v  = ScalarWrapper<Int32_t>;
+  using Int64_v  = ScalarWrapper<Int64_t>;
 
-  typedef details::ScalarWrapper<Int_t> Int_v;
-  typedef details::ScalarWrapper<Int16_t> Int16_v;
-  typedef details::ScalarWrapper<Int32_t> Int32_v;
-  typedef details::ScalarWrapper<Int64_t> Int64_v;
+  using UInt_v   = ScalarWrapper<UInt_t>;
+  using UInt16_v = ScalarWrapper<UInt16_t>;
+  using UInt32_v = ScalarWrapper<UInt32_t>;
+  using UInt64_v = ScalarWrapper<UInt64_t>;
 
-  typedef details::ScalarWrapper<UInt_t> UInt_v;
-  typedef details::ScalarWrapper<UInt16_t> UInt16_v;
-  typedef details::ScalarWrapper<UInt32_t> UInt32_v;
-  typedef details::ScalarWrapper<UInt64_t> UInt64_v;
+  template <typename T> using Vector = ScalarWrapper<T>;
 };
 
 } // namespace backend

@@ -13,21 +13,20 @@ struct ScalarType<Vc::Vector<T> > { typedef T Type; };
 
 class VcVector {
 public:
-  template <typename T>
-  using Vector = Vc::Vector<T>;
+  using Float_v  = Vc::Vector<Float_t>;
+  using Double_v = Vc::Vector<Double_t>;
 
-  typedef Vc::Vector<Float_t> Float_v;
-  typedef Vc::Vector<Double_t> Double_v;
+  using Int_v    = Vc::Vector<Int_t>;
+  using Int16_v  = Vc::Vector<Int16_t>;
+  using Int32_v  = Vc::Vector<Int32_t>;
+  using Int64_v  = Vc::Vector<Int64_t>;
 
-  typedef Vc::Vector<Int_t> Int_v;
-  typedef Vc::Vector<Int16_t> Int16_v;
-  typedef Vc::Vector<Int32_t> Int32_v;
-  typedef Vc::Vector<Int64_t> Int64_v;
+  using UInt_v   = Vc::Vector<UInt_t>;
+  using UInt16_v = Vc::Vector<UInt16_t>;
+  using UInt32_v = Vc::Vector<UInt32_t>;
+  using UInt64_v = Vc::Vector<UInt64_t>;
 
-  typedef Vc::Vector<UInt_t> UInt_v;
-  typedef Vc::Vector<UInt16_t> UInt16_v;
-  typedef Vc::Vector<UInt32_t> UInt32_v;
-  typedef Vc::Vector<UInt64_t> UInt64_v;
+  template <typename T> using Vector = Vc::Vector<T>;
 };
 
 } // namespace backend
