@@ -30,6 +30,37 @@ public:
 };
 
 } // namespace backend
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Bool_t IsEmpty(const Vc::Mask<T> mask)
+{
+  return mask.isEmpty();
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Bool_t IsFull(const Vc::Mask<T> mask)
+{
+  return mask.isFull();
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+void MaskAssign(Vc::Vector<T>& dest, Vc::Mask<T> mask, const Vc::Vector<T> &src)
+{
+  dest(mask) = src;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Vector<T> Blend(const Vc::Mask<T> mask, const Vc::Vector<T>& tval, const Vc::Vector<T>& fval)
+{
+  typename Vc::Vector<T> tmp(fval);
+  tmp(mask) = tval;
+  return tmp;
+}
+
 } // namespace vecCore
 
 #endif
