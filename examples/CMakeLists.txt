@@ -1,7 +1,7 @@
 # VecCore Examples
 
 if (CUDA)
-  cuda_add_executable(hello hello.cu)
+  add_subdirectory(cuda)
 endif()
 
 add_compile_options(${CMAKE_CXX_FLAGS_TARGET_ISA})
