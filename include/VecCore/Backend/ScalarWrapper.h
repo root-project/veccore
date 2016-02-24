@@ -2,9 +2,6 @@
 #define VECCORE_SCALAR_WRAPPER_H
 
 namespace vecCore {
-namespace backend {
-
-namespace details {
 
 class BoolWrapper {
 public:
@@ -125,8 +122,34 @@ private:
   T fVal;
 };
 
-} // namespace details
-} // namespace backend
+template <>
+VECCORE_FORCE_INLINE
+Bool_t IsEmpty<BoolWrapper>(const BoolWrapper mask)
+{
+  return !mask;
+}
+
+template <>
+VECCORE_FORCE_INLINE
+Bool_t IsFull<BoolWrapper>(const BoolWrapper mask)
+{
+  return mask;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+void MaskAssign(ScalarWrapper<T>& dest, BoolWrapper mask, const ScalarWrapper<T> &src)
+{
+  dest(mask) = src;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+ScalarWrapper<T> Blend(const BoolWrapper mask, const ScalarWrapper<T>& tval, const ScalarWrapper<T>& fval)
+{
+  return mask ? tval : fval;
+}
+
 } // namespace vecCore
 
 #endif
