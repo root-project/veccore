@@ -1,11 +1,4 @@
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  message(FATAL_ERROR "CUDA compilation requires GCC compiler")
-else()
-  if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 5.0.0
-      OR CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 5.0.0)
-    message(FATAL_ERROR "GCC ${CMAKE_CXX_COMPILER_VERSION} is not supported by CUDA")
-  endif()
-endif()
+message(STATUS "Compiling with CUDA enabled")
 
 find_package(CUDA REQUIRED)
 
@@ -22,5 +15,3 @@ set(CUDA_NVCC_FLAGS_RELEASE        "-O3 -use_fast_math")
 set(CUDA_NVCC_FLAGS_RELWITHDEBINFO "-O3 -g -G -use_fast_math")
 
 list(APPEND CUDA_NVCC_FLAGS "-gencode arch=compute_30,code=sm_30")
-
-message(STATUS "Compiling with CUDA enabled")
