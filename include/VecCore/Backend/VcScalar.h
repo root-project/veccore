@@ -13,6 +13,7 @@ struct ScalarType<Vc::Scalar::Vector<T> > { typedef T Type; };
 
 class VcScalar {
 public:
+  using Real_v   = Vc::Scalar::Vector<Real_t>;
   using Float_v  = Vc::Scalar::Vector<Float_t>;
   using Double_v = Vc::Scalar::Vector<Double_t>;
 

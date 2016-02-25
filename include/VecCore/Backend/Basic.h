@@ -13,6 +13,7 @@ namespace backend {
 
 class Basic {
 public:
+  using Real_v   = ScalarWrapper<Real_t>;
   using Float_v  = ScalarWrapper<Float_t>;
   using Double_v = ScalarWrapper<Double_t>;
 

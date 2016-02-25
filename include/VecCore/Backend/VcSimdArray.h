@@ -14,6 +14,7 @@ struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 template <size_t N = 16>
 class VcSimdArray {
 public:
+  using Real_v = Vc::SimdArray<Real_t, N>;
   using Float_v = Vc::SimdArray<Float_t, N>;
   using Double_v = Vc::SimdArray<Double_t, N>;
 
