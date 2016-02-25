@@ -14,16 +14,16 @@ struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
 template <size_t N = 16>
 class VcSimdArray {
 public:
-  using Real_v = Vc::SimdArray<Real_t, N>;
-  using Float_v = Vc::SimdArray<Float_t, N>;
+  using Real_v   = Vc::SimdArray<Real_t, N>;
+  using Float_v  = Vc::SimdArray<Float_t, N>;
   using Double_v = Vc::SimdArray<Double_t, N>;
 
-  using Int_v = Vc::SimdArray<Int_t, N>;
-  using Int16_v = Vc::SimdArray<Int16_t, N>;
-  using Int32_v = Vc::SimdArray<Int32_t, N>;
-  using Int64_v = Vc::SimdArray<Int64_t, N>;
+  using Int_v    = Vc::SimdArray<Int_t, N>;
+  using Int16_v  = Vc::SimdArray<Int16_t, N>;
+  using Int32_v  = Vc::SimdArray<Int32_t, N>;
+  using Int64_v  = Vc::SimdArray<Int64_t, N>;
 
-  using UInt_v = Vc::SimdArray<UInt_t, N>;
+  using UInt_v   = Vc::SimdArray<UInt_t, N>;
   using UInt16_v = Vc::SimdArray<UInt16_t, N>;
   using UInt32_v = Vc::SimdArray<UInt32_t, N>;
   using UInt64_v = Vc::SimdArray<UInt64_t, N>;
