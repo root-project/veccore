@@ -9,10 +9,8 @@ namespace backend {
 template <typename T>
 struct ScalarType { typedef T Type; };
 
-#ifndef __CUDACC__
 template <typename T, template <typename> class VectorType>
 struct ScalarType<VectorType<T>> { typedef T Type; };
-#endif
 
 }
 
