@@ -10,6 +10,12 @@ using Bool_t = bool;
 using Float_t = float;
 using Double_t = double;
 
+#ifdef VECCORE_SINGLE_PRECISION
+using Real_t = Float_t;
+#else
+using Real_t = Double_t;
+#endif
+
 using Size_t = size_t;
 
 using Int_t = int32_t;
