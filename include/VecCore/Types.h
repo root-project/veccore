@@ -5,6 +5,7 @@
 #include <cstdint>
 
 namespace vecCore {
+
 using Bool_t = bool;
 
 using Float_t = float;
@@ -27,6 +28,16 @@ using UInt_t = uint32_t;
 using UInt16_t = uint16_t;
 using UInt32_t = uint32_t;
 using UInt64_t = uint64_t;
+
+template <class T>
+struct ScalarType { using Type = T; };
+
+template <class T, template <typename> class VectorType>
+struct ScalarType<VectorType<T>> { using Type = T; };
+
+template <class T, size_t N, template <typename, size_t> class VectorType>
+struct ScalarType<VectorType<T,N>> { using Type = T; };
+
 }
 
 #endif

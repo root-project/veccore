@@ -1,12 +1,7 @@
 #ifndef VECCORE_BACKEND_H
 #define VECCORE_BACKEND_H
 
-#include "Common.h"
-#include "Limits.h"
-#include "Types.h"
-
 namespace vecCore {
-
 // backend interface
 
 template <class Mask> Bool_t IsEmpty(const Mask mask);

@@ -23,7 +23,7 @@ void Test(const char* name)
   using Real_t = FloatT;
   using Real_v = typename Backend::template Vector<Real_t>;
 
-  static_assert(std::is_same<typename backend::ScalarType<Real_v>::Type, Real_t>::value,
+  static_assert(std::is_same<typename ScalarType<Real_v>::Type, Real_t>::value,
     "conversion of vector type to scalar type failed");
 
   printf("Backend: %s\n\n", name);

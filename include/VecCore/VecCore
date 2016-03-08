@@ -5,6 +5,7 @@
 #include "Types.h"
 #include "Common.h"
 #include "Backend.h"
+#include "Limits.h"
 #include "Math.h"
 
 #endif

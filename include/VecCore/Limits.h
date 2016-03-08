@@ -4,20 +4,11 @@
 #include <limits>
 
 namespace vecCore {
-namespace backend {
-
-template <typename T>
-struct ScalarType { typedef T Type; };
-
-template <typename T, template <typename> class VectorType>
-struct ScalarType<VectorType<T>> { typedef T Type; };
-
-}
 
 template <typename T>
 class NumericLimits {
 public:
-  using ScalarT = typename backend::ScalarType<T>::Type;
+  using ScalarT = typename ScalarType<T>::Type;
 
   static constexpr T Min() noexcept { return T(std::numeric_limits<ScalarT>::min()); }
   static constexpr T Max() noexcept { return T(std::numeric_limits<ScalarT>::max()); }

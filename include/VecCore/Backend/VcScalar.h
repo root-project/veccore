@@ -6,10 +6,11 @@
 #include <Vc/Vc>
 
 namespace vecCore {
-namespace backend {
 
 template <typename T>
-struct ScalarType<Vc::Scalar::Vector<T> > { typedef T Type; };
+struct ScalarType<Vc::Scalar::Vector<T>> { using Type = T; };
+
+namespace backend {
 
 class VcScalar {
 public:

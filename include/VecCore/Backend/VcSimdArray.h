@@ -6,10 +6,11 @@
 #include <Vc/Vc>
 
 namespace vecCore {
-namespace backend {
 
 template <typename T, size_t N>
-struct ScalarType<typename Vc::SimdArray<T, N> > { typedef T Type; };
+struct ScalarType<typename Vc::SimdArray<T, N>> { using Type = T; };
+
+namespace backend {
 
 template <size_t N = 16>
 class VcSimdArray {
