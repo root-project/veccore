@@ -21,33 +21,43 @@ VecCore provides the following scalar types (in namespace vecCore):
 Bool_t, Int_t, Int16_t, Int32_t, UInt_t, UInt16_t, UInt32_t, Float_t, Double_t
 ```
 
-For each integer and floating point type, the backend _must_ provide an
-equivalent SIMD class vector types, designated either by
-
-```cpp
-template <typename T> Backend::Vector<T>;
-```
-
-for a given type `T` in the set of scalars (integer and floating point), or by
+For each scalar integer and floating point type, the backend _must_ provide
+equivalent SIMD vector types for the scalar type, and for its masks and
+indices, designated by
 
 ```cpp
 Int_v, Int16_v, Int32_v, UInt_v, UInt16_v, UInt32_v, Float_v, Double_v
 ```
 
-that follow the interface requirements for constructors, masking, etc, of
-the VecCore library.
+and
+
+```cpp
+template <typename T> Backend::Mask_v<T>;
+template <typename T> Backend::Index_v<T>;
+template <typename T> Backend::VectorSize<T>(const T&);
+```
+
+where `T` might be a scalar or vector type. That is, `Mask_v(Real_v)`
+and `Mask_v(Real_t)` are equivalent for a given backend.
+
+The SIMD classes need to follow the interface requirements for constructors,
+masking, etc, of the VecCore library.
 
 Since for booleans the number of elements is dependent on the vector type
 (e.g., in AVX2 32bit types have 8 elements, while 64bit types have only 4),
 it is not possible to have a single `Bool_v` that works for all types.
-Instead, each SIMD vector class must provide a mask type alias inside it,
-such that a mask can be created, for example, as
+Instead, each backend _must_ provide a SIMD template that takes a SIMD
+type as argument and defines a `Type` alias inside it, such that a mask for
+SIMD type `T` can be created as
 
 ```cpp
-typename Float_v::Mask m;
+typename Backend::Mask_v<T> mask;
 ```
 
-VecCore backend mask types must also follow a VecCore interface.
+This structure is important to avoid using a dependent type name such as
+`Real_v::Mask` that cannot be defined for scalar types, so that a purely
+scalar backend can be defined where it is supported. Nevertheless, VecCore
+backend mask types also _must_ follow a VecCore interface.
 
 SIMD Vector Class Interface Requirements
 ----------------------------------------
@@ -64,10 +74,10 @@ and operations must be defined:
 ### SIMD Vector Class Interface
 
 - Operator overloading for common bitwise, logical, and arithmetic operations
-- A static member function `size()` returning the number of elements in the class
 - An `operator[]` for indexing within the elements of the SIMD vector
-- An `operator()(Mask&)` for masked assignments (e.g.: `Float_v x, y; x(y < 0.0) = 0.0;`)
-- Member functions `load()` and `store()` to allow reading from/writing to memory addresses
+  (care must be taken, since a pure scalar backend has been added that doesn't
+  have such funtionality, requiring specialization in those cases).
+- Backend functions `Load()` and `Store()` to allow reading from/writing to memory addresses
 
 ### Standard Math Functions
 
@@ -97,7 +107,7 @@ T Blend(const Mask mask, const T& tval, const T& fval);
 - Perform assignment with a mask
 ```cpp
 template <class T, class Mask>
-void MaskAssign(T& dest, const T::Mask mask, const T& src);
+void MaskAssign(T& dest, const Mask mask, const T& src);
 ```
 
 SIMD Scatter/Gather Interface
