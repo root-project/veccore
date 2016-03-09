@@ -8,6 +8,10 @@
 #include "ScalarWrapper.h"
 
 namespace vecCore {
+
+template <typename T>
+struct ScalarType<ScalarWrapper<T>> { using Type = T; };
+
 namespace backend {
 
 class Basic {
