@@ -29,7 +29,17 @@ public:
   using UInt32_v = Vc::SimdArray<UInt32_t, N>;
   using UInt64_v = Vc::SimdArray<UInt64_t, N>;
 
-  template <typename T> using Vector = Vc::SimdArray<T, N>;
+  template <typename T>
+  using Mask_v = typename Vc::SimdArray<typename ScalarType<T>::Type, N>::MaskType;
+
+  template <typename T>
+  using Index_v = typename Vc::SimdArray<typename ScalarType<T>::Type, N>::IndexType;
+
+  template <typename T>
+  static constexpr UInt64_t VectorSize(const T& x)
+  {
+    return static_cast<UInt64_t>(N);
+  }
 };
 
 } // namespace backend
