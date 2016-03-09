@@ -10,12 +10,19 @@
 
 using namespace vecCore;
 
-static const int N = (8 * 1024 * 1024);
+#ifdef VECCORE_ENABLE_VC
+using Backend = backend::VcVector;
+#else
+using Backend = backend::Basic;
+#endif
+
+static const Int_t N = (8 * 1024 * 1024);
+static const UInt64_t K = Backend::VectorSize(Backend::Float_v());
 
 // solve ax2 + bx + c = 0, return number of roots found
 
 template <typename T>
-int QuadSolve(T a, T b, T c, T &x1, T &x2) {
+Int_t QuadSolve(T a, T b, T c, T &x1, T &x2) {
   T delta = b * b - 4.0 * a * c;
 
   if (delta < 0.0)
@@ -51,8 +58,9 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
                    typename Backend::Int32_v &roots)
 {
   using Float_v = typename Backend::Float_v;
-  using FMask = typename Backend::Float_v::Mask;
-  using IMask = typename Backend::Int32_v::Mask;
+  using Int32_v = typename Backend::Int32_v;
+  using FMask = typename Backend::template Mask_v<Float_v>;
+  using IMask = typename Backend::template Mask_v<Int32_v>;
 
   roots = 0;
   Float_v delta = b * b - Float_v(4.0) * a * c;
@@ -89,18 +97,18 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
 }
 
 int main(int argc, char *argv[]) {
-  float *a = (float *)memalign(64, N * sizeof(float));
-  float *b = (float *)memalign(64, N * sizeof(float));
-  float *c = (float *)memalign(64, N * sizeof(float));
+  Float_t *a = (Float_t *)memalign(64, N * sizeof(Float_t));
+  Float_t *b = (Float_t *)memalign(64, N * sizeof(Float_t));
+  Float_t *c = (Float_t *)memalign(64, N * sizeof(Float_t));
 
-  int *roots = (int *)memalign(64, N * sizeof(int));
-  float *x1 = (float *)memalign(64, N * sizeof(float));
-  float *x2 = (float *)memalign(64, N * sizeof(float));
+  Int_t *roots = (Int_t *)memalign(64, N * sizeof(Int_t));
+  Float_t *x1 = (Float_t *)memalign(64, N * sizeof(Float_t));
+  Float_t *x2 = (Float_t *)memalign(64, N * sizeof(Float_t));
 
   srand48(time(NULL));
-  int index = (int)((N - 100) * drand48());
+  Int_t index = (Int_t)((N - 100) * drand48());
 
-  for (int i = 0; i < N; i++) {
+  for (Int_t i = 0; i < N; i++) {
     a[i] = 10.0 * (drand48() - 0.5);
     b[i] = 10.0 * (drand48() - 0.5);
     c[i] = 50.0 * (drand48() - 0.5);
@@ -111,39 +119,45 @@ int main(int argc, char *argv[]) {
 
   Timer<milliseconds> timer;
 
-  for (int i = 0; i < N; i++) {
+  for (Int_t i = 0; i < N; i++) {
     roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
   }
 
-  double t = timer.Elapsed();
+  Double_t t = timer.Elapsed();
 
   // print random result to ensure scalar and vector backends give same result
 
-  for (int i = index; i < index + 10; i++) {
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
-            i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+  for (Int_t i = index; i < index + 10; i++) {
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f,"
+           " roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
+            i, a[i], b[i], c[i], roots[i],
+            roots[i] > 0 ? x1[i] : 0,
+            roots[i] > 1 ? x2[i] : 0);
   }
 
   printf("\nelapsed time = %.3lfms (scalar code)\n", t);
 
   timer.Start();
 
-  for (int i = 0; i < N; i += backend::Vector::Float_v::Size) {
-    QuadSolveSIMD<backend::Vector>(
-      (backend::Vector::Float_v &)(a[i]),
-      (backend::Vector::Float_v &)(b[i]),
-      (backend::Vector::Float_v &)(c[i]),
-      (backend::Vector::Float_v &)(x1[i]),
-      (backend::Vector::Float_v &)(x2[i]),
-      (backend::Vector::Int32_v &)(roots[i])
+  for (Int_t i = 0; i < N; i += Int_t(K)) {
+    QuadSolveSIMD<Backend>(
+      (Backend::Float_v &)(a[i]),
+      (Backend::Float_v &)(b[i]),
+      (Backend::Float_v &)(c[i]),
+      (Backend::Float_v &)(x1[i]),
+      (Backend::Float_v &)(x2[i]),
+      (Backend::Int32_v &)(roots[i])
     );
   }
 
   t = timer.Elapsed();
 
-  for (int i = index; i < index + 10; i++) {
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
-            i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+  for (Int_t i = index; i < index + 10; i++) {
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f,"
+           " roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
+            i, a[i], b[i], c[i], roots[i],
+            roots[i] > 0 ? x1[i] : 0,
+            roots[i] > 1 ? x2[i] : 0);
   }
 
   printf("\nelapsed time = %.3lfms (vector backend)\n", t);
