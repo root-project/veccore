@@ -13,11 +13,12 @@ using namespace vecCore;
 #ifdef VECCORE_ENABLE_VC
 using Backend = backend::VcVector;
 #else
-using Backend = backend::Basic;
+using Backend = backend::Scalar;
 #endif
 
+static Backend::Float_v x = 0.0;
 static const Int_t N = (8 * 1024 * 1024);
-static const UInt64_t K = Backend::VectorSize(Backend::Float_v());
+static const UInt64_t K = Backend::VectorSize(x);
 
 // solve ax2 + bx + c = 0, return number of roots found
 
@@ -68,32 +69,32 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
   FMask mask0(delta < Float_v(0.0));
   FMask mask2(delta >= NumericLimits<Float_v>::Epsilon());
 
-  roots((IMask)mask2) = 2;
+  MaskAssign(roots, (IMask)mask2, Int32_v(2));
 
   FMask mask = (b >= Float_v(0.0));
 
   Float_v sign = Blend(mask, Float_v(-1.0), Float_v(1.0));
   Float_v root = (-b + sign * math::Sqrt(delta)) / (Float_v(2.0) * a);
 
-  x1(mask2 && mask) = root;
-  x2(mask2 && !mask) = root;
+  MaskAssign(x1, mask2 && mask,  root);
+  MaskAssign(x2, mask2 && !mask, root);
 
   root = c / (a * Blend(mask, x1, x2));
 
-  x2(mask2 && mask) = root;
-  x1(mask2 && !mask) = root;
+  MaskAssign(x1, mask2 && !mask, root);
+  MaskAssign(x2, mask2 && mask,  root);
 
   FMask mask1 = !(mask0 || mask2);
 
   if (IsEmpty(mask1))
     return;
 
-  roots((IMask)mask1) = 1;
+  MaskAssign(roots, (IMask)mask1, Int32_v(1));
 
   root = -Float_v(0.5) * b / a;
 
-  x1(mask1) = root;
-  x2(mask1) = root;
+  MaskAssign(x1, mask1, root);
+  MaskAssign(x2, mask1, root);
 }
 
 int main(int argc, char *argv[]) {
