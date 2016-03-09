@@ -8,7 +8,6 @@
 #include "ScalarWrapper.h"
 
 namespace vecCore {
-
 namespace backend {
 
 class Basic {
@@ -27,7 +26,14 @@ public:
   using UInt32_v = ScalarWrapper<UInt32_t>;
   using UInt64_v = ScalarWrapper<UInt64_t>;
 
-  template <typename T> using Vector = ScalarWrapper<T>;
+  template <typename T> using Mask_v  = BoolWrapper;
+  template <typename T> using Index_v = ScalarWrapper<Int_t>;
+
+  template <typename T>
+  static constexpr UInt64_t VectorSize(const T& x)
+  {
+    return 1UL;
+  }
 };
 
 } // namespace backend
