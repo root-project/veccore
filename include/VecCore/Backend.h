@@ -59,6 +59,7 @@ constexpr Bool_t EarlyReturnAllowed()
 }
 
 #include "Backend/Basic.h"
+#include "Backend/Scalar.h"
 #include "Backend/CUDA.h"
 
 #if !defined(VECCORE_NVCC)
