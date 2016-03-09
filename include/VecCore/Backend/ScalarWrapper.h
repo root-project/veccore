@@ -138,14 +138,18 @@ Bool_t IsFull<BoolWrapper>(const BoolWrapper mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskAssign(ScalarWrapper<T>& dest, BoolWrapper mask, const ScalarWrapper<T> &src)
+void MaskAssign(ScalarWrapper<T>& dest,
+                BoolWrapper mask,
+                const ScalarWrapper<T> &src)
 {
-  dest(mask) = src;
+  if (mask) dest = src;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-ScalarWrapper<T> Blend(const BoolWrapper mask, const ScalarWrapper<T>& tval, const ScalarWrapper<T>& fval)
+ScalarWrapper<T> Blend(const BoolWrapper mask,
+                       const ScalarWrapper<T>& tval,
+                       const ScalarWrapper<T>& fval)
 {
   return mask ? tval : fval;
 }
