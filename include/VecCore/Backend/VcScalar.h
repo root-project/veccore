@@ -28,7 +28,17 @@ public:
   using UInt32_v = Vc::Scalar::Vector<UInt32_t>;
   using UInt64_v = Vc::Scalar::Vector<UInt64_t>;
 
-  template <typename T> using Vector = Vc::Scalar::Vector<T>;
+  template <typename T>
+  using Mask_v = typename Vc::Scalar::Vector<typename ScalarType<T>::Type>::MaskType;
+
+  template <typename T>
+  using Index_v = typename Vc::Scalar::Vector<typename ScalarType<T>::Type>::IndexType;
+
+  template <typename T>
+  static constexpr UInt64_t VectorSize(const T& x)
+  {
+    return Vc::Scalar::Vector<typename ScalarType<T>::Type>::Size;
+  }
 };
 
 } // namespace backend
