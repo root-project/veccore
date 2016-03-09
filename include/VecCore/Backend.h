@@ -67,18 +67,4 @@ constexpr Bool_t EarlyReturnAllowed()
 #include "Backend/VcSimdArray.h"
 #endif
 
-// default backends
-
-namespace vecCore {
-namespace backend {
-
-#if defined(VECCORE_NVCC) || defined(VECCORE_DISABLE_SIMD)
-using Scalar = Basic;
-using Vector = Basic;
-#elif defined(VECCORE_ENABLE_VC)
-using Scalar = VcScalar;
-using Vector = VcVector;
-#endif
-} // namespace backend
-} // namespace vecCore
 #endif
