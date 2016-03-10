@@ -67,7 +67,7 @@ void Test(const char* name)
 int main(int argc, char *argv[])
 {
   Test<backend::Scalar>("Scalar");
-  Test<backend::Basic>("Basic");
+  Test<backend::ScalarWrapper>("ScalarWrapper");
 
 #ifdef VECCORE_ENABLE_VC
   Test<backend::VcScalar>("VcScalar");

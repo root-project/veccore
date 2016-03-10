@@ -30,7 +30,7 @@ typename Backend::Float_v NewMin(typename Backend::Float_v a, typename Backend::
 
 int main(int argc, char *argv[])
 {
-  using Backend = backend::Basic;
+  using Backend = backend::ScalarWrapper;
 
   typename Backend::Float_v x = atof(argv[1]);
   typename Backend::Float_v y = atof(argv[2]);

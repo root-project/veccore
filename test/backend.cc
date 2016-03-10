@@ -83,8 +83,8 @@ void TestBackend() {
 
 int main(int argc, char *argv[]) {
 
-  printf("Backend Test: %s\n\n", "Basic");
-  TestBackend<backend::Basic>();
+  printf("Backend Test: %s\n\n", "ScalarWrapper");
+  TestBackend<backend::ScalarWrapper>();
 
 #ifdef VECCORE_ENABLE_VC
   printf("Backend Test: %s\n\n", "Vc (Scalar)");
