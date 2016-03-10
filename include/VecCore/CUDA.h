@@ -2,6 +2,7 @@
 #define VECCORE_CUDA_H
 
 #if !defined(VECCORE_ENABLE_CUDA)
+
 #define VECCORE_CUDA_HOST                /* empty */
 #define VECCORE_CUDA_DEVICE              /* empty */
 #define VECCORE_CUDA_HOST_DEVICE         /* empty */
@@ -11,12 +12,14 @@
 #define VECCORE_DECLARE_CUDA_TYPE(T)     /* empty */
 #define VECCORE_DECLARE_CUDA_CLASS(x)    /* empty */
 #define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
-#else
-#if (defined(__CUDACC__) || defined(__NVCC__))
+
+#elif (defined(__CUDACC__) || defined(__NVCC__))
+
 #define VECCORE_NVCC
 #ifdef __CUDA_ARCH__
 #define VECCORE_NVCC_DEVICE
 #endif
+
 #define VECCORE_CUDA_HOST __host__
 #define VECCORE_CUDA_DEVICE __device__
 #define VECCORE_CUDA_HOST_DEVICE __host__ __device__
@@ -27,7 +30,9 @@
 #define VECCORE_DECLARE_CUDA_CLASS(x)    /* empty */
 #define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
 #define VECCORE_DECLARE_CUDA_TEMPLATE(x) /* empty */
+
 #else // CUDA enabled, but compiling regular C++ code
+
 #define VECCORE_CUDA_INTERFACE
 #define VECCORE_CUDA_HOST        /* empty */
 #define VECCORE_CUDA_DEVICE      /* empty */
@@ -60,6 +65,6 @@ template <typename T> using CudaType = typename CudaTypeTraits<T>::Type;
 #define VECCORE_DECLARE_CUDA_STRUCT(x)                                         \
   VECCORE_DECLARE_CUDA(struct x) VECCORE_DECLARE_CUDA_TYPE(x)
 
-#endif // defined (__CUDACC__) || defined(__NVCC__)
 #endif // defined (VECCORE_ENABLE_CUDA)
+
 #endif
