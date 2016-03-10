@@ -11,7 +11,6 @@
 #define VECCORE_DECLARE_CUDA_TYPE(T)     /* empty */
 #define VECCORE_DECLARE_CUDA_CLASS(x)    /* empty */
 #define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
-#define VECCORE_DECLARE_CUDA_TEMPLATE(x) /* empty */
 #else
 #if (defined(__CUDACC__) || defined(__NVCC__))
 #define VECCORE_NVCC
