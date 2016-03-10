@@ -18,18 +18,20 @@ template <typename T> VECCORE_FORCE_INLINE T Abs(T x) { return std::abs(x); }
 template <class T> VECCORE_FORCE_INLINE T Min(const T a, const T b) { return Blend(a < b, a, b); }
 template <class T> VECCORE_FORCE_INLINE T Max(const T a, const T b) { return Blend(a > b, a, b); }
 
-template <typename T> VECCORE_FORCE_INLINE T Min(T a, T b, T c) { return Min(a, Min(b,c)); }
-template <typename T> VECCORE_FORCE_INLINE T Max(T a, T b, T c) { return Max(a, Max(b,c)); }
+template <typename T> VECCORE_FORCE_INLINE T Min(T a, T b, T c) { return Min(a, Min(b, c)); }
+template <typename T> VECCORE_FORCE_INLINE T Max(T a, T b, T c) { return Max(a, Max(b, c)); }
 
 template <typename T, template <typename> class Wrapper>
-VECCORE_FORCE_INLINE
-Wrapper<T> Min(const Wrapper<T>& a, const Wrapper<T>& b) { return Blend(a < b, a, b); }
+VECCORE_FORCE_INLINE Wrapper<T> Min(const Wrapper<T> &a, const Wrapper<T> &b) {
+  return Blend(a < b, a, b);
+}
 
 template <typename T, template <typename> class Wrapper>
-VECCORE_FORCE_INLINE
-Wrapper<T> Max(const Wrapper<T>& a, const Wrapper<T>& b) { return Blend(a > b, a, b); }
+VECCORE_FORCE_INLINE Wrapper<T> Max(const Wrapper<T> &a, const Wrapper<T> &b) {
+  return Blend(a > b, a, b);
+}
 
-template <typename T> VECCORE_FORCE_INLINE constexpr T Sgn(const T& x) { return Blend(x < T(0), T(-1), T(1)); }
+template <typename T> VECCORE_FORCE_INLINE constexpr T Sgn(const T &x) { return Blend(x < T(0), T(-1), T(1)); }
 
 // Trigonometric Functions
 
@@ -53,11 +55,11 @@ template <typename T> VECCORE_FORCE_INLINE T Atanh(T x) { return std::atanh(x); 
 // Exponential and Logarithmic Functions
 
 template <typename T> VECCORE_FORCE_INLINE T Exp(T x) { return std::exp(x); }
-template <typename T> VECCORE_FORCE_INLINE T Frexp(T x, int* exp) { return std::frexp(x, exp); }
+template <typename T> VECCORE_FORCE_INLINE T Frexp(T x, int *exp) { return std::frexp(x, exp); }
 template <typename T> VECCORE_FORCE_INLINE T Ldexp(T x, int exp) { return std::ldexp(x, exp); }
 template <typename T> VECCORE_FORCE_INLINE T Log(T x) { return std::log(x); }
 template <typename T> VECCORE_FORCE_INLINE T Log10(T x) { return std::log10(x); }
-template <typename T> VECCORE_FORCE_INLINE T Modf(T x, T* intpart) { return std::modf(x, intpart); }
+template <typename T> VECCORE_FORCE_INLINE T Modf(T x, T *intpart) { return std::modf(x, intpart); }
 template <typename T> VECCORE_FORCE_INLINE T Exp2(T x) { return std::exp2(x); }
 template <typename T> VECCORE_FORCE_INLINE T Expm1(T x) { return std::expm1(x); }
 template <typename T> VECCORE_FORCE_INLINE T Ilogb(T x) { return std::ilogb(x); }
@@ -84,8 +86,8 @@ template <typename T> VECCORE_FORCE_INLINE T Round(T x) { return std::round(x); 
 
 // Miscellaneous Utilities
 
-template <typename T> VECCORE_FORCE_INLINE constexpr T Deg(const T& x) { return (x * static_cast<T>(180.0 / M_PI)); }
-template <typename T> VECCORE_FORCE_INLINE constexpr T Rad(const T& x) { return (x * static_cast<T>(M_PI / 180.0)); }
+template <typename T> VECCORE_FORCE_INLINE constexpr T Deg(const T &x) { return (x * static_cast<T>(180.0 / M_PI)); }
+template <typename T> VECCORE_FORCE_INLINE constexpr T Rad(const T &x) { return (x * static_cast<T>(M_PI / 180.0)); }
 
 } // namespace math
 } // namespace vecCore
