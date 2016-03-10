@@ -29,9 +29,6 @@ template <typename T, template <typename> class Wrapper>
 VECCORE_FORCE_INLINE
 Wrapper<T> Max(const Wrapper<T>& a, const Wrapper<T>& b) { return Blend(a > b, a, b); }
 
-template <typename T> VECCORE_FORCE_INLINE void SetMin(T& a, const T& b) { if (a > b) a = b; }
-template <typename T> VECCORE_FORCE_INLINE void SetMax(T& a, const T& b) { if (a < b) a = b; }
-
 template <typename T> VECCORE_FORCE_INLINE constexpr T Sgn(const T& x) { return Blend(x < T(0), T(-1), T(1)); }
 
 // Trigonometric Functions
@@ -43,7 +40,6 @@ template <typename T> VECCORE_FORCE_INLINE T Asin(T x) { return std::asin(x); }
 template <typename T> VECCORE_FORCE_INLINE T Acos(T x) { return std::acos(x); }
 template <typename T> VECCORE_FORCE_INLINE T Atan(T x) { return std::atan(x); }
 template <typename T> VECCORE_FORCE_INLINE T Atan2(T x, T y) { return std::atan2(x, y); }
-template <typename T> VECCORE_FORCE_INLINE T SinCos(T x) { return sincos(x); }
 
 // Hyperbolic Functions
 
@@ -85,47 +81,11 @@ template <typename T> VECCORE_FORCE_INLINE T Floor(T x) { return std::floor(x); 
 template <typename T> VECCORE_FORCE_INLINE T Fmod(T x, T y) { return std::fmod(x, y); }
 template <typename T> VECCORE_FORCE_INLINE T Trunc(T x) { return std::trunc(x); }
 template <typename T> VECCORE_FORCE_INLINE T Round(T x) { return std::round(x); }
-template <typename T> VECCORE_FORCE_INLINE T Remainder(T x, T y) { return std::remainder(x, y); }
-template <typename T> VECCORE_FORCE_INLINE T Remquo(T numer, T denom, T *quot) {
-  return std::remquo(numer, denom, quot);
-}
 
 // Miscellaneous Utilities
 
-template <typename T> VECCORE_FORCE_INLINE T Fma(T x) { return std::fma(x); }
 template <typename T> VECCORE_FORCE_INLINE constexpr T Deg(const T& x) { return (x * static_cast<T>(180.0 / M_PI)); }
 template <typename T> VECCORE_FORCE_INLINE constexpr T Rad(const T& x) { return (x * static_cast<T>(M_PI / 180.0)); }
-
-template <typename T>
-VECCORE_FORCE_INLINE
-bool Infinitesimal(const T& x, const T epsilon = NumericLimits<T>::Epsilon())
-{
-  return Abs(x) < epsilon;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-bool AlmostEqual(const T& x, const T& y, const T epsilon = NumericLimits<T>::Epsilon())
-{
-  if (x == y)
-    return true;
-
-  return Abs(x - y) < (Abs(x) + Abs(y)) * epsilon;
-}
-
-template <class T>
-VECCORE_FORCE_INLINE
-bool InRange(const T& x, const T& min, const T& max)
-{
-  return Blend(min < max, (x >= min) && (x <= max), (x >= max) && (x <= min));
-}
-
-template <class T>
-VECCORE_FORCE_INLINE
-T Clamp(const T& x, const T& xmin, const T& xmax)
-{
-  return Max<T>(xmin, Min<T>(x, xmax));
-}
 
 } // namespace math
 } // namespace vecCore
