@@ -36,44 +36,31 @@
 #define VECCORE_CUDA_GLOBAL      /* empty */
 #define VECCORE_CUDA_ALIGN       /* empty */
 
+#define VECCORE_CUDA_BASIC_TYPES                                               \
+template <typename T> struct CudaTypeTraits;                                   \
+template <> struct CudaTypeTraits<Float_t>  { using Type = Float_t;  };        \
+template <> struct CudaTypeTraits<Double_t> { using Type = Double_t; };        \
+template <> struct CudaTypeTraits<Int8_t>   { using Type = Int8_t;   };        \
+template <> struct CudaTypeTraits<Int16_t>  { using Type = Int16_t;  };        \
+template <> struct CudaTypeTraits<Int32_t>  { using Type = Int32_t;  };        \
+template <> struct CudaTypeTraits<Int64_t>  { using Type = Int64_t;  };        \
+template <> struct CudaTypeTraits<Uint8_t>  { using Type = Uint8_t;  };        \
+template <> struct CudaTypeTraits<Uint16_t> { using Type = Uint16_t; };        \
+template <> struct CudaTypeTraits<Uint32_t> { using Type = Uint32_t; };        \
+template <> struct CudaTypeTraits<Uint64_t> { using Type = Uint64_t; };        \
+template <typename T> using CudaType = typename CudaTypeTraits<T>::Type;
+
 #define VECCORE_DECLARE_CUDA(T) T; namespace cuda { T; }
 
 #define VECCORE_DECLARE_CUDA_TYPE(T)                                           \
-  namespace vecCore {                                                          \
-  template <> struct cuda_t<T> { using value_type = cuda::T; };                \
-  }
+  template <> struct CudaTypeTraits<T> { using Type = cuda::T; };              \
 
 #define VECCORE_DECLARE_CUDA_CLASS(x)                                          \
-  VECCORE_DECLARE_CUDA_TYPE(x) VECCORE_DECLARE_CUDA(class x)
+  VECCORE_DECLARE_CUDA(class x) VECCORE_DECLARE_CUDA_TYPE(x)
 
 #define VECCORE_DECLARE_CUDA_STRUCT(x)                                         \
-  VECCORE_DECLARE_CUDA_TYPE(x) VECCORE_DECLARE_CUDA(struct x)
+  VECCORE_DECLARE_CUDA(struct x) VECCORE_DECLARE_CUDA_TYPE(x)
 
-#define VECCORE_DECLARE_CUDA_TEMPLATE(x, arg_t)                                \
-  VECCORE_DECLARE_CUDA(template <arg_t arg> class x)                           \
-  namespace vecCore {                                                          \
-  template <arg_t arg> struct cuda_t<x<arg>> {                                 \
-    using value_type = cuda::x<cuda_t<arg>>;                                   \
-  };                                                                           \
-  }
-
-namespace vecCore {
-template <typename T> struct cuda_t;
-
-template <> struct cuda_t<float> { using type = float; };
-template <> struct cuda_t<double> { using type = double; };
-
-template <> struct cuda_t<int8_t> { using type = int8_t; };
-template <> struct cuda_t<int16_t> { using type = int16_t; };
-template <> struct cuda_t<int32_t> { using type = int32_t; };
-template <> struct cuda_t<int64_t> { using type = int64_t; };
-template <> struct cuda_t<uint8_t> { using type = uint8_t; };
-template <> struct cuda_t<uint16_t> { using type = uint16_t; };
-template <> struct cuda_t<uint32_t> { using type = uint32_t; };
-template <> struct cuda_t<uint64_t> { using type = uint64_t; };
-
-template <typename T> using cuda_type = typename cuda_t<T>::type;
-}
 #endif // defined (__CUDACC__) || defined(__NVCC__)
 #endif // defined (VECCORE_ENABLE_CUDA)
 #endif
