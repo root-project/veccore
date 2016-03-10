@@ -61,8 +61,8 @@ Bool_t IsFull(const Vc::SimdMaskArray<T, N> mask)
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
 void MaskedAssign(Vc::SimdArray<T, N>& dest,
-                Vc::SimdMaskArray<T, N> mask,
-                const Vc::SimdArray<T, N> &src)
+                  Vc::SimdMaskArray<T, N> mask,
+                  const Vc::SimdArray<T, N> &src)
 {
   dest(mask) = src;
 }
