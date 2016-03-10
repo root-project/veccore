@@ -2,6 +2,9 @@
 #define VECCORE_BACKEND_H
 
 namespace vecCore {
+
+template <class T> struct ScalarType { using Type = T; };
+
 // backend interface
 
 template <class Mask> Bool_t IsEmpty(const Mask mask);
@@ -13,7 +16,7 @@ void MaskAssign(T& dest, bool mask, const T &src);
 template <class T, class Mask>
 T Blend(const Mask mask, const T& tval, const T& fval);
 
-// extra backend functions
+// extra functions
 
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
