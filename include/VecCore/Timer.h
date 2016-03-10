@@ -15,8 +15,7 @@ public:
 
   void Start() { fStart = clock::now(); }
 
-  double Elapsed()
-  {
+  double Elapsed() {
     fStop = clock::now();
     return duration_cast<unit>(fStop - fStart).count();
   }
@@ -37,8 +36,7 @@ public:
 
   void Start() { fStart = GetCycleCount(); }
 
-  double Elapsed()
-  {
+  double Elapsed() {
     return static_cast<double>(GetCycleCount() - fStart);
   }
 
@@ -46,8 +44,7 @@ private:
   unsigned long long int fStart;
 
   inline __attribute__((always_inline))
-  unsigned long long int GetCycleCount()
-  {
+  unsigned long long int GetCycleCount() {
     unsigned int hi, lo;
     asm volatile("cpuid\n\t" "rdtsc" : "=a"(lo), "=d"(hi));
     return ((unsigned long long)lo)|(((unsigned long long)hi) << 32);
