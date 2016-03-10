@@ -59,7 +59,7 @@ Bool_t IsFull(const Vc::Scalar::Mask<T> mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskAssign(Vc::Scalar::Vector<T>& dest,
+void MaskedAssign(Vc::Scalar::Vector<T>& dest,
                 Vc::Scalar::Mask<T> mask,
                 const Vc::Scalar::Vector<T> &src)
 {

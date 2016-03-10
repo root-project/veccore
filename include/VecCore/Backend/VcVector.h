@@ -59,7 +59,7 @@ Bool_t IsFull(const Vc::Mask<T> mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskAssign(Vc::Vector<T>& dest, Vc::Mask<T> mask, const Vc::Vector<T> &src)
+void MaskedAssign(Vc::Vector<T>& dest, Vc::Mask<T> mask, const Vc::Vector<T> &src)
 {
   dest(mask) = src;
 }

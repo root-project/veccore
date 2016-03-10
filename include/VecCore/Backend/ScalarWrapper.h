@@ -183,7 +183,7 @@ Bool_t IsFull<WrappedBool>(const WrappedBool mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskAssign(WrappedScalar<T>& dest,
+void MaskedAssign(WrappedScalar<T>& dest,
                 WrappedBool mask,
                 const WrappedScalar<T> &src)
 {

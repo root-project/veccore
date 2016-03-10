@@ -48,7 +48,7 @@ Bool_t IsFull<Bool_t>(const Bool_t mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskAssign(T& dest, Bool_t mask, const T &src)
+void MaskedAssign(T& dest, Bool_t mask, const T &src)
 {
   if (mask) dest = src;
 }

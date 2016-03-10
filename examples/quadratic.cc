@@ -69,32 +69,32 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
   FMask mask0(delta < Float_v(0.0));
   FMask mask2(delta >= NumericLimits<Float_v>::Epsilon());
 
-  MaskAssign(roots, (IMask)mask2, Int32_v(2));
+  MaskedAssign(roots, (IMask)mask2, Int32_v(2));
 
   FMask mask = (b >= Float_v(0.0));
 
   Float_v sign = Blend(mask, Float_v(-1.0), Float_v(1.0));
   Float_v root = (-b + sign * math::Sqrt(delta)) / (Float_v(2.0) * a);
 
-  MaskAssign(x1, mask2 && mask,  root);
-  MaskAssign(x2, mask2 && !mask, root);
+  MaskedAssign(x1, mask2 && mask,  root);
+  MaskedAssign(x2, mask2 && !mask, root);
 
   root = c / (a * Blend(mask, x1, x2));
 
-  MaskAssign(x1, mask2 && !mask, root);
-  MaskAssign(x2, mask2 && mask,  root);
+  MaskedAssign(x1, mask2 && !mask, root);
+  MaskedAssign(x2, mask2 && mask,  root);
 
   FMask mask1 = !(mask0 || mask2);
 
   if (IsEmpty(mask1))
     return;
 
-  MaskAssign(roots, (IMask)mask1, Int32_v(1));
+  MaskedAssign(roots, (IMask)mask1, Int32_v(1));
 
   root = -Float_v(0.5) * b / a;
 
-  MaskAssign(x1, mask1, root);
-  MaskAssign(x2, mask1, root);
+  MaskedAssign(x1, mask1, root);
+  MaskedAssign(x2, mask1, root);
 }
 
 int main(int argc, char *argv[]) {

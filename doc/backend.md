@@ -107,7 +107,7 @@ T Blend(const Mask mask, const T& tval, const T& fval);
 - Perform assignment with a mask
 ```cpp
 template <class T, class Mask>
-void MaskAssign(T& dest, const Mask mask, const T& src);
+void MaskedAssign(T& dest, const Mask mask, const T& src);
 ```
 
 SIMD Scatter/Gather Interface

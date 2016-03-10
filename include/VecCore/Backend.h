@@ -11,7 +11,7 @@ template <class Mask> Bool_t IsEmpty(const Mask mask);
 template <class Mask> Bool_t IsFull(const Mask mask);
 
 template <class T, class Mask>
-void MaskAssign(T& dest, bool mask, const T &src);
+void MaskedAssign(T& dest, bool mask, const T &src);
 
 template <class T, class Mask>
 T Blend(const Mask mask, const T& tval, const T& fval);
