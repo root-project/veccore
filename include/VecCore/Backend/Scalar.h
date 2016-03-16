@@ -22,15 +22,11 @@ public:
 
   template <typename T> using Mask_v  = Bool_t;
   template <typename T> using Index_v = UInt64_t;
-
-  template <typename T>
-  static constexpr UInt64_t VectorSize(const T& x)
-  {
-    return 1UL;
-  }
 };
 
 } // namespace backend
+
+template <typename T> struct ScalarType { using Type = T; };
 
 template <>
 VECCORE_FORCE_INLINE

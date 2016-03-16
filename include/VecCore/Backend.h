@@ -3,9 +3,21 @@
 
 namespace vecCore {
 
-template <class T> struct ScalarType { using Type = T; };
+template <typename T> struct ScalarType;
 
 // backend interface
+
+template <typename T>
+constexpr Size_t VectorSize()
+{
+  return sizeof(T)/sizeof(typename ScalarType<T>::Type);
+}
+
+template <typename T>
+constexpr Size_t VectorSize(const T&)
+{
+  return sizeof(T)/sizeof(typename ScalarType<T>::Type);
+}
 
 template <class Mask> Bool_t IsEmpty(const Mask mask);
 template <class Mask> Bool_t IsFull(const Mask mask);

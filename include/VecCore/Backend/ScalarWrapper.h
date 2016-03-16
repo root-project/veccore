@@ -10,9 +10,6 @@ class WrappedBool;
 template <typename> class MaskedScalar;
 template <typename> class WrappedScalar;
 
-template <typename T>
-struct ScalarType<WrappedScalar<T>> { using Type = T; };
-
 namespace backend {
 
 class ScalarWrapper {
@@ -34,11 +31,6 @@ public:
   template <typename T> using Mask_v  = WrappedBool;
   template <typename T> using Index_v = WrappedScalar<Int_t>;
 
-  template <typename T>
-  static constexpr UInt64_t VectorSize(const T& x)
-  {
-    return 1UL;
-  }
 };
 
 } // namespace backend
@@ -166,6 +158,9 @@ public:
 private:
   T fVal;
 };
+
+template <typename T>
+struct ScalarType<WrappedScalar<T>> { using Type = T; };
 
 template <>
 VECCORE_FORCE_INLINE

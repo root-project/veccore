@@ -16,9 +16,7 @@ using Backend = backend::VcVector;
 using Backend = backend::Scalar;
 #endif
 
-static Backend::Float_v x = 0.0;
 static const Int_t N = (8 * 1024 * 1024);
-static const UInt64_t K = Backend::VectorSize(x);
 
 // solve ax2 + bx + c = 0, return number of roots found
 
@@ -140,7 +138,7 @@ int main(int argc, char *argv[]) {
 
   timer.Start();
 
-  for (Int_t i = 0; i < N; i += Int_t(K)) {
+  for (Int_t i = 0; i < N; i += Int_t(VectorSize<Backend::Float_v>())) {
     QuadSolveSIMD<Backend>(
       (Backend::Float_v &)(a[i]),
       (Backend::Float_v &)(b[i]),

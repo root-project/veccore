@@ -34,12 +34,6 @@ public:
 
   template <typename T>
   using Index_v = typename Vc::SimdArray<typename ScalarType<T>::Type, N>::IndexType;
-
-  template <typename T>
-  static constexpr UInt64_t VectorSize(const T& x)
-  {
-    return static_cast<UInt64_t>(N);
-  }
 };
 
 } // namespace backend

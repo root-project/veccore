@@ -10,7 +10,7 @@ using namespace vecCore;
 template <class Backend>
 void Print(const typename Backend::Real_v& x)
 {
-  const size_t N = Backend::VectorSize(x);
+  const size_t N = VectorSize(x);
   printf("[ ");
   for (size_t i = 0; i < N-1; i++)
     printf("%g, ", x[i]);

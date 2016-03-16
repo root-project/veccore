@@ -33,12 +33,6 @@ public:
 
   template <typename T>
   using Index_v = typename Vc::Scalar::Vector<typename ScalarType<T>::Type>::IndexType;
-
-  template <typename T>
-  static constexpr UInt64_t VectorSize(const T& x)
-  {
-    return Vc::Scalar::Vector<typename ScalarType<T>::Type>::Size;
-  }
 };
 
 } // namespace backend
