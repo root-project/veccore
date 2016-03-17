@@ -20,7 +20,7 @@ constexpr Size_t VectorSize(const T&)
 }
 
 template <class Mask> Bool_t IsEmpty(const Mask mask);
-template <class Mask> Bool_t IsFull(const Mask mask);
+template <class Mask> Bool_t MaskFull(const Mask mask);
 
 template <class T, class Mask>
 void MaskedAssign(T& dest, bool mask, const T &src);

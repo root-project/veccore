@@ -12,10 +12,10 @@ void TestMask() {
 
   Mask mtrue(true), mfalse(false);
 
-  assert(IsFull(mtrue));
+  assert(MaskFull(mtrue));
   assert(IsEmpty(mfalse));
 
-  assert(IsFull(mtrue || mfalse));
+  assert(MaskFull(mtrue || mfalse));
   assert(IsEmpty(mtrue && mfalse));
 }
 

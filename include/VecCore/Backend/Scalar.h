@@ -37,7 +37,7 @@ Bool_t IsEmpty<Bool_t>(const Bool_t mask)
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t IsFull<Bool_t>(const Bool_t mask)
+Bool_t MaskFull<Bool_t>(const Bool_t mask)
 {
   return mask;
 }

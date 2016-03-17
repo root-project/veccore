@@ -47,7 +47,7 @@ Bool_t IsEmpty(const Vc::SimdMaskArray<T, N> mask)
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_t IsFull(const Vc::SimdMaskArray<T, N> mask)
+Bool_t MaskFull(const Vc::SimdMaskArray<T, N> mask)
 {
   return mask.isFull();
 }

@@ -95,7 +95,7 @@ functions:
 - Check if a mask empty or full
 ```cpp
 template <class Mask> Bool_t IsEmpty(const Mask&);
-template <class Mask> Bool_t IsFull(const Mask&);
+template <class Mask> Bool_t MaskFull(const Mask&);
 ```
 
 - Blend two variables using a mask

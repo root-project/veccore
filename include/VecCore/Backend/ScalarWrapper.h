@@ -171,7 +171,7 @@ Bool_t IsEmpty<WrappedBool>(const WrappedBool mask)
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t IsFull<WrappedBool>(const WrappedBool mask)
+Bool_t MaskFull<WrappedBool>(const WrappedBool mask)
 {
   return mask;
 }

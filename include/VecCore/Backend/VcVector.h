@@ -46,7 +46,7 @@ Bool_t IsEmpty(const Vc::Mask<T> mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_t IsFull(const Vc::Mask<T> mask)
+Bool_t MaskFull(const Vc::Mask<T> mask)
 {
   return mask.isFull();
 }
