@@ -164,7 +164,7 @@ struct ScalarType<WrappedScalar<T>> { using Type = T; };
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t IsEmpty<WrappedBool>(const WrappedBool mask)
+Bool_t MaskEmpty<WrappedBool>(const WrappedBool mask)
 {
   return !mask;
 }

@@ -39,7 +39,7 @@ public:
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_t IsEmpty(const Vc::Scalar::Mask<T> mask)
+Bool_t MaskEmpty(const Vc::Scalar::Mask<T> mask)
 {
   return mask.isEmpty();
 }

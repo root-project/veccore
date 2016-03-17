@@ -19,7 +19,7 @@ constexpr Size_t VectorSize(const T&)
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
 }
 
-template <class Mask> Bool_t IsEmpty(const Mask mask);
+template <class Mask> Bool_t MaskEmpty(const Mask mask);
 template <class Mask> Bool_t MaskFull(const Mask mask);
 
 template <class T, class Mask>

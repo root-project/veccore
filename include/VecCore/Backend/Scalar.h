@@ -30,7 +30,7 @@ template <typename T> struct ScalarType { using Type = T; };
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t IsEmpty<Bool_t>(const Bool_t mask)
+Bool_t MaskEmpty<Bool_t>(const Bool_t mask)
 {
   return !mask;
 }

@@ -40,7 +40,7 @@ public:
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_t IsEmpty(const Vc::SimdMaskArray<T, N> mask)
+Bool_t MaskEmpty(const Vc::SimdMaskArray<T, N> mask)
 {
   return mask.isEmpty();
 }

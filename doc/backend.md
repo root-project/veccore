@@ -94,7 +94,7 @@ functions:
 
 - Check if a mask empty or full
 ```cpp
-template <class Mask> Bool_t IsEmpty(const Mask&);
+template <class Mask> Bool_t MaskEmpty(const Mask&);
 template <class Mask> Bool_t MaskFull(const Mask&);
 ```
 

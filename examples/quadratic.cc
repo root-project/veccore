@@ -84,7 +84,7 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
 
   FMask mask1 = !(mask0 || mask2);
 
-  if (IsEmpty(mask1))
+  if (MaskEmpty(mask1))
     return;
 
   MaskedAssign(roots, (IMask)mask1, Int32_v(1));
