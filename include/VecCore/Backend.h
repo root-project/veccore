@@ -3,9 +3,16 @@
 
 namespace vecCore {
 
-template <typename T> struct ScalarType;
+template <typename T> struct TypeTraits;
 
 // backend interface
+
+template <typename T> using Mask_v  = typename TypeTraits<T>::MaskType;
+template <typename T> using Index_v = typename TypeTraits<T>::IndexType;
+
+template <typename T> struct ScalarType {
+  using Type = typename TypeTraits<T>::ScalarType;
+};
 
 template <typename T>
 constexpr Size_t VectorSize()

@@ -7,8 +7,11 @@
 
 namespace vecCore {
 
-template <typename T, size_t N>
-struct ScalarType<typename Vc::SimdArray<T, N>> { using Type = T; };
+template <typename T, size_t N> struct TypeTraits<Vc::SimdArray<T,N>> {
+  using ScalarType = T;
+  using MaskType   = typename Vc::SimdArray<T,N>::MaskType;
+  using IndexType  = typename Vc::SimdArray<T,N>::IndexType;
+};
 
 namespace backend {
 
@@ -28,12 +31,6 @@ public:
   using UInt16_v = Vc::SimdArray<UInt16_t, N>;
   using UInt32_v = Vc::SimdArray<UInt32_t, N>;
   using UInt64_v = Vc::SimdArray<UInt64_t, N>;
-
-  template <typename T>
-  using Mask_v = typename Vc::SimdArray<typename ScalarType<T>::Type, N>::MaskType;
-
-  template <typename T>
-  using Index_v = typename Vc::SimdArray<typename ScalarType<T>::Type, N>::IndexType;
 };
 
 } // namespace backend

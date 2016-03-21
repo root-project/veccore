@@ -7,8 +7,11 @@
 
 namespace vecCore {
 
-template <typename T>
-struct ScalarType<Vc::Scalar::Vector<T>> { using Type = T; };
+template <typename T> struct TypeTraits<Vc::Scalar::Vector<T>> {
+  using ScalarType = T;
+  using MaskType   = typename Vc::Scalar::Vector<T>::MaskType;
+  using IndexType  = typename Vc::Scalar::Vector<T>::IndexType;
+};
 
 namespace backend {
 
@@ -27,12 +30,6 @@ public:
   using UInt16_v = Vc::Scalar::Vector<UInt16_t>;
   using UInt32_v = Vc::Scalar::Vector<UInt32_t>;
   using UInt64_v = Vc::Scalar::Vector<UInt64_t>;
-
-  template <typename T>
-  using Mask_v = typename Vc::Scalar::Vector<typename ScalarType<T>::Type>::MaskType;
-
-  template <typename T>
-  using Index_v = typename Vc::Scalar::Vector<typename ScalarType<T>::Type>::IndexType;
 };
 
 } // namespace backend

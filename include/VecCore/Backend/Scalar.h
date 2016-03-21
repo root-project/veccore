@@ -2,6 +2,13 @@
 #define VECCORE_BACKEND_SCALAR_H
 
 namespace vecCore {
+
+template <typename T> struct TypeTraits {
+  using ScalarType = T;
+  using MaskType   = Bool_t;
+  using IndexType  = Size_t;
+};
+
 namespace backend {
 
 class Scalar {
@@ -19,14 +26,9 @@ public:
   using UInt16_v = UInt16_t;
   using UInt32_v = UInt32_t;
   using UInt64_v = UInt64_t;
-
-  template <typename T> using Mask_v  = Bool_t;
-  template <typename T> using Index_v = UInt64_t;
 };
 
 } // namespace backend
-
-template <typename T> struct ScalarType { using Type = T; };
 
 template <>
 VECCORE_FORCE_INLINE
