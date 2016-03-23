@@ -33,6 +33,7 @@ if (NOT SIMD)
 else()
   find_package(Vc 1.1.0 REQUIRED)
   set(VECCORE_ENABLE_VC True)
+  include_directories(${Vc_INCLUDE_DIR})
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
