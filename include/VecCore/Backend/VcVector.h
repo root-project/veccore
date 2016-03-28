@@ -64,6 +64,20 @@ Vc::Vector<T> Blend(const Vc::Mask<T> mask, const Vc::Vector<T>& tval, const Vc:
   return tmp;
 }
 
+namespace math {
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Vector<T> Pow(Vc::Vector<T> x, Vc::Vector<T> y)
+{
+  Vc::Vector<T> result;
+  for (Size_t i = 0; i < Vc::Vector<T>::Size; i++)
+    result[i] = std::pow(x[i], y[i]);
+  return result;
+}
+
+}
+
 } // namespace vecCore
 
 #endif
