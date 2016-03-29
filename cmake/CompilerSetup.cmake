@@ -8,7 +8,8 @@ add_compile_options(-Wall)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   include (GCC)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR
+        ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
   include (Clang)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
   include (Intel)
