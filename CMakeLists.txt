@@ -40,7 +40,7 @@ configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
   "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/Config.h")
 file(COPY include/${PROJECT_NAME} DESTINATION ${PROJECT_BINARY_DIR}/include)
 
-include_directories(${PROJECT_BINARY_DIR}/include/${PROJECT_NAME})
+include_directories(${PROJECT_BINARY_DIR}/include)
 install(DIRECTORY ${PROJECT_BINARY_DIR}/include/ DESTINATION include)
 
 if (EXAMPLES)

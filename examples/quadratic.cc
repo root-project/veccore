@@ -5,8 +5,8 @@
 
 #include <malloc.h>
 
-#include <VecCore>
-#include "Timer.h"
+#include <VecCore/VecCore>
+#include "VecCore/Timer.h"
 
 using namespace vecCore;
 

@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <type_traits>
 
-#include <VecCore>
+#include <VecCore/VecCore>
 
 using namespace vecCore;
 

@@ -2,7 +2,7 @@
 #include <cassert>
 #include <cstdio>
 
-#include <VecCore>
+#include <VecCore/VecCore>
 
 using namespace vecCore;
 

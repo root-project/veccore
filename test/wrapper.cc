@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <algorithm>
 
-#include <VecCore>
+#include <VecCore/VecCore>
 
 using namespace vecCore;
 
