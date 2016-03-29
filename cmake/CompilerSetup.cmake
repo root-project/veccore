@@ -4,7 +4,7 @@ set_property(CACHE TARGET_ISA PROPERTY STRINGS native sse sse2 sse3 ssse3 sse41 
 
 message(STATUS "Compiling for ${TARGET_ISA} SIMD instructions")
 
-list(APPEND CMAKE_CXX_FLAGS -Wall)
+add_compile_options(-Wall)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   include (GCC)
