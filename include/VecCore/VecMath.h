@@ -4,8 +4,8 @@
 #include <cmath>
 
 #ifdef __APPLE__
-#define sincos(x) __sincos(x)
-#define sincosf(x) __sincosf(x)
+#define sincos(x, s, c) __sincos(x, s, c)
+#define sincosf(x, s, c) __sincosf(x, s, c)
 #endif
 
 namespace vecCore {
@@ -63,6 +63,21 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 T Cos(T x) { return std::cos(x); }
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void SinCos(T x, T &s, T &c) { sincos(x, &s, &c); }
+
+template <>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void SinCos(Float_s x, Float_s &s, Float_s &c) { sincosf(x, &s, &c); }
+
+template <>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void SinCos(Double_s x, Double_s &s, Double_s &c) { sincos(x, &s, &c); }
 
 template <typename T>
 VECCORE_FORCE_INLINE
