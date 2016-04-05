@@ -9,7 +9,7 @@ using namespace vecCore;
 
 template <class Backend>
 VECCORE_FORCE_NOINLINE
-Float_t StdMin(Float_t a, Float_t b)
+Float_s StdMin(Float_s a, Float_s b)
 {
   return std::min(a, b);
 }

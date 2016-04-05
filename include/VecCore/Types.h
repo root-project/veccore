@@ -6,27 +6,27 @@
 
 namespace vecCore {
 
-using Bool_t = bool;
+using Bool_s = bool;
 
-using Size_t = size_t;
+using Size_s = size_t;
 
-using Int_t = int32_t;
-using Int16_t = int16_t;
-using Int32_t = int32_t;
-using Int64_t = int64_t;
+using Int_s = int32_t;
+using Int16_s = int16_t;
+using Int32_s = int32_t;
+using Int64_s = int64_t;
 
-using UInt_t = uint32_t;
-using UInt16_t = uint16_t;
-using UInt32_t = uint32_t;
-using UInt64_t = uint64_t;
+using UInt_s = uint32_t;
+using UInt16_s = uint16_t;
+using UInt32_s = uint32_t;
+using UInt64_s = uint64_t;
 
-using Float_t = float;
-using Double_t = double;
+using Float_s = float;
+using Double_s = double;
 
 #ifdef VECCORE_SINGLE_PRECISION
-using Real_t = Float_t;
+using Real_s = Float_s;
 #else
-using Real_t = Double_t;
+using Real_s = Double_s;
 #endif
 
 }

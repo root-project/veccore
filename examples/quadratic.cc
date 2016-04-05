@@ -16,12 +16,12 @@ using Backend = backend::VcVector;
 using Backend = backend::Scalar;
 #endif
 
-static const Int_t N = (8 * 1024 * 1024);
+static const Int_s N = (8 * 1024 * 1024);
 
 // solve ax2 + bx + c = 0, return number of roots found
 
 template <typename T>
-Int_t QuadSolve(T a, T b, T c, T &x1, T &x2) {
+Int_s QuadSolve(T a, T b, T c, T &x1, T &x2) {
   T delta = b * b - 4.0 * a * c;
 
   if (delta < 0.0)
@@ -96,18 +96,18 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
 }
 
 int main(int argc, char *argv[]) {
-  Float_t *a = (Float_t *)memalign(64, N * sizeof(Float_t));
-  Float_t *b = (Float_t *)memalign(64, N * sizeof(Float_t));
-  Float_t *c = (Float_t *)memalign(64, N * sizeof(Float_t));
+  Float_s *a = (Float_s *)memalign(64, N * sizeof(Float_s));
+  Float_s *b = (Float_s *)memalign(64, N * sizeof(Float_s));
+  Float_s *c = (Float_s *)memalign(64, N * sizeof(Float_s));
 
-  Int_t *roots = (Int_t *)memalign(64, N * sizeof(Int_t));
-  Float_t *x1 = (Float_t *)memalign(64, N * sizeof(Float_t));
-  Float_t *x2 = (Float_t *)memalign(64, N * sizeof(Float_t));
+  Int_s *roots = (Int_s *)memalign(64, N * sizeof(Int_s));
+  Float_s *x1 = (Float_s *)memalign(64, N * sizeof(Float_s));
+  Float_s *x2 = (Float_s *)memalign(64, N * sizeof(Float_s));
 
   srand48(time(NULL));
-  Int_t index = (Int_t)((N - 100) * drand48());
+  Int_s index = (Int_s)((N - 100) * drand48());
 
-  for (Int_t i = 0; i < N; i++) {
+  for (Int_s i = 0; i < N; i++) {
     a[i] = 10.0 * (drand48() - 0.5);
     b[i] = 10.0 * (drand48() - 0.5);
     c[i] = 50.0 * (drand48() - 0.5);
@@ -118,15 +118,15 @@ int main(int argc, char *argv[]) {
 
   Timer<milliseconds> timer;
 
-  for (Int_t i = 0; i < N; i++) {
+  for (Int_s i = 0; i < N; i++) {
     roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
   }
 
-  Double_t t = timer.Elapsed();
+  Double_s t = timer.Elapsed();
 
   // print random result to ensure scalar and vector backends give same result
 
-  for (Int_t i = index; i < index + 10; i++) {
+  for (Int_s i = index; i < index + 10; i++) {
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f,"
            " roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
             i, a[i], b[i], c[i], roots[i],
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
 
   timer.Start();
 
-  for (Int_t i = 0; i < N; i += Int_t(VectorSize<Backend::Float_v>())) {
+  for (Int_s i = 0; i < N; i += Int_s(VectorSize<Backend::Float_v>())) {
     QuadSolveSIMD<Backend>(
       (Backend::Float_v &)(a[i]),
       (Backend::Float_v &)(b[i]),
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 
   t = timer.Elapsed();
 
-  for (Int_t i = index; i < index + 10; i++) {
+  for (Int_s i = index; i < index + 10; i++) {
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f,"
            " roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
             i, a[i], b[i], c[i], roots[i],

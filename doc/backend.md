@@ -18,7 +18,7 @@ Backend Interface Requirements
 VecCore provides the following scalar types (in namespace vecCore):
 
 ```cpp
-Bool_t, Int_t, Int16_t, Int32_t, UInt_t, UInt16_t, UInt32_t, Float_t, Double_t
+Bool_s, Int_s, Int16_s, Int32_s, UInt_s, UInt16_s, UInt32_s, Float_s, Double_s
 ```
 
 For each scalar integer and floating point type, the backend _must_ provide
@@ -38,7 +38,7 @@ template <typename T> Backend::VectorSize<T>(const T&);
 ```
 
 where `T` might be a scalar or vector type. That is, `Mask_v(Real_v)`
-and `Mask_v(Real_t)` are equivalent for a given backend.
+and `Mask_v(Real_s)` are equivalent for a given backend.
 
 The SIMD classes need to follow the interface requirements for constructors,
 masking, etc, of the VecCore library.
@@ -68,8 +68,8 @@ and operations must be defined:
 ### Constructors
 
 - From a scalar constant literal (with auto-promotion in arithmetic expressions)
-- From a compatible scalar variable (e.g. auto-promotion of `Real_t` to `Real_v`)
-- From a pointer or reference to scalar (e.g. use `Float_t*` to load `Float_v`)
+- From a compatible scalar variable (e.g. auto-promotion of `Real_s` to `Real_v`)
+- From a pointer or reference to scalar (e.g. use `Float_s*` to load `Float_v`)
 
 ### SIMD Vector Class Interface
 
@@ -84,7 +84,7 @@ and operations must be defined:
 Backend types must be convertible to native SIMD types in such as way as to
 be acceptable as a parameter to standard math functions, or these functions
 must be defined in the backend allowing calls to, e.g., `sin()` and `cos()`
-using `Float_v` in the same way as a `Float_t`.
+using `Float_v` in the same way as a `Float_s`.
 
 SIMD Vector Masking Interface Requirements
 ------------------------------------------
@@ -94,8 +94,8 @@ functions:
 
 - Check if a mask empty or full
 ```cpp
-template <class Mask> Bool_t MaskEmpty(const Mask&);
-template <class Mask> Bool_t MaskFull(const Mask&);
+template <class Mask> Bool_s MaskEmpty(const Mask&);
+template <class Mask> Bool_s MaskFull(const Mask&);
 ```
 
 - Blend two variables using a mask

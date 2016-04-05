@@ -18,33 +18,33 @@ namespace backend {
 template <size_t N = 16>
 class VcSimdArray {
 public:
-  using Real_v   = Vc::SimdArray<Real_t, N>;
-  using Float_v  = Vc::SimdArray<Float_t, N>;
-  using Double_v = Vc::SimdArray<Double_t, N>;
+  using Real_v   = Vc::SimdArray<Real_s, N>;
+  using Float_v  = Vc::SimdArray<Float_s, N>;
+  using Double_v = Vc::SimdArray<Double_s, N>;
 
-  using Int_v    = Vc::SimdArray<Int_t, N>;
-  using Int16_v  = Vc::SimdArray<Int16_t, N>;
-  using Int32_v  = Vc::SimdArray<Int32_t, N>;
-  using Int64_v  = Vc::SimdArray<Int64_t, N>;
+  using Int_v    = Vc::SimdArray<Int_s, N>;
+  using Int16_v  = Vc::SimdArray<Int16_s, N>;
+  using Int32_v  = Vc::SimdArray<Int32_s, N>;
+  using Int64_v  = Vc::SimdArray<Int64_s, N>;
 
-  using UInt_v   = Vc::SimdArray<UInt_t, N>;
-  using UInt16_v = Vc::SimdArray<UInt16_t, N>;
-  using UInt32_v = Vc::SimdArray<UInt32_t, N>;
-  using UInt64_v = Vc::SimdArray<UInt64_t, N>;
+  using UInt_v   = Vc::SimdArray<UInt_s, N>;
+  using UInt16_v = Vc::SimdArray<UInt16_s, N>;
+  using UInt32_v = Vc::SimdArray<UInt32_s, N>;
+  using UInt64_v = Vc::SimdArray<UInt64_s, N>;
 };
 
 } // namespace backend
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_t MaskEmpty(const Vc::SimdMaskArray<T, N> mask)
+Bool_s MaskEmpty(const Vc::SimdMaskArray<T, N> mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_t MaskFull(const Vc::SimdMaskArray<T, N> mask)
+Bool_s MaskFull(const Vc::SimdMaskArray<T, N> mask)
 {
   return mask.isFull();
 }

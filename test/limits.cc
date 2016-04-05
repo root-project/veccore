@@ -18,7 +18,7 @@ void Print(const typename Backend::Real_v& x)
 }
 
 template <>
-void Print<backend::Scalar>(const Real_t& x)
+void Print<backend::Scalar>(const Real_s& x)
 {
   printf("[ %g ]", x);
 }
@@ -28,38 +28,38 @@ void Test(const char* name)
 {
   using Real_v = typename Backend::Real_v;
 
-  static_assert(std::is_same<typename ScalarType<Real_v>::Type, Real_t>::value,
+  static_assert(std::is_same<typename ScalarType<Real_v>::Type, Real_s>::value,
     "conversion of vector type to scalar type failed");
 
   printf("Backend: %s\n\n", name);
 
-  printf("NumericLimits::Min()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Min());
+  printf("NumericLimits::Min()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Min());
   Print<Backend>(NumericLimits<Real_v>::Min());
   printf("\n\n");
 
-  printf("NumericLimits::Max()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Max());
+  printf("NumericLimits::Max()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Max());
   Print<Backend>(NumericLimits<Real_v>::Max());
   printf("\n\n");
 
-  printf("NumericLimits::Lowest()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Lowest());
+  printf("NumericLimits::Lowest()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Lowest());
   Print<Backend>(NumericLimits<Real_v>::Lowest());
   printf("\n\n");
 
-  printf("NumericLimits::Highest()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Highest());
+  printf("NumericLimits::Highest()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Highest());
   Print<Backend>(NumericLimits<Real_v>::Highest());
   printf("\n\n");
 
-  printf("NumericLimits::Epsilon()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Epsilon());
+  printf("NumericLimits::Epsilon()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Epsilon());
   Print<Backend>(NumericLimits<Real_v>::Epsilon());
   printf("\n\n");
 
-  printf("NumericLimits::Infinity()\n Real_t: [ %g ]\n Real_v: ",
-    NumericLimits<Real_t>::Infinity());
+  printf("NumericLimits::Infinity()\n Real_s: [ %g ]\n Real_v: ",
+    NumericLimits<Real_s>::Infinity());
   Print<Backend>(NumericLimits<Real_v>::Infinity());
   printf("\n\n");
 }

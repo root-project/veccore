@@ -42,12 +42,12 @@
 
 #define VECCORE_CUDA_BASIC_TYPES                                               \
 template <typename T> struct CudaTypeTraits;                                   \
-template <> struct CudaTypeTraits<Float_t>  { using Type = Float_t;  };        \
-template <> struct CudaTypeTraits<Double_t> { using Type = Double_t; };        \
+template <> struct CudaTypeTraits<Float_s>  { using Type = Float_s;  };        \
+template <> struct CudaTypeTraits<Double_s> { using Type = Double_s; };        \
 template <> struct CudaTypeTraits<Int8_t>   { using Type = Int8_t;   };        \
-template <> struct CudaTypeTraits<Int16_t>  { using Type = Int16_t;  };        \
-template <> struct CudaTypeTraits<Int32_t>  { using Type = Int32_t;  };        \
-template <> struct CudaTypeTraits<Int64_t>  { using Type = Int64_t;  };        \
+template <> struct CudaTypeTraits<Int16_s>  { using Type = Int16_s;  };        \
+template <> struct CudaTypeTraits<Int32_s>  { using Type = Int32_s;  };        \
+template <> struct CudaTypeTraits<Int64_s>  { using Type = Int64_s;  };        \
 template <> struct CudaTypeTraits<Uint8_t>  { using Type = Uint8_t;  };        \
 template <> struct CudaTypeTraits<Uint16_t> { using Type = Uint16_t; };        \
 template <> struct CudaTypeTraits<Uint32_t> { using Type = Uint32_t; };        \

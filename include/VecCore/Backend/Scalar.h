@@ -5,55 +5,55 @@ namespace vecCore {
 
 template <typename T> struct TypeTraits {
   using ScalarType = T;
-  using MaskType   = Bool_t;
-  using IndexType  = Size_t;
+  using MaskType   = Bool_s;
+  using IndexType  = Size_s;
 };
 
 namespace backend {
 
 class Scalar {
 public:
-  using Real_v   = Real_t;
-  using Float_v  = Float_t;
-  using Double_v = Double_t;
+  using Real_v   = Real_s;
+  using Float_v  = Float_s;
+  using Double_v = Double_s;
 
-  using Int_v    = Int_t;
-  using Int16_v  = Int16_t;
-  using Int32_v  = Int32_t;
-  using Int64_v  = Int64_t;
+  using Int_v    = Int_s;
+  using Int16_v  = Int16_s;
+  using Int32_v  = Int32_s;
+  using Int64_v  = Int64_s;
 
-  using UInt_v   = UInt_t;
-  using UInt16_v = UInt16_t;
-  using UInt32_v = UInt32_t;
-  using UInt64_v = UInt64_t;
+  using UInt_v   = UInt_s;
+  using UInt16_v = UInt16_s;
+  using UInt32_v = UInt32_s;
+  using UInt64_v = UInt64_s;
 };
 
 } // namespace backend
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t MaskEmpty<Bool_t>(const Bool_t mask)
+Bool_s MaskEmpty<Bool_s>(const Bool_s mask)
 {
   return !mask;
 }
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t MaskFull<Bool_t>(const Bool_t mask)
+Bool_s MaskFull<Bool_s>(const Bool_s mask)
 {
   return mask;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskedAssign(T& dest, Bool_t mask, const T &src)
+void MaskedAssign(T& dest, Bool_s mask, const T &src)
 {
   if (mask) dest = src;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-T Blend(const Bool_t mask, const T& tval, const T& fval)
+T Blend(const Bool_s mask, const T& tval, const T& fval)
 {
   return mask ? tval : fval;
 }

@@ -13,26 +13,26 @@ template <typename> class WrappedScalar;
 template <typename T> struct TypeTraits<WrappedScalar<T>> {
   using ScalarType = T;
   using MaskType   = WrappedBool;
-  using IndexType  = WrappedScalar<Size_t>;
+  using IndexType  = WrappedScalar<Size_s>;
 };
 
 namespace backend {
 
 class ScalarWrapper {
 public:
-  using Real_v   = WrappedScalar<Real_t>;
-  using Float_v  = WrappedScalar<Float_t>;
-  using Double_v = WrappedScalar<Double_t>;
+  using Real_v   = WrappedScalar<Real_s>;
+  using Float_v  = WrappedScalar<Float_s>;
+  using Double_v = WrappedScalar<Double_s>;
 
-  using Int_v    = WrappedScalar<Int_t>;
-  using Int16_v  = WrappedScalar<Int16_t>;
-  using Int32_v  = WrappedScalar<Int32_t>;
-  using Int64_v  = WrappedScalar<Int64_t>;
+  using Int_v    = WrappedScalar<Int_s>;
+  using Int16_v  = WrappedScalar<Int16_s>;
+  using Int32_v  = WrappedScalar<Int32_s>;
+  using Int64_v  = WrappedScalar<Int64_s>;
 
-  using UInt_v   = WrappedScalar<UInt_t>;
-  using UInt16_v = WrappedScalar<UInt16_t>;
-  using UInt32_v = WrappedScalar<UInt32_t>;
-  using UInt64_v = WrappedScalar<UInt64_t>;
+  using UInt_v   = WrappedScalar<UInt_s>;
+  using UInt16_v = WrappedScalar<UInt16_s>;
+  using UInt32_v = WrappedScalar<UInt32_s>;
+  using UInt64_v = WrappedScalar<UInt64_s>;
 };
 
 } // namespace backend
@@ -163,14 +163,14 @@ private:
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t MaskEmpty<WrappedBool>(const WrappedBool mask)
+Bool_s MaskEmpty<WrappedBool>(const WrappedBool mask)
 {
   return !mask;
 }
 
 template <>
 VECCORE_FORCE_INLINE
-Bool_t MaskFull<WrappedBool>(const WrappedBool mask)
+Bool_s MaskFull<WrappedBool>(const WrappedBool mask)
 {
   return mask;
 }

@@ -15,19 +15,19 @@ template <typename T> struct ScalarType {
 };
 
 template <typename T>
-constexpr Size_t VectorSize()
+constexpr Size_s VectorSize()
 {
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
 }
 
 template <typename T>
-constexpr Size_t VectorSize(const T&)
+constexpr Size_s VectorSize(const T&)
 {
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
 }
 
-template <class Mask> Bool_t MaskEmpty(const Mask mask);
-template <class Mask> Bool_t MaskFull(const Mask mask);
+template <class Mask> Bool_s MaskEmpty(const Mask mask);
+template <class Mask> Bool_s MaskFull(const Mask mask);
 
 template <class T, class Mask>
 void MaskedAssign(T& dest, bool mask, const T &src);
@@ -39,7 +39,7 @@ T Blend(const Mask mask, const T& tval, const T& fval);
 
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-constexpr Bool_t EarlyReturnAllowed()
+constexpr Bool_s EarlyReturnAllowed()
 {
 #ifdef VECCORE_NVCC_DEVICE
   return false;
