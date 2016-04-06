@@ -32,6 +32,7 @@ public:
 
 template <>
 VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 Bool_s MaskEmpty<Bool_s>(const Bool_s mask)
 {
   return !mask;
@@ -39,6 +40,7 @@ Bool_s MaskEmpty<Bool_s>(const Bool_s mask)
 
 template <>
 VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 Bool_s MaskFull<Bool_s>(const Bool_s mask)
 {
   return mask;
@@ -46,6 +48,7 @@ Bool_s MaskFull<Bool_s>(const Bool_s mask)
 
 template <typename T>
 VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void MaskedAssign(T& dest, Bool_s mask, const T &src)
 {
   if (mask) dest = src;
@@ -53,6 +56,7 @@ void MaskedAssign(T& dest, Bool_s mask, const T &src)
 
 template <typename T>
 VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 T Blend(const Bool_s mask, const T& tval, const T& fval)
 {
   return mask ? tval : fval;

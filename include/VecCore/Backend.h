@@ -15,12 +15,16 @@ template <typename T> struct ScalarType {
 };
 
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 constexpr Size_s VectorSize()
 {
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
 }
 
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 constexpr Size_s VectorSize(const T&)
 {
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
