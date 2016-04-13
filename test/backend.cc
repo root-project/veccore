@@ -182,7 +182,34 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable)
   EXPECT_TRUE(vecCore::VectorSize(x) > 0);
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable);
+TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
+{
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+
+  auto VS = vecCore::VectorSize<Vector_t>();
+  auto N = 2*VS;
+  Scalar_t input[N];
+  Scalar_t output[N];
+
+  // init input; output
+  for (vecCore::UInt_s i = 0; i < N; ++i){
+    input[i]=2*i;
+    output[i]=0;
+  }
+
+  // transfer to output via FromPtr; ToPtr sequence
+  for (vecCore::UInt_s i = 0; i < 2; ++i){
+    Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i*VS]));
+    vecCore::ToPtr<Vector_t>(tmp,&output[i*VS]);
+  }
+
+  // assert input == output
+  for (vecCore::UInt_s i = 0; i < N; ++i)
+    EXPECT_EQ(input[i], output[i]);
+}
+
+REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr);
 
 ///////////////////////////////////////////////////////////////////////////////
 
