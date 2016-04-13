@@ -1,6 +1,8 @@
 #ifndef VECCORE_BACKEND_H
 #define VECCORE_BACKEND_H
 
+#include <type_traits>
+
 namespace vecCore {
 
 template <typename T> struct TypeTraits;
@@ -38,6 +40,19 @@ void MaskedAssign(T& dest, bool mask, const T &src);
 
 template <class T, class Mask>
 T Blend(const Mask mask, const T& tval, const T& fval);
+
+// construct a type from a pointer - generic impl for vector types
+// may be template specialized in backends
+template <typename T>
+typename std::enable_if<!std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
+  return T(x);
+}
+
+// construct a type from a pointer - generic impl for scalar types
+template <typename T>
+typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
+  return T(*x);
+}
 
 // extra functions
 
