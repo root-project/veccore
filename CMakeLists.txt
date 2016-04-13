@@ -36,12 +36,13 @@ else()
   include_directories(${Vc_INCLUDE_DIR})
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
-  "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/Config.h")
-file(COPY include/${PROJECT_NAME} DESTINATION ${PROJECT_BINARY_DIR}/include)
+configure_file(${PROJECT_SOURCE_DIR}/include/Config.in "${PROJECT_BINARY_DIR}/include/Config.h")
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_BINARY_DIR}/include)
-install(DIRECTORY ${PROJECT_BINARY_DIR}/include/ DESTINATION include)
+
+install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION include/${PROJECT_NAME})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME} DESTINATION include)
 
 if (EXAMPLES)
   add_subdirectory(examples)
