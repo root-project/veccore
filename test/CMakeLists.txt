@@ -8,11 +8,11 @@ endif()
 
 add_subdirectory(gtest)
 
-add_executable(backend backend.cc)
-add_executable(limits limits.cc)
-add_executable(wrapper wrapper.cc)
+add_executable(TestBackend backend.cc)
+add_executable(TestNumericLimits limits.cc)
+add_executable(TestWrapper wrapper.cc)
 
-target_link_libraries(backend gtest)
+target_link_libraries(TestBackend gtest)
 
-add_test(Backend backend)
-add_test(NumericLimits limits)
+add_test(Backend TestBackend)
+add_test(NumericLimits TestNumericLimits)
