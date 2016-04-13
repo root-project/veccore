@@ -85,7 +85,24 @@ TYPED_TEST_P(ConstructorTest, FromRefToScalar)
   EXPECT_TRUE((std::is_constructible<Vector_t, const Scalar_t &>::value));
 }
 
-REGISTER_TYPED_TEST_CASE_P(ConstructorTest, Default, Copy, Move, FromScalar, FromRefToScalar);
+TYPED_TEST_P(ConstructorTest, FromPtrToScalar)
+{
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Vector_t = typename TestFixture::Vector_t;
+
+  Scalar_t tmp[vecCore::VectorSize<Vector_t>()];
+  Scalar_t *addr = &tmp[0];
+
+  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
+    tmp[i] = static_cast<Scalar_t>(i);
+
+  Vector_t x = vecCore::FromPtr<Vector_t>(addr);
+
+  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
+    EXPECT_TRUE(!vecCore::MaskEmpty(x == Vector_t(Scalar_t(i))));
+}
+
+REGISTER_TYPED_TEST_CASE_P(ConstructorTest, Default, Copy, Move, FromScalar, FromRefToScalar, FromPtrToScalar);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -219,23 +236,6 @@ TYPED_TEST_P(VectorMaskTest, Blend)
 
   a = vecCore::Blend(a > b, a, b);
 }
-
-TEST(FromPtrTest, FromPtrWorksForScalar)
-{
-  double a[4]={1,2,3,4};
-  double x(vecCore::FromPtr<double>(&a[2]));
-  ASSERT_EQ(x,3);
-}
-
-#ifdef VECCORE_ENABLE_VC
-TEST(FromPtrTest, FromPtrWorksForVc)
-{
-  float a[8]={1,2,3,4,5,6,7,8};
-  Vc::float_v x(vecCore::FromPtr<Vc::float_v>(&a[0]));
-  for(size_t i=0;i<Vc::float_v::Size;++i)
-    ASSERT_EQ(x[i],i+1);
-}
-#endif
 
 REGISTER_TYPED_TEST_CASE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, Blend);
 
