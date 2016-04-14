@@ -94,8 +94,6 @@ template <typename Mask>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 bool MaskLaneAt(Mask x, size_t index) {
-  // TODO: Do we have traits that can find out the size of a masked type?
-  // assert(index < VectorSize<T>());
   return x[index];
 }
 
