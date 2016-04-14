@@ -169,10 +169,10 @@ public:
   void load(T const *const src) { fVal = *src; }
 
   VECCORE_CUDA_HOST_DEVICE
-  void store(T &val) { val = fVal; }
+  void store(T &dest) { dest = fVal; }
 
   VECCORE_CUDA_HOST_DEVICE
-  void store(T *val) { *val = fVal; }
+  void store(T *dest) { *dest = fVal; }
 
 #define SCALAR_WRAPPER_OPERATOR(OP)                                            \
   VECCORE_FORCE_INLINE                                                         \
