@@ -59,13 +59,13 @@ typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename Type
 // store type to an address destination (pointer to scalar type)- generic impl for vector types
 // may be template specialized in backends
 template <typename T>
-void ToPtr(T x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(T x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   x.store(dest);
 }
 
 // store to an address destination - generic impl for scalar types
 template <typename T>
-void ToPtr(T x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(T x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   *dest = x;
 }
 
