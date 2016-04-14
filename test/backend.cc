@@ -282,13 +282,36 @@ TYPED_TEST_P(VectorMaskTest, MaskEmpty)
   EXPECT_TRUE(vecCore::MaskEmpty(!tmask));
 }
 
-TYPED_TEST_P(VectorMaskTest, MaskAssign)
-{
+TYPED_TEST_P(VectorMaskTest, MaskAssign) {
   using Vector_t = typename TestFixture::Vector_t;
 
   Vector_t a(0), b(1);
 
   vecCore::MaskedAssign(a, a > b, b);
+  EXPECT_TRUE(vecCore::MaskFull(a == Vector_t(0)));
+
+  vecCore::MaskedAssign(a, b > a, b);
+  EXPECT_TRUE(vecCore::MaskFull(a == b));
+}
+
+TYPED_TEST_P(VectorMaskTest, MaskAssign2) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+
+  auto kVS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[kVS];
+  Scalar_t output[kVS];
+
+  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
+    input[i] = (i % 2 == 0) ? i : -i;
+    output[i] = (input[i] > 0) ? input[i] : 0;
+  }
+
+  Vector_t c(vecCore::FromPtr<Vector_t>(&input[0])), dest(0);
+  vecCore::MaskedAssign(dest, c > Vector_t(0), c);
+
+  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+    EXPECT_EQ(vecCore::LaneAt<Vector_t>(dest, i), output[i]);
 }
 
 TYPED_TEST_P(VectorMaskTest, Blend)
@@ -300,7 +323,7 @@ TYPED_TEST_P(VectorMaskTest, Blend)
   a = vecCore::Blend(a > b, a, b);
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, Blend);
+REGISTER_TYPED_TEST_CASE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, MaskAssign2, Blend);
 
 #define TEST_BACKEND_P(name, x)                                                            \
   INSTANTIATE_TYPED_TEST_CASE_P(name, ConstructorTest, VectorTypes<vecCore::backend::x>);  \
