@@ -45,6 +45,8 @@ T Blend(const Mask mask, const T& tval, const T& fval);
 // construct a type from a pointer - generic impl for vector types
 // may be template specialized in backends
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 typename std::enable_if<!std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
   return T(x);
 }
@@ -52,6 +54,8 @@ typename std::enable_if<!std::is_scalar<T>::value, T>::type FromPtr(typename Typ
 
 // construct a type from a pointer - generic impl for scalar types
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
   return T(*x);
 }
@@ -59,12 +63,16 @@ typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename Type
 // store type to an address destination (pointer to scalar type)- generic impl for vector types
 // may be template specialized in backends
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void Store(T x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   x.store(dest);
 }
 
 // store to an address destination - generic impl for scalar types
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void Store(T x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   *dest = x;
 }
