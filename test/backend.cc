@@ -186,8 +186,8 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr) {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto VS = vecCore::VectorSize<Vector_t>();
-  auto N = 2 * VS;
+  auto kVS = vecCore::VectorSize<Vector_t>();
+  auto N = 2 * kVS;
   Scalar_t input[N];
   Scalar_t output[N];
 
@@ -199,8 +199,8 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr) {
 
   // transfer to output via FromPtr; Store sequence
   for (vecCore::UInt_s i = 0; i < 2; ++i) {
-    Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i * VS]));
-    vecCore::Store<Vector_t>(tmp, &output[i * VS]);
+    Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i * kVS]));
+    vecCore::Store<Vector_t>(tmp, &output[i * kVS]);
   }
 
   // assert input == output
@@ -212,16 +212,16 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead) {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto VS = vecCore::VectorSize<Vector_t>();
-  Scalar_t input[VS];
+  auto kVS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[kVS];
 
-  for (vecCore::UInt_s i = 0; i < VS; ++i) {
+  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
     input[i] = i;
   }
 
   Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
 
-  for (vecCore::UInt_s i = 0; i < VS; ++i)
+  for (vecCore::UInt_s i = 0; i < kVS; ++i)
     EXPECT_EQ(input[i], vecCore::LaneAt<Vector_t>(tmp, i));
 }
 
@@ -229,10 +229,10 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto VS = vecCore::VectorSize<Vector_t>();
-  Scalar_t input[VS];
+  auto kVS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[kVS];
 
-  for (vecCore::UInt_s i = 0; i < VS; ++i) {
+  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
     input[i] = (i % 2 == 0) ? i : -i;
   }
 
@@ -240,7 +240,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
 
   auto mask = tmp > Scalar_t(0);
 
-  for (vecCore::UInt_s i = 0; i < VS; ++i)
+  for (vecCore::UInt_s i = 0; i < kVS; ++i)
     EXPECT_EQ(input[i] > Scalar_t(0), vecCore::MaskLaneAt(mask, i));
 }
 
