@@ -209,7 +209,49 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
     EXPECT_EQ(input[i], output[i]);
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr);
+TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+
+  auto VS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[VS];
+
+  // init input
+  for (vecCore::UInt_s i = 0; i < VS; ++i) {
+    input[i] = i;
+  }
+
+  // construct vector from input and verify lane access
+  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+
+  for (vecCore::UInt_s i = 0; i < VS; ++i)
+    EXPECT_EQ(input[i], vecCore::LaneAt<Vector_t>(tmp, i));
+}
+
+TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+
+  auto VS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[VS];
+
+  // init input
+  for (vecCore::UInt_s i = 0; i < VS; ++i) {
+    input[i] = (i % 2 == 0) ? i : -i;
+  }
+
+  // construct vector from input
+  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+
+  // construct a mask via comparison
+  auto mask = tmp > Scalar_t(0);
+
+  for (vecCore::UInt_s i = 0; i < VS; ++i)
+    EXPECT_EQ(input[i] > Scalar_t(0), vecCore::MaskLaneAt(mask, i));
+}
+
+REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr, VectorLaneRead,
+                           MaskLaneRead);
 
 ///////////////////////////////////////////////////////////////////////////////
 
