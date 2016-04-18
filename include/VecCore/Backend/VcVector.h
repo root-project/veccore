@@ -76,6 +76,14 @@ Vc::Vector<T> Pow(Vc::Vector<T> x, Vc::Vector<T> y)
   return result;
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE
+void SinCos(Vc::Vector<T> x, Vc::Vector<T> &s, Vc::Vector<T> &c)
+{
+  s = Vc::sin(x);
+  c = Vc::cos(x);
+}
+
 }
 
 } // namespace vecCore
