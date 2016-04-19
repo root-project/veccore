@@ -3,11 +3,6 @@
 
 #include <cmath>
 
-#ifdef __APPLE__
-#define sincos(x, s, c) __sincos(x, s, c)
-#define sincosf(x, s, c) __sincosf(x, s, c)
-#endif
-
 namespace vecCore {
 namespace math {
 
@@ -68,6 +63,14 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 void SinCos(T x, T &s, T &c) { sincos(x, &s, &c); }
+
+#ifdef __APPLE__
+VECCORE_FORCE_INLINE
+void sincosf(float x, float *s, float *c) { __sincosf(x, s, c); }
+
+VECCORE_FORCE_INLINE
+void sincos(double x, double *s, double *c) { __sincos(x, s, c); }
+#endif
 
 template <>
 VECCORE_FORCE_INLINE
