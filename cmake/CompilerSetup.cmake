@@ -6,15 +6,15 @@ message(STATUS "Compiling for ${TARGET_ISA} SIMD instructions")
 
 add_compile_options(-Wall)
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   include (GCC)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR
-        ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
   include (Clang)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   include (Intel)
 else()
-  message(WARNING "Unsupported compiler")
+  message(WARNING "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
 string(TOUPPER "FLAGS_${TARGET_ISA}" _target_isa)
