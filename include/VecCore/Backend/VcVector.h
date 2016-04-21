@@ -70,10 +70,7 @@ template <typename T>
 VECCORE_FORCE_INLINE
 Vc::Vector<T> Pow(Vc::Vector<T> x, Vc::Vector<T> y)
 {
-  Vc::Vector<T> result;
-  for (Size_s i = 0; i < Vc::Vector<T>::Size; i++)
-    result[i] = std::pow(x[i], y[i]);
-  return result;
+  return Vc::exp(Vc::log(x) * y);
 }
 
 }
