@@ -62,7 +62,7 @@ T Cos(T x) { return std::cos(x); }
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void SinCos(T x, T &s, T &c) { sincos(x, &s, &c); }
+void SinCos(T x, T *s, T *c) { sincos(x, s, c); }
 
 #ifdef __APPLE__
 VECCORE_FORCE_INLINE
@@ -75,12 +75,12 @@ void sincos(double x, double *s, double *c) { __sincos(x, s, c); }
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void SinCos(Float_s x, Float_s &s, Float_s &c) { sincosf(x, &s, &c); }
+void SinCos(Float_s x, Float_s *s, Float_s *c) { sincosf(x, s, c); }
 
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void SinCos(Double_s x, Double_s &s, Double_s &c) { sincos(x, &s, &c); }
+void SinCos(Double_s x, Double_s *s, Double_s *c) { sincos(x, s, c); }
 
 template <typename T>
 VECCORE_FORCE_INLINE
