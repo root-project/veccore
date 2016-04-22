@@ -60,15 +60,13 @@ TYPED_TEST_P(BackendMathTest, SinTrivial) {
 TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Exp, exp);
 TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Cos, cos);
 TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Sin, sin);
+TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Tan, tan);
 TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Sqrt, sqrt);
 TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Log, log);
 
-// Tan not available in Vc:
-// TEST_MATHFUNCTIONS_POSITIVEREALS_P(BackendMathTest, Tan, tan);
-
 // TODO: add further tests
 
-REGISTER_TYPED_TEST_CASE_P(BackendMathTest, SinTrivial, Sqrt, Exp, Cos, Sin, Log);
+REGISTER_TYPED_TEST_CASE_P(BackendMathTest, SinTrivial, Exp, Cos, Sin, Tan, Sqrt, Log);
 
 #define TEST_BACKEND_P(name, x)                                                            \
   INSTANTIATE_TYPED_TEST_CASE_P(name, BackendMathTest, VectorTypes<vecCore::backend::x>);  \

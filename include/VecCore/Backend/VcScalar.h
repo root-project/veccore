@@ -68,6 +68,17 @@ Vc::Scalar::Vector<T> Blend(const Vc::Scalar::Mask<T> mask,
   return tmp;
 }
 
+namespace math {
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Scalar::Vector<T> Tan(Vc::Scalar::Vector<T> x)
+{
+  return std::tan(x[0]);
+}
+
+}
+
 } // namespace vecCore
 
 #endif

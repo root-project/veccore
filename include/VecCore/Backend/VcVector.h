@@ -73,6 +73,15 @@ Vc::Vector<T> Pow(Vc::Vector<T> x, Vc::Vector<T> y)
   return Vc::exp(Vc::log(x) * y);
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Vector<T> Tan(Vc::Vector<T> x)
+{
+  Vc::Vector<T> s, c;
+  Vc::sincos(x, &s, &c);
+  return s / c;
+}
+
 }
 
 } // namespace vecCore

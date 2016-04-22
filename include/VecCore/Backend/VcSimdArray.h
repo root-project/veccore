@@ -69,6 +69,19 @@ Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> mask,
   return tmp;
 }
 
+namespace math {
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+Vc::SimdArray<T, N> Tan(Vc::SimdArray<T, N> x)
+{
+  Vc::SimdArray<T, N> s, c;
+  Vc::sincos(x, &s, &c);
+  return s/c;
+}
+
+}
+
 } // namespace vecCore
 
 #endif
