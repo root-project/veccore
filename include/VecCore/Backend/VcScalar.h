@@ -72,6 +72,13 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
+Vc::Scalar::Vector<T> Pow(Vc::Scalar::Vector<T> x, Vc::Scalar::Vector<T> y)
+{
+  return std::exp(std::log(x[0]) * y[0]);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
 Vc::Scalar::Vector<T> Tan(Vc::Scalar::Vector<T> x)
 {
   return std::tan(x[0]);

@@ -73,6 +73,13 @@ namespace math {
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
+Vc::SimdArray<T, N> Pow(Vc::SimdArray<T, N> x, Vc::SimdArray<T, N> y)
+{
+  return Vc::exp(Vc::log(x) * y);
+}
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
 Vc::SimdArray<T, N> Tan(Vc::SimdArray<T, N> x)
 {
   Vc::SimdArray<T, N> s, c;
