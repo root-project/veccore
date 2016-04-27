@@ -136,6 +136,7 @@ constexpr Bool_s EarlyReturnAllowed()
 #include "Backend/VcScalar.h"
 #include "Backend/VcVector.h"
 #include "Backend/VcSimdArray.h"
+#include "Backend/UMESimd.h"
 #endif
 
 #endif
