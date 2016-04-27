@@ -2,7 +2,7 @@
 
 add_compile_options(${CMAKE_CXX_FLAGS_TARGET_ISA})
 
-if (SIMD)
+if (VC)
   link_libraries(${Vc_LIBRARIES})
 endif()
 

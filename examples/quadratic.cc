@@ -10,10 +10,14 @@
 
 using namespace vecCore;
 
-#ifdef VECCORE_ENABLE_VC
-using Backend = backend::VcVector;
-#else
+#ifdef VECCORE_DISABLE_SIMD
 using Backend = backend::Scalar;
+#elif defined(VECCORE_ENABLE_VC)
+using Backend = backend::VcVector;
+#elif defined(VECCORE_ENABLE_UMESIMD)
+using Backend = backend::UMESimd<16>;
+#else
+using Backend = backend::ScalarWrapper;
 #endif
 
 static const Int_s N = (8 * 1024 * 1024);
