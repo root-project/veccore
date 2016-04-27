@@ -457,6 +457,10 @@ TEST_BACKEND(VcVector);
 TEST_BACKEND_P(VcSimdArray, VcSimdArray<16>);
 #endif
 
+#ifdef VECCORE_ENABLE_UMESIMD
+TEST_BACKEND_P(UMESimd, UMESimd<16>);
+#endif
+
 #else // if !GTEST_HAS_TYPED_TEST
 TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform) {}
 #endif
