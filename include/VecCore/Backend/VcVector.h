@@ -15,7 +15,7 @@ template <typename T> struct TypeTraits<Vc::Vector<T>> {
 
 namespace backend {
 
-template <typename T=Real_s>
+template <typename T = Real_s>
 class VcVectorT {
 public:
   using Real_v   = Vc::Vector<T>;

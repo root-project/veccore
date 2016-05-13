@@ -11,7 +11,7 @@ template <typename T> struct TypeTraits {
 
 namespace backend {
 
-template <typename T=Real_s>
+template <typename T = Real_s>
 class ScalarT {
 public:
   using Real_v   = T;

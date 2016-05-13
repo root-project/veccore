@@ -15,7 +15,7 @@ template <typename T> struct TypeTraits<Vc::Scalar::Vector<T>> {
 
 namespace backend {
 
-template <typename T=Real_s>
+template <typename T = Real_s>
 class VcScalarT {
 public:
   using Real_v   = Vc::Scalar::Vector<T>;
