@@ -15,9 +15,10 @@ template <typename T> struct TypeTraits<Vc::Vector<T>> {
 
 namespace backend {
 
-class VcVector {
+template <typename T=Real_s>
+class VcVectorT {
 public:
-  using Real_v   = Vc::Vector<Real_s>;
+  using Real_v   = Vc::Vector<T>;
   using Float_v  = Vc::Vector<Float_s>;
   using Double_v = Vc::Vector<Double_s>;
 
@@ -31,6 +32,8 @@ public:
   using UInt32_v = Vc::Vector<UInt32_s>;
   using UInt64_v = Vc::Vector<UInt64_s>;
 };
+
+using VcVector = VcVectorT<>;
 
 } // namespace backend
 

@@ -15,9 +15,10 @@ template <typename T> struct TypeTraits<Vc::Scalar::Vector<T>> {
 
 namespace backend {
 
-class VcScalar {
+template <typename T=Real_s>
+class VcScalarT {
 public:
-  using Real_v   = Vc::Scalar::Vector<Real_s>;
+  using Real_v   = Vc::Scalar::Vector<T>;
   using Float_v  = Vc::Scalar::Vector<Float_s>;
   using Double_v = Vc::Scalar::Vector<Double_s>;
 
@@ -31,6 +32,8 @@ public:
   using UInt32_v = Vc::Scalar::Vector<UInt32_s>;
   using UInt64_v = Vc::Scalar::Vector<UInt64_s>;
 };
+
+using VcScalar = VcScalarT<>;
 
 } // namespace backend
 

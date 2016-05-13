@@ -18,9 +18,10 @@ template <typename T> struct TypeTraits<WrappedScalar<T>> {
 
 namespace backend {
 
-class ScalarWrapper {
+template <typename T=Real_s>
+class ScalarWrapperT {
 public:
-  using Real_v   = WrappedScalar<Real_s>;
+  using Real_v   = WrappedScalar<T>;
   using Float_v  = WrappedScalar<Float_s>;
   using Double_v = WrappedScalar<Double_s>;
 
@@ -34,6 +35,8 @@ public:
   using UInt32_v = WrappedScalar<UInt32_s>;
   using UInt64_v = WrappedScalar<UInt64_s>;
 };
+
+using ScalarWrapper = ScalarWrapperT<>;
 
 } // namespace backend
 

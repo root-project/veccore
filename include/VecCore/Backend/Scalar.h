@@ -11,9 +11,10 @@ template <typename T> struct TypeTraits {
 
 namespace backend {
 
-class Scalar {
+template <typename T=Real_s>
+class ScalarT {
 public:
-  using Real_v   = Real_s;
+  using Real_v   = T;
   using Float_v  = Float_s;
   using Double_v = Double_s;
 
@@ -27,6 +28,8 @@ public:
   using UInt32_v = UInt32_s;
   using UInt64_v = UInt64_s;
 };
+
+using Scalar = ScalarT<>;
 
 } // namespace backend
 
