@@ -14,4 +14,5 @@ set(CUDA_NVCC_FLAGS_DEBUG          "-O2 -g -G")
 set(CUDA_NVCC_FLAGS_RELEASE        "-O3 -use_fast_math")
 set(CUDA_NVCC_FLAGS_RELWITHDEBINFO "-O3 -g -G -use_fast_math")
 
-list(APPEND CUDA_NVCC_FLAGS "-gencode arch=compute_30,code=sm_30")
+set(CUDA_ARCH 30 CACHE STRING "CUDA device architecture")
+list(APPEND CUDA_NVCC_FLAGS "-arch=sm_${CUDA_ARCH}")
