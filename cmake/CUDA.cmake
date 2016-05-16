@@ -16,3 +16,7 @@ set(CUDA_NVCC_FLAGS_RELWITHDEBINFO "-O3 -g -G -use_fast_math")
 
 set(CUDA_ARCH 30 CACHE STRING "CUDA device architecture")
 list(APPEND CUDA_NVCC_FLAGS "-arch=sm_${CUDA_ARCH}")
+
+# Force inlining of memcpy(), workaround for issue below
+# https://github.com/tensorflow/tensorflow/issues/1346
+list(APPEND CUDA_NVCC_FLAGS "-D_FORCE_INLINES")
