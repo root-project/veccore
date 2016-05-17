@@ -25,26 +25,28 @@ static const Int_s N = (8 * 1024 * 1024);
 // solve ax2 + bx + c = 0, return number of roots found
 
 template <typename T>
-Int_s QuadSolve(T a, T b, T c, T &x1, T &x2) {
-  T delta = b * b - 4.0 * a * c;
+void QuadSolve(const T& a, const T& b, const T& c, T &x1, T &x2, int& roots) {
+  T a_inv = T(1.0) / a;
+  T delta = b * b - T(4.0) * a * c;
+  T s = (b >= 0) ? T(1.0) : T(-1.0);
 
-  if (delta < 0.0)
-    return 0;
+  roots = delta > NumericLimits<T>::Epsilon() ? 2 : delta < T(0.0) ? 0 : 1;
 
-  if (delta < NumericLimits<T>::Epsilon()) {
-    x1 = x2 = -0.5 * b / a;
-    return 1;
+  switch (roots) {
+    case 2:
+      x1 = T(0.5) * (-b + s * math::Sqrt(delta));
+      x2 = c / x1;
+      x1 *= a_inv;
+      return;
+
+    case 0: return;
+
+    case 1:
+      x1 = x2 = T(-0.5) * b * a_inv;
+      return;
+
+    default: return;
   }
-
-  if (b >= 0.0) {
-    x1 = -0.5 * (b + math::Sqrt(delta)) / a;
-    x2 = c / (a * x1);
-  } else {
-    x2 = -0.5 * (b - math::Sqrt(delta)) / a;
-    x1 = c / (a * x2);
-  }
-
-  return 2;
 }
 
 // SIMD version
@@ -123,7 +125,7 @@ int main(int argc, char *argv[]) {
   Timer<milliseconds> timer;
 
   for (Int_s i = 0; i < N; i++) {
-    roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
+    QuadSolve<float>(a[i], b[i], c[i], x1[i], x2[i], roots[i]);
   }
 
   Double_s t = timer.Elapsed();
