@@ -65,7 +65,7 @@ typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename Type
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(T x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(const T& x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   x.store(dest);
 }
 
@@ -73,7 +73,7 @@ void Store(T x, typename std::enable_if<!std::is_scalar<T>::value, typename Type
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(T x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(const T& x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
   *dest = x;
 }
 
