@@ -377,8 +377,34 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
     EXPECT_EQ(input[i] > Scalar_t(0), vecCore::MaskLaneAt(mask, i));
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr, VectorLaneRead,
-                           MaskLaneRead, VectorLaneWrite);
+TYPED_TEST_P(VectorInterfaceTest, Gather) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Index_v = typename vecCore::Index_v<Vector_t>;
+  using Index_t = typename vecCore::ScalarType<Index_v>::Type;
+
+  size_t N = vecCore::VectorSize<Vector_t>();
+
+  Scalar_t input[N * N];
+  for (vecCore::UInt_s i = 0; i < N*N; ++i)
+    input[i] = i;
+
+  Index_v idx;
+  for (vecCore::UInt_s i = 0; i < N; ++i)
+    vecCore::AssignLane(idx, i, Index_t(i));
+
+  for (vecCore::UInt_s i = 1; i <= N; ++i) {
+    Index_v iidx = Index_v(i) * idx;
+
+    Vector_t x = vecCore::Gather<Vector_t>(input, iidx);
+
+    for (vecCore::UInt_s j = 0; j < N; ++j)
+      EXPECT_TRUE(vecCore::LaneAt(x, j) == input[i*j]);
+  }
+}
+
+REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr,
+                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, Gather);
 
 ///////////////////////////////////////////////////////////////////////////////
 

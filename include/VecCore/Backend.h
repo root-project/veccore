@@ -149,6 +149,29 @@ bool MaskLaneAt<bool>(const bool &x, size_t index)
   return x;
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+typename std::enable_if<std::is_scalar<T>::value,T>::type
+Gather(typename TypeTraits<T>::ScalarType const *ptr,
+       typename TypeTraits<T>::IndexType  const &idx)
+{
+  return *(ptr + idx);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+typename std::enable_if<!std::is_scalar<T>::value,T>::type
+Gather(typename TypeTraits<T>::ScalarType const *ptr,
+       typename TypeTraits<T>::IndexType  const &idx)
+{
+  T result;
+  for (size_t i = 0; i < VectorSize<T>(); i++)
+    result[i] = ptr[idx[i]];
+  return result;
+}
+
 // extra functions
 
 VECCORE_FORCE_INLINE
