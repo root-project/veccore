@@ -83,7 +83,9 @@ void Store(T x, typename std::enable_if<std::is_scalar<T>::value, typename TypeT
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type LaneAt(T x, size_t index) {
+typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
+LaneAt(const T& x, size_t index)
+{
   assert(index == 0);
   return x;
 }
@@ -92,7 +94,9 @@ typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::Scalar
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type LaneAt(T x, size_t index) {
+typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
+LaneAt(const T& x, size_t index)
+{
   assert(index < VectorSize<T>());
   return x[index];
 }
