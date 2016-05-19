@@ -133,10 +133,12 @@ constexpr Bool_s EarlyReturnAllowed()
 #include "Backend/ScalarWrapper.h"
 
 #if !defined(VECCORE_NVCC)
+#include "Backend/SIMDSizes.h"
 #include "Backend/VcScalar.h"
 #include "Backend/VcVector.h"
 #include "Backend/VcSimdArray.h"
 #include "Backend/UMESimd.h"
+#include "Backend/UMESimdArray.h"
 #endif
 
 #endif

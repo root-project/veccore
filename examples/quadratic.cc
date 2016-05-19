@@ -15,7 +15,7 @@ using Backend = backend::Scalar;
 #elif defined(VECCORE_ENABLE_VC)
 using Backend = backend::VcVector;
 #elif defined(VECCORE_ENABLE_UMESIMD)
-using Backend = backend::UMESimd<16>;
+using Backend = backend::UMESimd;
 #else
 using Backend = backend::ScalarWrapper;
 #endif

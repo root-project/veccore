@@ -396,11 +396,15 @@ TYPED_TEST_P(VectorMaskTest, MaskEmpty)
 
 TYPED_TEST_P(VectorMaskTest, MaskAssign) {
   using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
 
-  Vector_t a(0), b(1);
+  // casting 0 with Scalar_t is necessary here
+  // as 0 can be interpreted as the null-pointer
+  // which leads to ambiguities with some vector types constructors
+  Vector_t a(Scalar_t(0)), b(1);
 
   vecCore::MaskedAssign(a, a > b, b);
-  EXPECT_TRUE(vecCore::MaskFull(a == Vector_t(0)));
+  EXPECT_TRUE(vecCore::MaskFull(a == Vector_t(Scalar_t(0))));
 
   vecCore::MaskedAssign(a, b > a, b);
   EXPECT_TRUE(vecCore::MaskFull(a == b));
@@ -419,8 +423,8 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2) {
     output[i] = (input[i] > 0) ? input[i] : 0;
   }
 
-  Vector_t c(vecCore::FromPtr<Vector_t>(&input[0])), dest(0);
-  vecCore::MaskedAssign(dest, c > Vector_t(0), c);
+  Vector_t c(vecCore::FromPtr<Vector_t>(&input[0])), dest(Scalar_t(0));
+  vecCore::MaskedAssign(dest, c > Vector_t(Scalar_t(0)), c);
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
     EXPECT_EQ(vecCore::LaneAt<Vector_t>(dest, i), output[i]);
@@ -428,9 +432,10 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2) {
 
 TYPED_TEST_P(VectorMaskTest, Blend)
 {
+  using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
 
-  Vector_t a(0), b(1);
+  Vector_t a(Scalar_t(0)), b(1);
 
   a = vecCore::Blend(a > b, a, b);
 }
@@ -458,7 +463,8 @@ TEST_BACKEND_P(VcSimdArray, VcSimdArray<16>);
 #endif
 
 #ifdef VECCORE_ENABLE_UMESIMD
-TEST_BACKEND_P(UMESimd, UMESimd<16>);
+TEST_BACKEND(UMESimd);
+TEST_BACKEND_P(UMESimdArray, UMESimdArray<16>);
 #endif
 
 #else // if !GTEST_HAS_TYPED_TEST
