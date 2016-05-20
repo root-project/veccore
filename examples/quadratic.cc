@@ -66,6 +66,47 @@ void QuadSolveOptimized(const T& a, const T& b, const T& c, T &x1, T &x2, int& r
   }
 }
 
+#if !defined(VECCORE_DISABLE_SIMD) && defined(__AVX2__)
+
+// explicit AVX2 code using intrinsics
+
+void QuadSolveAVX(const float* __restrict__ a,
+                  const float* __restrict__ b,
+                  const float* __restrict__ c,
+                        float* __restrict__ x1,
+                        float* __restrict__ x2,
+                          int* __restrict__ roots)
+{
+  __m256 one  = _mm256_set1_ps(1.0f);
+  __m256 va = _mm256_load_ps(a);
+  __m256 vb = _mm256_load_ps(b);
+  __m256 zero = _mm256_set1_ps(0.0f);
+  __m256 a_inv = _mm256_div_ps(one, va);
+  __m256 b2 = _mm256_mul_ps(vb, vb);
+  __m256 eps  = _mm256_set1_ps(NumericLimits<float>::Epsilon());
+  __m256 vc = _mm256_load_ps(c);
+  __m256 negone = _mm256_set1_ps(-1.0f);
+  __m256 ac = _mm256_mul_ps(va, vc);
+  __m256 sign = _mm256_blendv_ps(negone, one, _mm256_cmp_ps(vb, zero, _CMP_GE_OS));
+  __m256 delta = _mm256_fmadd_ps(_mm256_set1_ps(-4.0f), ac, b2);
+  __m256 r1 = _mm256_fmadd_ps(sign,_mm256_sqrt_ps(delta), vb);
+  __m256 mask0 = _mm256_cmp_ps(delta, zero, _CMP_LT_OS);
+  __m256 mask2 = _mm256_cmp_ps(delta,  eps, _CMP_GE_OS);
+  r1 = _mm256_mul_ps(_mm256_set1_ps(-0.5f), r1);
+  __m256 r2 = _mm256_div_ps(vc, r1);
+  r1 = _mm256_mul_ps(a_inv, r1);
+  __m256 r3 = _mm256_mul_ps(_mm256_set1_ps(-0.5f),_mm256_mul_ps(vb,a_inv));
+  __m256 nr = _mm256_blendv_ps(one, _mm256_set1_ps(2), mask2);
+  nr = _mm256_blendv_ps(nr, _mm256_set1_ps(0), mask0);
+  r3 = _mm256_blendv_ps(r3, zero, mask0);
+  r1 = _mm256_blendv_ps(r3, r1, mask2);
+  r2 = _mm256_blendv_ps(r3, r2, mask2);
+  _mm256_store_si256((__m256i*)roots, _mm256_cvtps_epi32(nr));
+  _mm256_store_ps(x1, r1);
+  _mm256_store_ps(x2, r2);
+}
+#endif
+
 // explicit SIMD code
 
 template <class Backend>
@@ -108,7 +149,12 @@ void QuadSolveSIMD(typename Backend::Float_v const &a,
 }
 
 template <class Backend>
-void TestQuadSolve(const float* a, const float* b, const float* c, float* x1, float* x2, int* roots,
+void TestQuadSolve(const float* __restrict__ a,
+                   const float* __restrict__ b,
+                   const float* __restrict__ c,
+                   float* __restrict__ x1,
+                   float* __restrict__ x2,
+                   int* __restrict__ roots,
                    size_t N, const char* name)
 {
   using Float_v = typename Backend::Float_v;
@@ -127,17 +173,17 @@ void TestQuadSolve(const float* a, const float* b, const float* c, float* x1, fl
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
             i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("\nelapsed time = %.3lfms (%s)\n", t, name);
+  printf("%32s: %7.3lfms\n", name, t);
 }
 
 int main(int argc, char *argv[]) {
-  float *a = (float *)memalign(64, N * sizeof(float));
-  float *b = (float *)memalign(64, N * sizeof(float));
-  float *c = (float *)memalign(64, N * sizeof(float));
+  float *a = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  float *b = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  float *c = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
 
-  int *roots = (int *)memalign(64, N * sizeof(int));
-  float *x1 = (float *)memalign(64, N * sizeof(float));
-  float *x2 = (float *)memalign(64, N * sizeof(float));
+  int *roots = (int *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(int));
+  float *x1 = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  float *x2 = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
 
   srand48(time(NULL));
 
@@ -162,7 +208,7 @@ int main(int argc, char *argv[]) {
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
             i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("\nelapsed time = %.3lfms (naive scalar code)\n", t);
+  printf("%32s: %7.3lfms\n", "naive scalar", t);
 
   timer.Start();
   for (int i = 0; i < N; i++)
@@ -174,21 +220,35 @@ int main(int argc, char *argv[]) {
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
             i, a[i], b[i], c[i], roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("\nelapsed time = %.3lfms (optimized scalar code)\n", t);
+  printf("%32s: %7.3lfms\n", "optimized scalar", t);
+
+#if !defined(VECCORE_DISABLE_SIMD) && defined(__AVX2__)
+  timer.Start();
+  for (int i = 0; i < N; i+= 8)
+    QuadSolveAVX(&a[i], &b[i], &c[i], &x1[i], &x2[i], &roots[i]);
+  t = timer.Elapsed();
+
+#ifdef VERBOSE
+  for (int i = index; i < index + 10; i++)
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n",
+            i, a[i], b[i], c[i], roots[i], x1[i], x2[i]);
+#endif
+  printf("%32s: %7.3lfms\n", "AVX2 intrinsics", t);
+#endif
 
   TestQuadSolve<backend::Scalar>(a, b, c, x1, x2, roots, N, "plain scalar backend");
   TestQuadSolve<backend::ScalarWrapper>(a, b, c, x1, x2, roots, N, "scalarwrapper backend");
 
 #ifdef VECCORE_ENABLE_VC
-  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, N, "simd code via Vc scalar backend");
-  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, N, "simd code via Vc vector backend");
-  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, N, "simd code via VcSimdArray<8> backend");
-  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, N, "simd code via VcSimdArray<16> backend");
-  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, N, "simd code via VcSimdArray<32> backend");
+  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, N, "Vc scalar backend");
+  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, N, "Vc vector backend");
+  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, N, "VcSimdArray<8> backend");
+  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, N, "VcSimdArray<16> backend");
+  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, N, "VcSimdArray<32> backend");
 #endif
 
 #ifdef VECCORE_ENABLE_UMESIMD
-  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "simd code via UME::SIMD backend");
+  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "UME::SIMD backend");
 #endif
 
   return 0;
