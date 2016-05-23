@@ -37,7 +37,7 @@ template <class Mask> Bool_s MaskEmpty(const Mask mask);
 template <class Mask> Bool_s MaskFull(const Mask mask);
 
 template <class T, class Mask>
-void MaskedAssign(T& dest, bool mask, const T &src);
+void MaskedAssign(T& dest, Mask mask, const T &src);
 
 template <class T, class Mask>
 T Blend(const Mask mask, const T& tval, const T& fval);
