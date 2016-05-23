@@ -9,21 +9,21 @@ template <typename T, uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVec_f<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
-  using IndexType  = typename UME::SIMD::SIMDVec_i<uint32_t, N>;
+  using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
 };
 
 template <typename T, uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVec_i<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
-  using IndexType  = typename UME::SIMD::SIMDVec_i<uint32_t, N>;
+  using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
 };
 
 template <typename T, uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVec_u<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
-  using IndexType  = typename UME::SIMD::SIMDVec_i<uint32_t, N>;
+  using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
 };
 
 
@@ -77,9 +77,7 @@ Blend(const UME::SIMD::SIMDVecMask<N> mask,
       const UME::SIMD::SIMDVec_f<T, N>& tval,
       const UME::SIMD::SIMDVec_f<T, N>& fval)
 {
-  UME::SIMD::SIMDVec_f<T, N> tmp(fval);
-  tmp.assign(mask, tval);
-  return tmp;
+  return tval.blend(mask, fval);
 }
 
 template <typename T, uint32_t N>
@@ -89,9 +87,7 @@ Blend(const UME::SIMD::SIMDVecMask<N> mask,
       const UME::SIMD::SIMDVec_i<T, N>& tval,
       const UME::SIMD::SIMDVec_i<T, N>& fval)
 {
-  UME::SIMD::SIMDVec<T, N> tmp(fval);
-  tmp.assign(mask, tval);
-  return tmp;
+  return tval.blend(mask, fval);
 }
 
 
@@ -102,9 +98,7 @@ Blend(const UME::SIMD::SIMDVecMask<N> mask,
       const UME::SIMD::SIMDVec_u<T, N>& tval,
       const UME::SIMD::SIMDVec_u<T, N>& fval)
 {
-  UME::SIMD::SIMDVec<T, N> tmp(fval);
-  tmp.assign(mask, tval);
-  return tmp;
+  return tval.blend(mask, fval);
 }
 
 namespace math {
