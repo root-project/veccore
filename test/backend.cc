@@ -401,6 +401,9 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign) {
   // casting 0 with Scalar_t is necessary here
   // as 0 can be interpreted as the null-pointer
   // which leads to ambiguities with some vector types constructors
+  // (For example the float instantiation of UME::SIMD vector has 'only' 
+  //  constructor taking a float and another taking a float* both requiring 
+  //  one conversion from an integer '0'.)
   Vector_t a(Scalar_t(0)), b(1);
 
   vecCore::MaskedAssign(a, a > b, b);
