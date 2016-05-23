@@ -37,7 +37,7 @@ template <> constexpr size_t SIMDWidth<Int32_s>()  { return 4;  }
 template <> constexpr size_t SIMDWidth<UInt16_s>() { return 8;  }
 template <> constexpr size_t SIMDWidth<Int16_s>()  { return 8;  }
 #else
-#pragma message ("NO SIMD ARCHITECTURE FOUND")
+// #pragma message ("NO SIMD ARCHITECTURE FOUND")
 #endif
 
 }
