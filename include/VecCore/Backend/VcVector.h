@@ -5,6 +5,8 @@
 
 #include <Vc/Vc>
 
+#ifndef Vc_IMPL_Scalar
+
 namespace vecCore {
 
 template <typename T> struct TypeTraits<Vc::Vector<T>> {
@@ -89,5 +91,6 @@ Vc::Vector<T> Tan(Vc::Vector<T> x)
 
 } // namespace vecCore
 
+#endif
 #endif
 #endif

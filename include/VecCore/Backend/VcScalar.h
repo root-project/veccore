@@ -35,6 +35,12 @@ public:
 
 using VcScalar = VcScalarT<>;
 
+#ifdef Vc_IMPL_Scalar
+template <typename T>
+using VcVectorT = VcScalarT<T>;
+using VcVector  = VcScalar;
+#endif
+
 } // namespace backend
 
 template <typename T>
