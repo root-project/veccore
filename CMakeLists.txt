@@ -21,8 +21,8 @@ option(ENABLE_TESTS "Build VecCore unit tests and benchmarks." ON)
 include(CMakeDependentOption)
 cmake_dependent_option(OFFLOAD "Enable Xeon Phi offload support." ON "MIC" OFF)
 
-cmake_dependent_option(VC "Enable Vc backend." ON "SIMD" ON)
-cmake_dependent_option(UMESIMD "Enable UME::SIMD backend." ON "SIMD" ON)
+cmake_dependent_option(VC "Enable Vc backend." ON "SIMD" OFF)
+cmake_dependent_option(UMESIMD "Enable UME::SIMD backend." OFF "SIMD" OFF)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Specifies the build type." FORCE)
