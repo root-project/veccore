@@ -7,7 +7,8 @@
 
 namespace vecCore {
 
-template <typename T, size_t N> struct TypeTraits<Vc::SimdArray<T,N>> {
+template <typename T, size_t N>
+struct TypeTraits<Vc::SimdArray<T,N>> {
   using ScalarType = T;
   using MaskType   = typename Vc::SimdArray<T,N>::MaskType;
   using IndexType  = typename Vc::SimdArray<T,N>::IndexType;
@@ -51,18 +52,15 @@ Bool_s MaskFull(const Vc::SimdMaskArray<T, N> mask)
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-void MaskedAssign(Vc::SimdArray<T, N>& dest,
-                  Vc::SimdMaskArray<T, N> mask,
-                  const Vc::SimdArray<T, N> &src)
+void MaskedAssign(Vc::SimdArray<T, N> &dest, Vc::SimdMaskArray<T, N> mask, const Vc::SimdArray<T, N> &src)
 {
   dest(mask) = src;
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> mask,
-                          const Vc::SimdArray<T, N>& tval,
-                          const Vc::SimdArray<T, N>& fval)
+Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> mask, const Vc::SimdArray<T, N> &tval,
+                          const Vc::SimdArray<T, N> &fval)
 {
   typename Vc::SimdArray<T, N> tmp(fval);
   tmp(mask) = tval;
@@ -73,14 +71,14 @@ namespace math {
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Vc::SimdArray<T, N> Pow(const Vc::SimdArray<T, N>& x, const Vc::SimdArray<T, N>& y)
+Vc::SimdArray<T, N> Pow(const Vc::SimdArray<T, N> &x, const Vc::SimdArray<T, N> &y)
 {
   return Vc::exp(Vc::log(x) * y);
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Vc::SimdArray<T, N> Tan(const Vc::SimdArray<T, N>& x)
+Vc::SimdArray<T, N> Tan(const Vc::SimdArray<T, N> &x)
 {
   Vc::SimdArray<T, N> s, c;
   Vc::sincos(x, &s, &c);

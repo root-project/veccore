@@ -37,26 +37,29 @@ template <class Mask> Bool_s MaskEmpty(const Mask mask);
 template <class Mask> Bool_s MaskFull(const Mask mask);
 
 template <class T, class Mask>
-void MaskedAssign(T& dest, Mask mask, const T &src);
+void MaskedAssign(T &dest, Mask mask, const T &src);
 
 template <class T, class Mask>
-T Blend(const Mask mask, const T& tval, const T& fval);
+T Blend(const Mask mask, const T &tval, const T &fval);
 
 // construct a type from a pointer - generic impl for vector types
 // may be template specialized in backends
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
+typename std::enable_if<!std::is_scalar<T>::value, T>::type
+FromPtr(typename TypeTraits<T>::ScalarType const *x)
+{
   return T(x);
 }
-
 
 // construct a type from a pointer - generic impl for scalar types
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x) {
+typename std::enable_if<std::is_scalar<T>::value, T>::type
+FromPtr(typename TypeTraits<T>::ScalarType const *x)
+{
   return T(*x);
 }
 
@@ -65,7 +68,9 @@ typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename Type
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(const T& x, typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(const T &x, typename std::enable_if<!std::is_scalar<T>::value,
+                                               typename TypeTraits<T>::ScalarType>::type *dest)
+{
   x.store(dest);
 }
 
@@ -73,7 +78,9 @@ void Store(const T& x, typename std::enable_if<!std::is_scalar<T>::value, typena
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(const T& x, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest) {
+void Store(const T& x, typename std::enable_if<std::is_scalar<T>::value,
+                                               typename TypeTraits<T>::ScalarType>::type *dest)
+{
   *dest = x;
 }
 
@@ -84,7 +91,7 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
-LaneAt(const T& x, size_t index)
+LaneAt(const T &x, size_t index)
 {
   assert(index == 0);
   return x;
@@ -95,7 +102,7 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
-LaneAt(const T& x, size_t index)
+LaneAt(const T &x, size_t index)
 {
   assert(index < VectorSize<T>());
   return x[index];
@@ -105,7 +112,8 @@ LaneAt(const T& x, size_t index)
 template <typename Mask>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-bool MaskLaneAt(Mask x, size_t index) {
+bool MaskLaneAt(Mask x, size_t index)
+{
   return x[index];
 }
 
@@ -113,7 +121,8 @@ bool MaskLaneAt(Mask x, size_t index) {
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-bool MaskLaneAt<bool>(bool x, size_t index) {
+bool MaskLaneAt<bool>(bool x, size_t index)
+{
   assert(index == 0);
   return x;
 }

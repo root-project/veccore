@@ -10,7 +10,8 @@ class WrappedBool;
 template <typename> class MaskedScalar;
 template <typename> class WrappedScalar;
 
-template <typename T> struct TypeTraits<WrappedScalar<T>> {
+template <typename T>
+struct TypeTraits<WrappedScalar<T>> {
   using ScalarType = T;
   using MaskType   = WrappedBool;
   using IndexType  = WrappedScalar<Size_s>;
@@ -66,7 +67,7 @@ public:
   operator bool const &() const noexcept { return fBool; }
 
   VECCORE_CUDA_HOST_DEVICE
-  bool &operator[](int index) {
+  bool& operator[](int index) {
     assert(index == 0);
     return fBool;
   }
@@ -94,7 +95,7 @@ public:
 
 #define MASK_ASSIGN_OPERATOR(OP)                                               \
   VECCORE_CUDA_HOST_DEVICE                                                     \
-  T &operator OP(const T &ref) {                                               \
+  T& operator OP(const T &ref) {                                               \
     if (fMask)                                                                 \
       fRef OP ref;                                                             \
     return fRef;                                                               \
@@ -130,19 +131,19 @@ public:
   WrappedScalar() { /* uninitialized */ }
 
   VECCORE_CUDA_HOST_DEVICE
-  WrappedScalar(const T& val) : fVal(val) {}
+  WrappedScalar(const T &val) : fVal(val) {}
 
   VECCORE_CUDA_HOST_DEVICE
-  WrappedScalar(const T* const val_ptr) : fVal(*val_ptr) {}
+  WrappedScalar(const T *const val_ptr) : fVal(*val_ptr) {}
 
   VECCORE_CUDA_HOST_DEVICE
-  WrappedScalar(const WrappedScalar* const s) : fVal(s->val_ptr) {}
+  WrappedScalar(const WrappedScalar *const s) : fVal(s->val_ptr) {}
 
   /* allow type conversion from other scalar types at initialization */
   template <typename Type,
-  class = typename std::enable_if<std::is_integral<Type>::value>::type>
+            class = typename std::enable_if<std::is_integral<Type>::value>::type>
   VECCORE_CUDA_HOST_DEVICE
-  WrappedScalar(const Type& val) : fVal(static_cast<T>(val)) {}
+  WrappedScalar(const Type &val) : fVal(static_cast<T>(val)) {}
 
   VECCORE_CUDA_HOST_DEVICE
   static constexpr size_t size() { return 1; }
@@ -221,9 +222,7 @@ Bool_s MaskFull<WrappedBool>(const WrappedBool mask)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void MaskedAssign(WrappedScalar<T>& dest,
-                WrappedBool mask,
-                const WrappedScalar<T> &src)
+void MaskedAssign(WrappedScalar<T> &dest, WrappedBool mask, const WrappedScalar<T> &src)
 {
   if (mask) dest = src;
 }
@@ -231,9 +230,8 @@ void MaskedAssign(WrappedScalar<T>& dest,
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-WrappedScalar<T> Blend(const WrappedBool mask,
-                       const WrappedScalar<T>& tval,
-                       const WrappedScalar<T>& fval)
+WrappedScalar<T> Blend(const WrappedBool mask, const WrappedScalar<T> &tval,
+                       const WrappedScalar<T> &fval)
 {
   return mask ? tval : fval;
 }
