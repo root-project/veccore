@@ -5,6 +5,8 @@
 #  if defined(__SSE__) || defined(__AVX__) || defined(__MIC__)
 #    define VECCORE_ENABLE_SIMD
 #  endif
+#else
+#  define VECCORE_SIMD_ALIGN 16
 #endif
 
 #if defined(VECCORE_ENABLE_SIMD)
