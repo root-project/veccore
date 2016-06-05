@@ -108,6 +108,26 @@ LaneAt(const T &x, size_t index)
   return x[index];
 }
 
+// per lane assignment to vector types - generic implementation
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void
+AssignLane(T &x, size_t index, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
+{
+  assert(index == 0);
+  x = y;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+void AssignLane(T &x, size_t index,
+    typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
+{
+  assert(index < VectorSize<T>());
+  x[index] = y;
+}
+
 // lane access to masks of vector types - generic implementation
 template <typename Mask>
 VECCORE_FORCE_INLINE

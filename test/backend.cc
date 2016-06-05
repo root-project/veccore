@@ -337,6 +337,27 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead) {
     EXPECT_EQ(input[i], vecCore::LaneAt<Vector_t>(tmp, i));
 }
 
+
+TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+
+  auto kVS = vecCore::VectorSize<Vector_t>();
+  Scalar_t input[kVS];
+
+  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
+    input[i] = i;
+  }
+
+  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+
+  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+    vecCore::AssignLane(tmp, i, Scalar_t(10));
+
+  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+    EXPECT_EQ(Scalar_t(10), vecCore::LaneAt<Vector_t>(tmp, i));
+}
+
 TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
@@ -357,7 +378,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
 }
 
 REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr, VectorLaneRead,
-                           MaskLaneRead);
+                           MaskLaneRead, VectorLaneWrite);
 
 ///////////////////////////////////////////////////////////////////////////////
 
