@@ -89,8 +89,13 @@ void QuadSolveAVX(const float *__restrict__ a, const float *__restrict__ b, cons
   __m256 negone = _mm256_set1_ps(-1.0f);
   __m256 ac = _mm256_mul_ps(va, vc);
   __m256 sign = _mm256_blendv_ps(negone, one, _mm256_cmp_ps(vb, zero, _CMP_GE_OS));
+#if defined(__FMA__)
   __m256 delta = _mm256_fmadd_ps(_mm256_set1_ps(-4.0f), ac, b2);
   __m256 r1 = _mm256_fmadd_ps(sign, _mm256_sqrt_ps(delta), vb);
+#else
+  __m256 delta = _mm256_sub_ps(b2, __256_mul_ps(_mm256_set1_ps(-4.0f), ac));
+  __m256 r1 = _mm256_add_ps(vb, _mm256_mul_ps(sign, _mm256_sqrt_ps(delta)));
+#endif
   __m256 mask0 = _mm256_cmp_ps(delta, zero, _CMP_LT_OS);
   __m256 mask2 = _mm256_cmp_ps(delta, eps, _CMP_GE_OS);
   r1 = _mm256_mul_ps(_mm256_set1_ps(-0.5f), r1);
