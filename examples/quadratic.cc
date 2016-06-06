@@ -75,6 +75,7 @@ void QuadSolveOptimized(const T &a, const T &b, const T &c, T &x1, T &x2, int &r
 
 // explicit AVX2 code using intrinsics
 
+VECCORE_FORCE_NOINLINE
 void QuadSolveAVX(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots)
 {
