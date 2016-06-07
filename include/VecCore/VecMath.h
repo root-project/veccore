@@ -64,7 +64,7 @@ VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 void SinCos(const T &x, T *s, T *c) { sincos(x, s, c); }
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(NVCC)
 VECCORE_FORCE_INLINE
 void sincosf(const float &x, float *s, float *c) { __sincosf(x, s, c); }
 
