@@ -33,14 +33,14 @@ constexpr Size_s VectorSize(const T&)
   return sizeof(T)/sizeof(typename ScalarType<T>::Type);
 }
 
-template <class Mask> Bool_s MaskEmpty(const Mask mask);
-template <class Mask> Bool_s MaskFull(const Mask mask);
+template <class Mask> Bool_s MaskEmpty(const Mask &mask);
+template <class Mask> Bool_s MaskFull(const Mask &mask);
 
 template <class T, class Mask>
-void MaskedAssign(T &dest, Mask mask, const T &src);
+void MaskedAssign(T &dest, const Mask &mask, const T &src);
 
 template <class T, class Mask>
-T Blend(const Mask mask, const T &tval, const T &fval);
+T Blend(const Mask &mask, const T &tval, const T &fval);
 
 // construct a type from a pointer - generic impl for vector types
 // may be template specialized in backends
@@ -132,7 +132,7 @@ void AssignLane(T &x, size_t index,
 template <typename Mask>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-bool MaskLaneAt(Mask x, size_t index)
+bool MaskLaneAt(const Mask &x, size_t index)
 {
   return x[index];
 }
@@ -141,7 +141,7 @@ bool MaskLaneAt(Mask x, size_t index)
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-bool MaskLaneAt<bool>(bool x, size_t index)
+bool MaskLaneAt<bool>(const bool &x, size_t index)
 {
   assert(index == 0);
   return x;

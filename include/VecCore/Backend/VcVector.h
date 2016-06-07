@@ -41,28 +41,28 @@ using VcVector = VcVectorT<>;
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::Mask<T> mask)
+Bool_s MaskEmpty(const Vc::Mask<T> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::Mask<T> mask)
+Bool_s MaskFull(const Vc::Mask<T> &mask)
 {
   return mask.isFull();
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-void MaskedAssign(Vc::Vector<T>& dest, Vc::Mask<T> mask, const Vc::Vector<T> &src)
+void MaskedAssign(Vc::Vector<T> &dest, const Vc::Mask<T> &mask, const Vc::Vector<T> &src)
 {
   dest(mask) = src;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Vector<T> Blend(const Vc::Mask<T> mask, const Vc::Vector<T>& tval, const Vc::Vector<T>& fval)
+Vc::Vector<T> Blend(const Vc::Mask<T> &mask, const Vc::Vector<T> &tval, const Vc::Vector<T> &fval)
 {
   typename Vc::Vector<T> tmp(fval);
   tmp(mask) = tval;
@@ -73,14 +73,14 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Vector<T> Pow(Vc::Vector<T> x, Vc::Vector<T> y)
+Vc::Vector<T> Pow(const Vc::Vector<T> &x, const Vc::Vector<T> &y)
 {
   return Vc::exp(Vc::log(x) * y);
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Vector<T> Tan(Vc::Vector<T> x)
+Vc::Vector<T> Tan(const Vc::Vector<T> &x)
 {
   Vc::Vector<T> s, c;
   Vc::sincos(x, &s, &c);

@@ -206,7 +206,7 @@ private:
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-Bool_s MaskEmpty<WrappedBool>(const WrappedBool mask)
+Bool_s MaskEmpty<WrappedBool>(const WrappedBool &mask)
 {
   return !mask;
 }
@@ -214,7 +214,7 @@ Bool_s MaskEmpty<WrappedBool>(const WrappedBool mask)
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-Bool_s MaskFull<WrappedBool>(const WrappedBool mask)
+Bool_s MaskFull<WrappedBool>(const WrappedBool &mask)
 {
   return mask;
 }
@@ -222,7 +222,7 @@ Bool_s MaskFull<WrappedBool>(const WrappedBool mask)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void MaskedAssign(WrappedScalar<T> &dest, WrappedBool mask, const WrappedScalar<T> &src)
+void MaskedAssign(WrappedScalar<T> &dest, const WrappedBool &mask, const WrappedScalar<T> &src)
 {
   if (mask) dest = src;
 }
@@ -230,7 +230,7 @@ void MaskedAssign(WrappedScalar<T> &dest, WrappedBool mask, const WrappedScalar<
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-WrappedScalar<T> Blend(const WrappedBool mask, const WrappedScalar<T> &tval,
+WrappedScalar<T> Blend(const WrappedBool &mask, const WrappedScalar<T> &tval,
                        const WrappedScalar<T> &fval)
 {
   return mask ? tval : fval;

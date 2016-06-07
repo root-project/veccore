@@ -45,14 +45,14 @@ using VcVector  = VcScalar;
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::Scalar::Mask<T> mask)
+Bool_s MaskEmpty(const Vc::Scalar::Mask<T> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::Scalar::Mask<T> mask)
+Bool_s MaskFull(const Vc::Scalar::Mask<T> &mask)
 {
   return mask.isFull();
 }
@@ -60,7 +60,7 @@ Bool_s MaskFull(const Vc::Scalar::Mask<T> mask)
 template <typename T>
 VECCORE_FORCE_INLINE
 void MaskedAssign(Vc::Scalar::Vector<T>& dest,
-                  Vc::Scalar::Mask<T> mask,
+                  const Vc::Scalar::Mask<T> &mask,
                   const Vc::Scalar::Vector<T> &src)
 {
   dest(mask) = src;
@@ -68,9 +68,9 @@ void MaskedAssign(Vc::Scalar::Vector<T>& dest,
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Blend(const Vc::Scalar::Mask<T> mask,
-                            const Vc::Scalar::Vector<T>& tval,
-                            const Vc::Scalar::Vector<T>& fval)
+Vc::Scalar::Vector<T> Blend(const Vc::Scalar::Mask<T> &mask,
+                            const Vc::Scalar::Vector<T> &tval,
+                            const Vc::Scalar::Vector<T> &fval)
 {
   typename Vc::Scalar::Vector<T> tmp(tval);
   tmp(mask) = fval;
@@ -81,14 +81,14 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Pow(Vc::Scalar::Vector<T> x, Vc::Scalar::Vector<T> y)
+Vc::Scalar::Vector<T> Pow(const Vc::Scalar::Vector<T> &x, const Vc::Scalar::Vector<T> &y)
 {
   return std::exp(std::log(x[0]) * y[0]);
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Tan(Vc::Scalar::Vector<T> x)
+Vc::Scalar::Vector<T> Tan(const Vc::Scalar::Vector<T> &x)
 {
   return std::tan(x[0]);
 }

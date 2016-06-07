@@ -38,28 +38,28 @@ public:
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::SimdMaskArray<T, N> mask)
+Bool_s MaskEmpty(const Vc::SimdMaskArray<T, N> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::SimdMaskArray<T, N> mask)
+Bool_s MaskFull(const Vc::SimdMaskArray<T, N> &mask)
 {
   return mask.isFull();
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-void MaskedAssign(Vc::SimdArray<T, N> &dest, Vc::SimdMaskArray<T, N> mask, const Vc::SimdArray<T, N> &src)
+void MaskedAssign(Vc::SimdArray<T, N> &dest, const Vc::SimdMaskArray<T, N> &mask, const Vc::SimdArray<T, N> &src)
 {
   dest(mask) = src;
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> mask, const Vc::SimdArray<T, N> &tval,
+Vc::SimdArray<T, N> Blend(const Vc::SimdMaskArray<T, N> &mask, const Vc::SimdArray<T, N> &tval,
                           const Vc::SimdArray<T, N> &fval)
 {
   typename Vc::SimdArray<T, N> tmp(fval);
