@@ -57,6 +57,7 @@ double uniform_random(double a, double b)
 #define TEST_MATH_FUNCTION_ONE(F, f) TEST_MATH_FUNCTION_RANGE(F, f, -1.0, 1.0)
 #define TEST_MATH_FUNCTION_NEG(F, f) TEST_MATH_FUNCTION_RANGE(F, f, -1.0, 0.0)
 #define TEST_MATH_FUNCTION_POS(F, f) TEST_MATH_FUNCTION_RANGE(F, f,  0.0, 1.0)
+#define TEST_MATH_FUNCTION_TRIG(F, f) TEST_MATH_FUNCTION_RANGE(F, f,  0.0, 2.0 * M_PI)
 
 #define TEST_MATH_FUNCTION_RANGE_2(func, stdfunc, a, b, c, d)                              \
   TYPED_TEST_P(MathFunctions, func) {                                                      \
@@ -93,15 +94,15 @@ double uniform_random(double a, double b)
 TEST_MATH_FUNCTION(Abs, abs);
 TEST_MATH_FUNCTION(Floor, floor);
 TEST_MATH_FUNCTION(Ceil, ceil);
-TEST_MATH_FUNCTION(Sin, sin);
+TEST_MATH_FUNCTION_TRIG(Sin, sin);
 TEST_MATH_FUNCTION_ONE(Asin, asin);
 // TEST_MATH_FUNCTION(Sinh, sinh);
 // TEST_MATH_FUNCTION(Asinh, asinh);
-TEST_MATH_FUNCTION(Cos, cos);
+TEST_MATH_FUNCTION_TRIG(Cos, cos);
 // TEST_MATH_FUNCTION(Acos, acos);
 // TEST_MATH_FUNCTION(Cosh, cosh);
 // TEST_MATH_FUNCTION(Acosh, acosh);
-TEST_MATH_FUNCTION(Tan, tan);
+TEST_MATH_FUNCTION_TRIG(Tan, tan);
 TEST_MATH_FUNCTION(Atan, atan);
 TEST_MATH_FUNCTION(Exp, exp);
 TEST_MATH_FUNCTION_POS(Log, log);
