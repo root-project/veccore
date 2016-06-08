@@ -15,11 +15,12 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 option(CUDA "Enable support for CUDA.")
 option(EXAMPLES "Enable installation of code examples.")
 option(MIC "Enable support for Intel Xeon Phi coprocessor.")
-option(SIMD "Enable support for SIMD instructions (using Vc library)." ON)
+option(SIMD "Enable support for SIMD instructions (using Vc library)." OFF)
 option(ENABLE_TESTS "Build VecCore unit tests and benchmarks." ON)
 
 include(CMakeDependentOption)
 cmake_dependent_option(OFFLOAD "Enable Xeon Phi offload support." ON "MIC" OFF)
+
 
 cmake_dependent_option(VC "Enable Vc backend." ON "SIMD" OFF)
 cmake_dependent_option(UMESIMD "Enable UME::SIMD backend." OFF "SIMD" OFF)
