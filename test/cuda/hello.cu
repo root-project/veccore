@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include <driver_types.h>
 #include <cuda_runtime.h>
