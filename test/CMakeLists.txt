@@ -1,25 +1,25 @@
 # VecCore Tests
 
-add_compile_options(${CMAKE_CXX_FLAGS_TARGET_ISA})
+add_subdirectory(gtest)
+
+if (CUDA)
+  add_subdirectory(cuda)
+endif()
 
 if (VC)
   link_libraries(${Vc_LIBRARIES})
 endif()
 
-add_subdirectory(gtest)
+add_executable(Backend backend.cc)
+add_executable(TypeTraits traittest.cc)
+add_executable(NumericLimits limits.cc)
+add_executable(Math mathtest.cc)
 
-add_executable(TestBackend backend.cc)
-add_executable(TestMath mathtest.cc)
-add_executable(TestNumericLimits limits.cc)
-add_executable(TestWrapper wrapper.cc)
-add_executable(TestTypeTraits traittest.cc)
+target_link_libraries(Backend gtest)
+target_link_libraries(TypeTraits gtest)
+target_link_libraries(Math gtest)
 
-target_link_libraries(TestBackend gtest)
-target_link_libraries(TestMath gtest)
-target_link_libraries(TestTypeTraits gtest)
-
-
-add_test(Backend TestBackend)
-add_test(Traits TestTypeTraits)
-add_test(Math TestMath)
-add_test(NumericLimits TestNumericLimits)
+add_test(Backend Backend)
+add_test(TypeTraits TypeTraits)
+add_test(NumericLimits NumericLimits)
+add_test(Math Math)
