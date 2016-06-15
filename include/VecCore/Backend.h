@@ -2,7 +2,9 @@
 #define VECCORE_BACKEND_H
 
 #include <type_traits>
+#ifndef VECGEOM_ASSERT_H
 #include <cassert>
+#endif
 
 namespace vecCore {
 
