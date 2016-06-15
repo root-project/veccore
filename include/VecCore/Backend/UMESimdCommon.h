@@ -31,22 +31,22 @@ struct TypeTraits<UME::SIMD::SIMDVec_u<T, N>> {
 
 template <uint32_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const UME::SIMD::SIMDVecMask<N> cond)
+Bool_s MaskFull(const UME::SIMD::SIMDVecMask<N> &cond)
 {
   return cond.hland();
 }
 
 template <uint32_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const UME::SIMD::SIMDVecMask<N> cond)
+Bool_s MaskEmpty(const UME::SIMD::SIMDVecMask<N> &cond)
 {
   return !cond.hlor();
 }
 
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
-void MaskedAssign(UME::SIMD::SIMDVec_f<T, N>& dest,
-                  UME::SIMD::SIMDVecMask<N> mask,
+void MaskedAssign(UME::SIMD::SIMDVec_f<T, N> &dest,
+                  const UME::SIMD::SIMDVecMask<N> &mask,
                   const UME::SIMD::SIMDVec_f<T, N> &src)
 {
   dest.assign(mask, src);
@@ -54,8 +54,8 @@ void MaskedAssign(UME::SIMD::SIMDVec_f<T, N>& dest,
 
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
-void MaskedAssign(UME::SIMD::SIMDVec_i<T, N>& dest,
-                  UME::SIMD::SIMDVecMask<N> mask,
+void MaskedAssign(UME::SIMD::SIMDVec_i<T, N> &dest,
+                  const UME::SIMD::SIMDVecMask<N> &mask,
                   const UME::SIMD::SIMDVec_i<T, N> &src)
 {
   dest.assign(mask, src);
@@ -64,7 +64,7 @@ void MaskedAssign(UME::SIMD::SIMDVec_i<T, N>& dest,
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
 void MaskedAssign(UME::SIMD::SIMDVec_u<T, N>& dest,
-                  UME::SIMD::SIMDVecMask<N> mask,
+                  const UME::SIMD::SIMDVecMask<N> &mask,
                   const UME::SIMD::SIMDVec_u<T, N> &src)
 {
   dest.assign(mask, src);
@@ -73,9 +73,9 @@ void MaskedAssign(UME::SIMD::SIMDVec_u<T, N>& dest,
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
 typename UME::SIMD::SIMDVec_f<T, N>
-Blend(const UME::SIMD::SIMDVecMask<N> mask,
-      const UME::SIMD::SIMDVec_f<T, N>& tval,
-      const UME::SIMD::SIMDVec_f<T, N>& fval)
+Blend(const UME::SIMD::SIMDVecMask<N> &mask,
+      const UME::SIMD::SIMDVec_f<T, N> &tval,
+      const UME::SIMD::SIMDVec_f<T, N> &fval)
 {
   return tval.blend(mask, fval);
 }
@@ -83,9 +83,9 @@ Blend(const UME::SIMD::SIMDVecMask<N> mask,
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
 typename UME::SIMD::SIMDVec_i<T, N>
-Blend(const UME::SIMD::SIMDVecMask<N> mask,
-      const UME::SIMD::SIMDVec_i<T, N>& tval,
-      const UME::SIMD::SIMDVec_i<T, N>& fval)
+Blend(const UME::SIMD::SIMDVecMask<N> &mask,
+      const UME::SIMD::SIMDVec_i<T, N> &tval,
+      const UME::SIMD::SIMDVec_i<T, N> &fval)
 {
   return tval.blend(mask, fval);
 }
@@ -94,26 +94,19 @@ Blend(const UME::SIMD::SIMDVecMask<N> mask,
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
 typename UME::SIMD::SIMDVec_u<T, N>
-Blend(const UME::SIMD::SIMDVecMask<N> mask,
-      const UME::SIMD::SIMDVec_u<T, N>& tval,
-      const UME::SIMD::SIMDVec_u<T, N>& fval)
+Blend(const UME::SIMD::SIMDVecMask<N> &mask,
+      const UME::SIMD::SIMDVec_u<T, N> &tval,
+      const UME::SIMD::SIMDVec_u<T, N> &fval)
 {
   return tval.blend(mask, fval);
 }
 
 namespace math {
 
-#define UMESIMD_INT_FUNC(f, name)                                               \
-  template <typename T, uint32_t N>                                             \
-  VECCORE_FORCE_INLINE                                                          \
-  typename UME::SIMD::SIMDVec_i<T, N> f(UME::SIMD::SIMDVec_i<T, N> x) {         \
-    return x.name();                                                            \
-  }
-
 #define UMESIMD_REAL_FUNC(f, name)                                              \
   template <typename T, uint32_t N>                                             \
   VECCORE_FORCE_INLINE                                                          \
-  typename UME::SIMD::SIMDVec_f<T, N> f(UME::SIMD::SIMDVec_f<T, N> x) {         \
+  typename UME::SIMD::SIMDVec_f<T, N> f(const UME::SIMD::SIMDVec_f<T, N> &x) {  \
     return x.name();                                                            \
   }
 
@@ -129,9 +122,7 @@ UMESIMD_REAL_FUNC(Round, round)
 UMESIMD_REAL_FUNC(Floor, floor)
 UMESIMD_REAL_FUNC(Ceil, ceil)
 
-
 } // end namespace math
 } // end namespace vecCore
-
 
 #endif
