@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <limits>
 
+#ifndef __APPLE__
 #include <malloc.h>
+#endif
 
 #include "VecCore/Timer.h"
 #include <VecCore/VecCore>
@@ -176,13 +178,16 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
 
 int main(int argc, char *argv[])
 {
-  float *a = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  float *b = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  float *c = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  float *a, *b, *c, *x1, *x2;
+  int *roots;
+  posix_memalign((void**) &a, VECCORE_SIMD_ALIGN, N * sizeof(float));
+  posix_memalign((void**) &b, VECCORE_SIMD_ALIGN, N * sizeof(float));
+  posix_memalign((void**) &c, VECCORE_SIMD_ALIGN, N * sizeof(float));
 
-  int *roots = (int *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(int));
-  float *x1 = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  float *x2 = (float *)memalign(VECCORE_SIMD_ALIGN, N * sizeof(float));
+   
+  posix_memalign((void**) &roots, VECCORE_SIMD_ALIGN, N * sizeof(int));
+  posix_memalign((void**) &x1, VECCORE_SIMD_ALIGN, N * sizeof(float));
+  posix_memalign((void**) &x2,VECCORE_SIMD_ALIGN, N * sizeof(float));
 
   srand48(time(NULL));
 
