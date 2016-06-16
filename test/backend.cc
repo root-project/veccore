@@ -403,8 +403,35 @@ TYPED_TEST_P(VectorInterfaceTest, Gather) {
   }
 }
 
+TYPED_TEST_P(VectorInterfaceTest, Scatter) {
+  using Vector_t = typename TestFixture::Vector_t;
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Index_v = typename vecCore::Index_v<Vector_t>;
+  using Index_t = typename vecCore::ScalarType<Index_v>::Type;
+
+  size_t N = vecCore::VectorSize<Vector_t>();
+
+  Index_t  index[N];
+  Scalar_t input[N], output[N];
+
+  for (vecCore::UInt_s i = 0; i < N; ++i) {
+    input[i] = i;
+    index[i] = i;
+  }
+
+  Index_v idx(vecCore::FromPtr<Index_v>(&index[0]));
+
+  Vector_t x = vecCore::FromPtr<Vector_t>(&input[0]);
+
+  vecCore::Scatter<Vector_t>(x, &output[0], idx);
+
+  Vector_t y = vecCore::FromPtr<Vector_t>(&output[0]);
+
+  EXPECT_TRUE(vecCore::MaskFull(x == y));
+}
+
 REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr,
-                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, Gather);
+                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, Gather, Scatter);
 
 ///////////////////////////////////////////////////////////////////////////////
 

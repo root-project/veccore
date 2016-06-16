@@ -172,6 +172,27 @@ Gather(typename TypeTraits<T>::ScalarType const *ptr,
   return result;
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+typename std::enable_if<std::is_scalar<T>::value,void>::type
+Scatter(const T& x, typename TypeTraits<T>::ScalarType *ptr,
+        typename TypeTraits<T>::IndexType  const &idx)
+{
+  ptr[idx] = x;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+typename std::enable_if<!std::is_scalar<T>::value,void>::type
+Scatter(const T& x, typename TypeTraits<T>::ScalarType *ptr,
+        typename TypeTraits<T>::IndexType  const &idx)
+{
+  for (size_t i = 0; i < VectorSize<T>(); i++)
+    ptr[idx[i]] = x[i];
+}
+
 // extra functions
 
 VECCORE_FORCE_INLINE
