@@ -3,10 +3,6 @@
 #include <cstdlib>
 #include <limits>
 
-#ifndef __APPLE__
-#include <malloc.h>
-#endif
-
 #include "VecCore/Timer.h"
 #include <VecCore/VecCore>
 
@@ -180,14 +176,13 @@ int main(int argc, char *argv[])
 {
   float *a, *b, *c, *x1, *x2;
   int *roots;
-  posix_memalign((void**) &a, VECCORE_SIMD_ALIGN, N * sizeof(float));
-  posix_memalign((void**) &b, VECCORE_SIMD_ALIGN, N * sizeof(float));
-  posix_memalign((void**) &c, VECCORE_SIMD_ALIGN, N * sizeof(float));
 
-   
-  posix_memalign((void**) &roots, VECCORE_SIMD_ALIGN, N * sizeof(int));
-  posix_memalign((void**) &x1, VECCORE_SIMD_ALIGN, N * sizeof(float));
-  posix_memalign((void**) &x2,VECCORE_SIMD_ALIGN, N * sizeof(float));
+  a = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  b = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  c = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  x1 = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  x2 = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  roots = (int*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(int));
 
   srand48(time(NULL));
 

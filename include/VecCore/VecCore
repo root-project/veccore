@@ -7,5 +7,6 @@
 #include "Backend.h"
 #include "Limits.h"
 #include "VecMath.h"
+#include "Utilities.h"
 
 #endif
