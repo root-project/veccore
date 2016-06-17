@@ -57,6 +57,8 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/"
 install(DIRECTORY "${PROJECT_BINARY_DIR}/cmake/"
         DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME} FILES_MATCHING PATTERN *.cmake)
 
+enable_testing()
+
 if (BUILD_TESTING)
   add_subdirectory(test)
   add_subdirectory(bench)
