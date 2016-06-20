@@ -71,12 +71,14 @@ public:
   VECCORE_CUDA_HOST_DEVICE
   bool& operator[](int index) {
     assert(index == 0);
+    (void)index;
     return fBool;
   }
 
   VECCORE_CUDA_HOST_DEVICE
   bool operator[](int index) const {
     assert(index == 0);
+    (void)index;
     return fBool;
   }
 
