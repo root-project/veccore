@@ -19,7 +19,7 @@ T Abs(const T &x)
 template <class T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-T Min(const T a, const T b)
+T Min(const T &a, const T &b)
 {
   return Blend(a < b, a, b);
 }
@@ -27,7 +27,7 @@ T Min(const T a, const T b)
 template <class T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-T Max(const T a, const T b)
+T Max(const T &a, const T &b)
 {
   return Blend(a > b, a, b);
 }
@@ -35,7 +35,7 @@ T Max(const T a, const T b)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-T Min(T a, T b, T c)
+T Min(const T &a, const T &b, const T &c)
 {
   return Min(a, Min(b, c));
 }
@@ -43,7 +43,7 @@ T Min(T a, T b, T c)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-T Max(T a, T b, T c)
+T Max(const T &a, const T &b, const T &c)
 {
   return Max(a, Max(b, c));
 }
