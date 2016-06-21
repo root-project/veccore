@@ -164,12 +164,14 @@ public:
   VECCORE_CUDA_HOST_DEVICE
   T &operator[](int index) {
     assert(index == 0);
+    (void)index);
     return fVal;
   }
 
   VECCORE_CUDA_HOST_DEVICE
   T const operator[](int index) const {
     assert(index == 0);
+    (void)index;
     return fVal;
   }
 
