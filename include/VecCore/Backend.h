@@ -96,6 +96,7 @@ typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::Scalar
 LaneAt(const T &x, size_t index)
 {
   assert(index == 0);
+  (void)index;
   return x;
 }
 
@@ -107,6 +108,7 @@ typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::Scala
 LaneAt(const T &x, size_t index)
 {
   assert(index < VectorSize<T>());
+  (void)index;
   return x[index];
 }
 
@@ -118,6 +120,7 @@ void
 AssignLane(T &x, size_t index, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
 {
   assert(index == 0);
+  (void)index;
   x = y;
 }
 
@@ -146,6 +149,7 @@ VECCORE_CUDA_HOST_DEVICE
 bool MaskLaneAt<bool>(const bool &x, size_t index)
 {
   assert(index == 0);
+  (void)index;
   return x;
 }
 

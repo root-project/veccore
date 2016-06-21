@@ -164,7 +164,7 @@ public:
   VECCORE_CUDA_HOST_DEVICE
   T &operator[](int index) {
     assert(index == 0);
-    (void)index);
+    (void)index;
     return fVal;
   }
 
