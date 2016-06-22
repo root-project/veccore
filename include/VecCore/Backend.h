@@ -133,6 +133,25 @@ void AssignLane(T &x, size_t index,
   x[index] = y;
 }
 
+// per lane assignment to mask types
+template <typename T>
+VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+void AssignMaskLane(T &x, size_t index, typename std::enable_if<!std::is_scalar<T>::value, bool>::type const &y)
+{
+  x[index] = y;
+}
+
+
+VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+void AssignMaskLane(bool &x, size_t index, bool const &y)
+{
+  assert(index == 0);
+  (void)index;
+  x = y;
+}
+
+
+
 // lane access to masks of vector types - generic implementation
 template <typename Mask>
 VECCORE_FORCE_INLINE
