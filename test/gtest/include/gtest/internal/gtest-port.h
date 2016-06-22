@@ -2080,6 +2080,7 @@ class ThreadLocal {
     }
 
     ValueHolder* const new_holder = default_factory_->MakeNewHolder();
+
     ThreadLocalValueHolderBase* const holder_base = new_holder;
     GTEST_CHECK_POSIX_SUCCESS_(pthread_setspecific(key_, holder_base));
     return new_holder->pointer();
