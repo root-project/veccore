@@ -40,6 +40,9 @@
 #define VECCORE_CUDA_GLOBAL      /* empty */
 #define VECCORE_CUDA_ALIGN       /* empty */
 
+// Keep the macro compact
+// clang-format off
+
 #define VECCORE_CUDA_BASIC_TYPES                                               \
 template <typename T> struct CudaTypeTraits;                                   \
 template <> struct CudaTypeTraits<Float_s>  { using Type = Float_s;  };        \
@@ -64,6 +67,8 @@ template <typename T> using CudaType = typename CudaTypeTraits<T>::Type;
 
 #define VECCORE_DECLARE_CUDA_STRUCT(x)                                         \
   VECCORE_DECLARE_CUDA(struct x) VECCORE_DECLARE_CUDA_TYPE(x)
+
+// clang-format on
 
 #endif // defined (VECCORE_ENABLE_CUDA)
 
