@@ -142,7 +142,8 @@ void AssignMaskLane(T &x, size_t index, typename std::enable_if<!std::is_scalar<
 }
 
 
-VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void AssignMaskLane(bool &x, size_t index, bool const &y)
 {
   assert(index == 0);
