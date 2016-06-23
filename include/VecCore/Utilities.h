@@ -11,12 +11,10 @@ inline void *AlignedAlloc(size_t alignment, size_t size)
   int status;
   void *ptr = NULL;
 
-  if ((status = posix_memalign(&ptr, alignment, size)) != 0)
-    throw std::system_error(status, std::system_category());
+  if ((status = posix_memalign(&ptr, alignment, size)) != 0) throw std::system_error(status, std::system_category());
 
   return ptr;
 }
-
 }
 
 #endif

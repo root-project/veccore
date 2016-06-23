@@ -5,7 +5,8 @@
 
 namespace vecCore {
 
-template <typename T> class NumericLimits {
+template <typename T>
+class NumericLimits {
 public:
   using ScalarT = typename ScalarType<T>::Type;
 

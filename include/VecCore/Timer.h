@@ -8,6 +8,7 @@ using namespace std::chrono;
 template <class unit = nanoseconds>
 class Timer {
   using clock = high_resolution_clock;
+
 public:
   Timer() : fStart(), fStop() { Start(); }
 
@@ -15,7 +16,8 @@ public:
 
   void Start() { fStart = clock::now(); }
 
-  double Elapsed() {
+  double Elapsed()
+  {
     fStop = clock::now();
     return duration_cast<unit>(fStop - fStart).count();
   }
@@ -26,9 +28,11 @@ private:
 
 #if !defined(VECCORE_NVCC_DEVICE)
 
-class cycles {};
+class cycles {
+};
 
-template <> class Timer<cycles> {
+template <>
+class Timer<cycles> {
 public:
   Timer() { Start(); }
 
@@ -36,18 +40,18 @@ public:
 
   void Start() { fStart = GetCycleCount(); }
 
-  double Elapsed() {
-    return static_cast<double>(GetCycleCount() - fStart);
-  }
+  double Elapsed() { return static_cast<double>(GetCycleCount() - fStart); }
 
 private:
   unsigned long long int fStart;
 
-  inline __attribute__((always_inline))
-  unsigned long long int GetCycleCount() {
+  inline __attribute__((always_inline)) unsigned long long int GetCycleCount()
+  {
     unsigned int hi, lo;
-    asm volatile("cpuid\n\t" "rdtsc" : "=a"(lo), "=d"(hi));
-    return ((unsigned long long)lo)|(((unsigned long long)hi) << 32);
+    asm volatile("cpuid\n\t"
+                 "rdtsc"
+                 : "=a"(lo), "=d"(hi));
+    return ((unsigned long long)lo) | (((unsigned long long)hi) << 32);
   }
 };
 #endif

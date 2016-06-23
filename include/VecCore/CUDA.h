@@ -3,15 +3,15 @@
 
 #if !defined(VECCORE_ENABLE_CUDA)
 
-#define VECCORE_CUDA_HOST                /* empty */
-#define VECCORE_CUDA_DEVICE              /* empty */
-#define VECCORE_CUDA_HOST_DEVICE         /* empty */
-#define VECCORE_CUDA_GLOBAL              /* empty */
-#define VECCORE_CUDA_ALIGN               /* empty */
-#define VECCORE_DECLARE_CUDA(x)          /* empty */
-#define VECCORE_DECLARE_CUDA_TYPE(T)     /* empty */
-#define VECCORE_DECLARE_CUDA_CLASS(x)    /* empty */
-#define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
+#define VECCORE_CUDA_HOST              /* empty */
+#define VECCORE_CUDA_DEVICE            /* empty */
+#define VECCORE_CUDA_HOST_DEVICE       /* empty */
+#define VECCORE_CUDA_GLOBAL            /* empty */
+#define VECCORE_CUDA_ALIGN             /* empty */
+#define VECCORE_DECLARE_CUDA(x)        /* empty */
+#define VECCORE_DECLARE_CUDA_TYPE(T)   /* empty */
+#define VECCORE_DECLARE_CUDA_CLASS(x)  /* empty */
+#define VECCORE_DECLARE_CUDA_STRUCT(x) /* empty */
 
 #elif (defined(__CUDACC__) || defined(__NVCC__))
 

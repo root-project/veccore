@@ -8,10 +8,10 @@
 namespace vecCore {
 
 template <typename T, size_t N>
-struct TypeTraits<Vc::SimdArray<T,N>> {
+struct TypeTraits<Vc::SimdArray<T, N>> {
   using ScalarType = T;
-  using MaskType   = typename Vc::SimdArray<T,N>::MaskType;
-  using IndexType  = typename Vc::SimdArray<T,N>::IndexType;
+  using MaskType   = typename Vc::SimdArray<T, N>::MaskType;
+  using IndexType  = typename Vc::SimdArray<T, N>::IndexType;
 };
 
 namespace backend {
@@ -23,10 +23,10 @@ public:
   using Float_v  = Vc::SimdArray<Float_s, N>;
   using Double_v = Vc::SimdArray<Double_s, N>;
 
-  using Int_v    = Vc::SimdArray<Int_s, N>;
-  using Int16_v  = Vc::SimdArray<Int16_s, N>;
-  using Int32_v  = Vc::SimdArray<Int32_s, N>;
-  using Int64_v  = Vc::SimdArray<Int64_s, N>;
+  using Int_v   = Vc::SimdArray<Int_s, N>;
+  using Int16_v = Vc::SimdArray<Int16_s, N>;
+  using Int32_v = Vc::SimdArray<Int32_s, N>;
+  using Int64_v = Vc::SimdArray<Int64_s, N>;
 
   using UInt_v   = Vc::SimdArray<UInt_s, N>;
   using UInt16_v = Vc::SimdArray<UInt16_s, N>;
@@ -82,9 +82,8 @@ Vc::SimdArray<T, N> Tan(const Vc::SimdArray<T, N> &x)
 {
   Vc::SimdArray<T, N> s, c;
   Vc::sincos(x, &s, &c);
-  return s/c;
+  return s / c;
 }
-
 }
 
 } // namespace vecCore

@@ -9,7 +9,8 @@
 
 namespace vecCore {
 
-template <typename T> struct TypeTraits<Vc::Vector<T>> {
+template <typename T>
+struct TypeTraits<Vc::Vector<T>> {
   using ScalarType = T;
   using MaskType   = typename Vc::Vector<T>::MaskType;
   using IndexType  = typename Vc::Vector<T>::IndexType;
@@ -24,10 +25,10 @@ public:
   using Float_v  = Vc::Vector<Float_s>;
   using Double_v = Vc::Vector<Double_s>;
 
-  using Int_v    = Vc::Vector<Int_s>;
-  using Int16_v  = Vc::Vector<Int16_s>;
-  using Int32_v  = Vc::Vector<Int32_s>;
-  using Int64_v  = Vc::Vector<Int64_s>;
+  using Int_v   = Vc::Vector<Int_s>;
+  using Int16_v = Vc::Vector<Int16_s>;
+  using Int32_v = Vc::Vector<Int32_s>;
+  using Int64_v = Vc::Vector<Int64_s>;
 
   using UInt_v   = Vc::Vector<UInt_s>;
   using UInt16_v = Vc::Vector<UInt16_s>;
@@ -86,7 +87,6 @@ Vc::Vector<T> Tan(const Vc::Vector<T> &x)
   Vc::sincos(x, &s, &c);
   return s / c;
 }
-
 }
 
 } // namespace vecCore

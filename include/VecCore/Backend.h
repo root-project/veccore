@@ -8,14 +8,18 @@
 
 namespace vecCore {
 
-template <typename T> struct TypeTraits;
+template <typename T>
+struct TypeTraits;
 
 // backend interface
 
-template <typename T> using Mask_v  = typename TypeTraits<T>::MaskType;
-template <typename T> using Index_v = typename TypeTraits<T>::IndexType;
+template <typename T>
+using Mask_v = typename TypeTraits<T>::MaskType;
+template <typename T>
+using Index_v = typename TypeTraits<T>::IndexType;
 
-template <typename T> struct ScalarType {
+template <typename T>
+struct ScalarType {
   using Type = typename TypeTraits<T>::ScalarType;
 };
 
@@ -24,19 +28,21 @@ VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
 constexpr Size_s VectorSize()
 {
-  return sizeof(T)/sizeof(typename ScalarType<T>::Type);
+  return sizeof(T) / sizeof(typename ScalarType<T>::Type);
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-constexpr Size_s VectorSize(const T&)
+constexpr Size_s VectorSize(const T &)
 {
-  return sizeof(T)/sizeof(typename ScalarType<T>::Type);
+  return sizeof(T) / sizeof(typename ScalarType<T>::Type);
 }
 
-template <class Mask> Bool_s MaskEmpty(const Mask &mask);
-template <class Mask> Bool_s MaskFull(const Mask &mask);
+template <class Mask>
+Bool_s MaskEmpty(const Mask &mask);
+template <class Mask>
+Bool_s MaskFull(const Mask &mask);
 
 template <class T, class Mask>
 void MaskedAssign(T &dest, const Mask &mask, const T &src);
@@ -49,8 +55,7 @@ T Blend(const Mask &mask, const T &tval, const T &fval);
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value, T>::type
-FromPtr(typename TypeTraits<T>::ScalarType const *x)
+typename std::enable_if<!std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x)
 {
   return T(x);
 }
@@ -59,8 +64,7 @@ FromPtr(typename TypeTraits<T>::ScalarType const *x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value, T>::type
-FromPtr(typename TypeTraits<T>::ScalarType const *x)
+typename std::enable_if<std::is_scalar<T>::value, T>::type FromPtr(typename TypeTraits<T>::ScalarType const *x)
 {
   return T(*x);
 }
@@ -70,8 +74,8 @@ FromPtr(typename TypeTraits<T>::ScalarType const *x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(const T &x, typename std::enable_if<!std::is_scalar<T>::value,
-                                               typename TypeTraits<T>::ScalarType>::type *dest)
+void Store(const T &x,
+           typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest)
 {
   x.store(dest);
 }
@@ -80,8 +84,8 @@ void Store(const T &x, typename std::enable_if<!std::is_scalar<T>::value,
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void Store(const T& x, typename std::enable_if<std::is_scalar<T>::value,
-                                               typename TypeTraits<T>::ScalarType>::type *dest)
+void Store(const T &x,
+           typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type *dest)
 {
   *dest = x;
 }
@@ -92,8 +96,8 @@ void Store(const T& x, typename std::enable_if<std::is_scalar<T>::value,
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
-LaneAt(const T &x, size_t index)
+typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type LaneAt(const T &x,
+                                                                                                   size_t index)
 {
   assert(index == 0);
   (void)index;
@@ -104,8 +108,8 @@ LaneAt(const T &x, size_t index)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type
-LaneAt(const T &x, size_t index)
+typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type LaneAt(const T &x,
+                                                                                                    size_t index)
 {
   assert(index < VectorSize<T>());
   (void)index;
@@ -116,8 +120,8 @@ LaneAt(const T &x, size_t index)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void
-AssignLane(T &x, size_t index, typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
+void AssignLane(T &x, size_t index,
+                typename std::enable_if<std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
 {
   assert(index == 0);
   (void)index;
@@ -125,9 +129,10 @@ AssignLane(T &x, size_t index, typename std::enable_if<std::is_scalar<T>::value,
 }
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void AssignLane(T &x, size_t index,
-    typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
+                typename std::enable_if<!std::is_scalar<T>::value, typename TypeTraits<T>::ScalarType>::type const &y)
 {
   assert(index < VectorSize<T>());
   x[index] = y;
@@ -135,12 +140,12 @@ void AssignLane(T &x, size_t index,
 
 // per lane assignment to mask types
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_CUDA_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
 void AssignMaskLane(T &x, size_t index, typename std::enable_if<!std::is_scalar<T>::value, bool>::type const &y)
 {
   x[index] = y;
 }
-
 
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
@@ -150,8 +155,6 @@ void AssignMaskLane(bool &x, size_t index, bool const &y)
   (void)index;
   x = y;
 }
-
-
 
 // lane access to masks of vector types - generic implementation
 template <typename Mask>
@@ -176,9 +179,8 @@ bool MaskLaneAt<bool>(const bool &x, size_t index)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value,T>::type
-Gather(typename TypeTraits<T>::ScalarType const *ptr,
-       typename TypeTraits<T>::IndexType  const &idx)
+typename std::enable_if<std::is_scalar<T>::value, T>::type Gather(typename TypeTraits<T>::ScalarType const *ptr,
+                                                                  typename TypeTraits<T>::IndexType const &idx)
 {
   return *(ptr + idx);
 }
@@ -186,22 +188,21 @@ Gather(typename TypeTraits<T>::ScalarType const *ptr,
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value,T>::type
-Gather(typename TypeTraits<T>::ScalarType const *ptr,
-       typename TypeTraits<T>::IndexType  const &idx)
+typename std::enable_if<!std::is_scalar<T>::value, T>::type Gather(typename TypeTraits<T>::ScalarType const *ptr,
+                                                                   typename TypeTraits<T>::IndexType const &idx)
 {
   T result;
   for (size_t i = 0; i < VectorSize<T>(); i++)
-    result[i] = ptr[idx[i]];
+    result[i]   = ptr[idx[i]];
   return result;
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<std::is_scalar<T>::value,void>::type
-Scatter(const T& x, typename TypeTraits<T>::ScalarType *ptr,
-        typename TypeTraits<T>::IndexType  const &idx)
+typename std::enable_if<std::is_scalar<T>::value, void>::type Scatter(const T &x,
+                                                                      typename TypeTraits<T>::ScalarType *ptr,
+                                                                      typename TypeTraits<T>::IndexType const &idx)
 {
   ptr[idx] = x;
 }
@@ -209,9 +210,9 @@ Scatter(const T& x, typename TypeTraits<T>::ScalarType *ptr,
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-typename std::enable_if<!std::is_scalar<T>::value,void>::type
-Scatter(const T& x, typename TypeTraits<T>::ScalarType *ptr,
-        typename TypeTraits<T>::IndexType  const &idx)
+typename std::enable_if<!std::is_scalar<T>::value, void>::type Scatter(const T &x,
+                                                                       typename TypeTraits<T>::ScalarType *ptr,
+                                                                       typename TypeTraits<T>::IndexType const &idx)
 {
   for (size_t i = 0; i < VectorSize<T>(); i++)
     ptr[idx[i]] = x[i];
@@ -229,7 +230,6 @@ constexpr Bool_s EarlyReturnAllowed()
   return true;
 #endif
 }
-
 }
 
 #include "Backend/Scalar.h"

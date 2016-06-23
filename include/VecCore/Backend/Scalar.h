@@ -3,7 +3,8 @@
 
 namespace vecCore {
 
-template <typename T> struct TypeTraits {
+template <typename T>
+struct TypeTraits {
   using ScalarType = T;
   using MaskType   = Bool_s;
   using IndexType  = Size_s;
@@ -18,10 +19,10 @@ public:
   using Float_v  = Float_s;
   using Double_v = Double_s;
 
-  using Int_v    = Int_s;
-  using Int16_v  = Int16_s;
-  using Int32_v  = Int32_s;
-  using Int64_v  = Int64_s;
+  using Int_v   = Int_s;
+  using Int16_v = Int16_s;
+  using Int32_v = Int32_s;
+  using Int64_v = Int64_s;
 
   using UInt_v   = UInt_s;
   using UInt16_v = UInt16_s;
@@ -52,7 +53,7 @@ Bool_s MaskFull<Bool_s>(const Bool_s &mask)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-void MaskedAssign(T& dest, const Bool_s &mask, const T &src)
+void MaskedAssign(T &dest, const Bool_s &mask, const T &src)
 {
   if (mask) dest = src;
 }
@@ -60,7 +61,7 @@ void MaskedAssign(T& dest, const Bool_s &mask, const T &src)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_CUDA_HOST_DEVICE
-T Blend(const Bool_s &mask, const T& tval, const T& fval)
+T Blend(const Bool_s &mask, const T &tval, const T &fval)
 {
   return mask ? tval : fval;
 }
