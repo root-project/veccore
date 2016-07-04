@@ -86,6 +86,9 @@ public:
     return fBool;
   }
 
+  VECCORE_CUDA_HOST_DEVICE
+  void store(bool *dest) const { *dest = fBool; }
+
 private:
   bool fBool;
 };

@@ -90,6 +90,25 @@ void Store(const T &x,
   *dest = x;
 }
 
+// store type to an address destination (pointer to scalar type)- generic impl for vector types
+// may be template specialized in backends
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void StoreMask(const T &x, typename std::enable_if<!std::is_scalar<T>::value, bool>::type *dest)
+{
+  x.store(dest);
+}
+
+// store to an address destination - generic impl for scalar types
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_CUDA_HOST_DEVICE
+void StoreMask(const T &x, typename std::enable_if<std::is_scalar<T>::value, bool>::type *dest)
+{
+  *dest = x;
+}
+
 // indexed *read* lane accesses for vector and mask types
 
 // lane access to scalar types - trivial implementation
