@@ -19,8 +19,7 @@ int QuadSolveNaive(T a, T b, T c, T &x1, T &x2)
 {
   T delta = b * b - 4.0 * a * c;
 
-  if (delta < 0.0)
-    return 0;
+  if (delta < 0.0) return 0;
 
   if (delta < NumericLimits<T>::Epsilon()) {
     x1 = x2 = -0.5 * b / a;
@@ -30,8 +29,7 @@ int QuadSolveNaive(T a, T b, T c, T &x1, T &x2)
   if (b >= 0.0) {
     x1 = -0.5 * (b + math::Sqrt(delta)) / a;
     x2 = c / (a * x1);
-  }
-  else {
+  } else {
     x2 = -0.5 * (b - math::Sqrt(delta)) / a;
     x1 = c / (a * x2);
   }
@@ -46,7 +44,7 @@ void QuadSolveOptimized(const T &a, const T &b, const T &c, T &x1, T &x2, int &r
 {
   T a_inv = T(1.0) / a;
   T delta = b * b - T(4.0) * a * c;
-  T s = (b >= 0) ? T(1.0) : T(-1.0);
+  T s     = (b >= 0) ? T(1.0) : T(-1.0);
 
   roots = delta > NumericLimits<T>::Epsilon() ? 2 : delta < T(0.0) ? 0 : 1;
 
@@ -77,35 +75,35 @@ VECCORE_FORCE_NOINLINE
 void QuadSolveAVX(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots)
 {
-  __m256 one = _mm256_set1_ps(1.0f);
-  __m256 va = _mm256_load_ps(a);
-  __m256 vb = _mm256_load_ps(b);
-  __m256 zero = _mm256_set1_ps(0.0f);
-  __m256 a_inv = _mm256_div_ps(one, va);
-  __m256 b2 = _mm256_mul_ps(vb, vb);
-  __m256 eps = _mm256_set1_ps(NumericLimits<float>::Epsilon());
-  __m256 vc = _mm256_load_ps(c);
+  __m256 one    = _mm256_set1_ps(1.0f);
+  __m256 va     = _mm256_load_ps(a);
+  __m256 vb     = _mm256_load_ps(b);
+  __m256 zero   = _mm256_set1_ps(0.0f);
+  __m256 a_inv  = _mm256_div_ps(one, va);
+  __m256 b2     = _mm256_mul_ps(vb, vb);
+  __m256 eps    = _mm256_set1_ps(NumericLimits<float>::Epsilon());
+  __m256 vc     = _mm256_load_ps(c);
   __m256 negone = _mm256_set1_ps(-1.0f);
-  __m256 ac = _mm256_mul_ps(va, vc);
-  __m256 sign = _mm256_blendv_ps(negone, one, _mm256_cmp_ps(vb, zero, _CMP_GE_OS));
+  __m256 ac     = _mm256_mul_ps(va, vc);
+  __m256 sign   = _mm256_blendv_ps(negone, one, _mm256_cmp_ps(vb, zero, _CMP_GE_OS));
 #if defined(__FMA__)
   __m256 delta = _mm256_fmadd_ps(_mm256_set1_ps(-4.0f), ac, b2);
-  __m256 r1 = _mm256_fmadd_ps(sign, _mm256_sqrt_ps(delta), vb);
+  __m256 r1    = _mm256_fmadd_ps(sign, _mm256_sqrt_ps(delta), vb);
 #else
   __m256 delta = _mm256_sub_ps(b2, __256_mul_ps(_mm256_set1_ps(-4.0f), ac));
-  __m256 r1 = _mm256_add_ps(vb, _mm256_mul_ps(sign, _mm256_sqrt_ps(delta)));
+  __m256 r1    = _mm256_add_ps(vb, _mm256_mul_ps(sign, _mm256_sqrt_ps(delta)));
 #endif
   __m256 mask0 = _mm256_cmp_ps(delta, zero, _CMP_LT_OS);
   __m256 mask2 = _mm256_cmp_ps(delta, eps, _CMP_GE_OS);
-  r1 = _mm256_mul_ps(_mm256_set1_ps(-0.5f), r1);
-  __m256 r2 = _mm256_div_ps(vc, r1);
-  r1 = _mm256_mul_ps(a_inv, r1);
-  __m256 r3 = _mm256_mul_ps(_mm256_set1_ps(-0.5f), _mm256_mul_ps(vb, a_inv));
-  __m256 nr = _mm256_blendv_ps(one, _mm256_set1_ps(2), mask2);
-  nr = _mm256_blendv_ps(nr, _mm256_set1_ps(0), mask0);
-  r3 = _mm256_blendv_ps(r3, zero, mask0);
-  r1 = _mm256_blendv_ps(r3, r1, mask2);
-  r2 = _mm256_blendv_ps(r3, r2, mask2);
+  r1           = _mm256_mul_ps(_mm256_set1_ps(-0.5f), r1);
+  __m256 r2    = _mm256_div_ps(vc, r1);
+  r1           = _mm256_mul_ps(a_inv, r1);
+  __m256 r3    = _mm256_mul_ps(_mm256_set1_ps(-0.5f), _mm256_mul_ps(vb, a_inv));
+  __m256 nr    = _mm256_blendv_ps(one, _mm256_set1_ps(2), mask2);
+  nr           = _mm256_blendv_ps(nr, _mm256_set1_ps(0), mask0);
+  r3           = _mm256_blendv_ps(r3, zero, mask0);
+  r1           = _mm256_blendv_ps(r3, r1, mask2);
+  r2           = _mm256_blendv_ps(r3, r2, mask2);
   _mm256_store_si256((__m256i *)roots, _mm256_cvtps_epi32(nr));
   _mm256_store_ps(x1, r1);
   _mm256_store_ps(x2, r2);
@@ -121,19 +119,19 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
 {
   using Float_v = typename Backend::Float_v;
   using Int32_v = typename Backend::Int32_v;
-  using FMask = Mask_v<Float_v>;
-  using IMask = Mask_v<Int32_v>;
+  using FMask   = Mask_v<Float_v>;
+  using IMask   = Mask_v<Int32_v>;
 
   Float_v a_inv = Float_v(1.0f) / a;
   Float_v delta = b * b - Float_v(4.0f) * a * c;
-  Float_v sign = Blend(FMask(b >= Float_v(0.0f)), Float_v(1.0f), Float_v(-1.0f));
+  Float_v sign  = Blend(FMask(b >= Float_v(0.0f)), Float_v(1.0f), Float_v(-1.0f));
 
   FMask mask0(delta < Float_v(0.0f));
   FMask mask2(delta >= NumericLimits<Float_v>::Epsilon());
 
   Float_v root1 = Float_v(-0.5f) * (b + sign * math::Sqrt(delta));
   Float_v root2 = c / root1;
-  root1 = root1 * a_inv;
+  root1         = root1 * a_inv;
 
   FMask mask1 = !(mask2 || mask0);
 
@@ -141,8 +139,7 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
   MaskedAssign(x2, mask2, root2);
   roots = Blend((IMask)mask2, Int32_v(2), Int32_v(0));
 
-  if (MaskEmpty(mask1))
-    return;
+  if (MaskEmpty(mask1)) return;
 
   root1 = Float_v(-0.5f) * b * a_inv;
   MaskedAssign(roots, (IMask)mask1, Int32_v(1));
@@ -177,27 +174,28 @@ int main(int argc, char *argv[])
   float *a, *b, *c, *x1, *x2;
   int *roots;
 
-  a = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  b = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  c = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  x1 = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  x2 = (float*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  roots = (int*) AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(int));
+  a     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  b     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  c     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  x1    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  x2    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
+  roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(int));
 
   srand48(time(NULL));
 
   for (int i = 0; i < N; i++) {
-    a[i] = 10.0 * (drand48() - 0.5);
-    b[i] = 10.0 * (drand48() - 0.5);
-    c[i] = 50.0 * (drand48() - 0.5);
-    x1[i] = 0.0;
-    x2[i] = 0.0;
+    a[i]     = 10.0 * (drand48() - 0.5);
+    b[i]     = 10.0 * (drand48() - 0.5);
+    c[i]     = 50.0 * (drand48() - 0.5);
+    x1[i]    = 0.0;
+    x2[i]    = 0.0;
     roots[i] = 0;
   }
 
   Timer<milliseconds> timer;
   for (int i = 0; i < N; i++)
     roots[i] = QuadSolveNaive(a[i], b[i], c[i], x1[i], x2[i]);
+
   double t = timer.Elapsed();
 
 #ifdef VERBOSE

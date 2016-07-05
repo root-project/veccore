@@ -9,35 +9,20 @@ using namespace testing;
 #if defined(GTEST_HAS_TYPED_TEST) && defined(GTEST_HAS_TYPED_TEST_P)
 
 template <class Backend>
-using FloatTypes = Types
-<
-  typename Backend::Float_v,
-  typename Backend::Double_v
->;
+using FloatTypes = Types<typename Backend::Float_v, typename Backend::Double_v>;
 
 template <class Backend>
-using IntTypes = Types
-<
-  typename Backend::Int16_v,
-  typename Backend::UInt16_v,
-  typename Backend::Int32_v,
-  typename Backend::UInt32_v
->;
+using IntTypes =
+    Types<typename Backend::Int16_v, typename Backend::UInt16_v, typename Backend::Int32_v, typename Backend::UInt32_v>;
 
 template <class Backend>
-using VectorTypes = Types
-<
-  typename Backend::Float_v,
-  typename Backend::Double_v,
-  typename Backend::Int16_v,
-  typename Backend::UInt16_v,
-  typename Backend::Int32_v,
-  typename Backend::UInt32_v
->;
+using VectorTypes = Types<typename Backend::Float_v, typename Backend::Double_v, typename Backend::Int16_v,
+                          typename Backend::UInt16_v, typename Backend::Int32_v, typename Backend::UInt32_v>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class VectorTypeTest : public Test {
+template <class T>
+class VectorTypeTest : public Test {
 public:
   using Scalar_t = typename vecCore::ScalarType<T>::Type;
   using Vector_t = T;
@@ -45,7 +30,9 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class ConstructorTest : public VectorTypeTest<T> {};
+template <class T>
+class ConstructorTest : public VectorTypeTest<T> {
+};
 
 TYPED_TEST_CASE_P(ConstructorTest);
 
@@ -94,8 +81,9 @@ TYPED_TEST_P(ConstructorTest, FromPtrToScalar)
   Scalar_t tmp[vecCore::VectorSize<Vector_t>()];
   Scalar_t *addr = &tmp[0];
 
-  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
+  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++) {
     tmp[i] = static_cast<Scalar_t>(i);
+  }
 
   Vector_t x = vecCore::FromPtr<Vector_t>(addr);
 
@@ -107,7 +95,9 @@ REGISTER_TYPED_TEST_CASE_P(ConstructorTest, Default, Copy, Move, FromScalar, Fro
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class ArithmeticsTest : public VectorTypeTest<T> {};
+template <class T>
+class ArithmeticsTest : public VectorTypeTest<T> {
+};
 
 TYPED_TEST_CASE_P(ArithmeticsTest);
 
@@ -123,7 +113,8 @@ TYPED_TEST_P(ArithmeticsTest, Addition)
   EXPECT_TRUE(vecCore::MaskFull(res == (lhs + rhs)));
 }
 
-TYPED_TEST_P(ArithmeticsTest, AdditionAssign) {
+TYPED_TEST_P(ArithmeticsTest, AdditionAssign)
+{
   using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
 
@@ -147,7 +138,8 @@ TYPED_TEST_P(ArithmeticsTest, Subtraction)
   EXPECT_TRUE(vecCore::MaskFull(res == (lhs - rhs)));
 }
 
-TYPED_TEST_P(ArithmeticsTest, SubtractionAssign) {
+TYPED_TEST_P(ArithmeticsTest, SubtractionAssign)
+{
   using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
 
@@ -171,7 +163,8 @@ TYPED_TEST_P(ArithmeticsTest, Multiplication)
   EXPECT_TRUE(vecCore::MaskFull(res == (lhs * rhs)));
 }
 
-TYPED_TEST_P(ArithmeticsTest, MultiplicationAssign) {
+TYPED_TEST_P(ArithmeticsTest, MultiplicationAssign)
+{
   using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
 
@@ -195,7 +188,8 @@ TYPED_TEST_P(ArithmeticsTest, Division)
   EXPECT_TRUE(vecCore::MaskFull(res == (lhs / rhs)));
 }
 
-TYPED_TEST_P(ArithmeticsTest, DivisionAssign) {
+TYPED_TEST_P(ArithmeticsTest, DivisionAssign)
+{
   using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
 
@@ -207,19 +201,21 @@ TYPED_TEST_P(ArithmeticsTest, DivisionAssign) {
   EXPECT_TRUE(vecCore::MaskFull(res == lhs));
 }
 
-REGISTER_TYPED_TEST_CASE_P(ArithmeticsTest, Addition, Subtraction, Multiplication, Division,
-                           AdditionAssign, SubtractionAssign, MultiplicationAssign, DivisionAssign);
-
+REGISTER_TYPED_TEST_CASE_P(ArithmeticsTest, Addition, Subtraction, Multiplication, Division, AdditionAssign,
+                           SubtractionAssign, MultiplicationAssign, DivisionAssign);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class MaskArithmeticsTest : public VectorTypeTest<T> {};
+template <class T>
+class MaskArithmeticsTest : public VectorTypeTest<T> {
+};
 
 TYPED_TEST_CASE_P(MaskArithmeticsTest);
 
-TYPED_TEST_P(MaskArithmeticsTest, AND) {
+TYPED_TEST_P(MaskArithmeticsTest, AND)
+{
   using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) & Mask_t(true))));
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) && Mask_t(true))));
@@ -228,9 +224,10 @@ TYPED_TEST_P(MaskArithmeticsTest, AND) {
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(true) && Mask_t(false))));
 }
 
-TYPED_TEST_P(MaskArithmeticsTest, OR) {
+TYPED_TEST_P(MaskArithmeticsTest, OR)
+{
   using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) | Mask_t(true))));
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) || Mask_t(true))));
@@ -242,17 +239,19 @@ TYPED_TEST_P(MaskArithmeticsTest, OR) {
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(false) || Mask_t(false))));
 }
 
-TYPED_TEST_P(MaskArithmeticsTest, NEG) {
+TYPED_TEST_P(MaskArithmeticsTest, NEG)
+{
   using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == !Mask_t(true)));
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == !Mask_t(false)));
 }
 
-TYPED_TEST_P(MaskArithmeticsTest, ANDAssign) {
+TYPED_TEST_P(MaskArithmeticsTest, ANDAssign)
+{
   using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
   Mask_t rhs(true);
   rhs &= Mask_t(false);
@@ -260,9 +259,10 @@ TYPED_TEST_P(MaskArithmeticsTest, ANDAssign) {
   EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == rhs));
 }
 
-TYPED_TEST_P(MaskArithmeticsTest, ORAssign) {
+TYPED_TEST_P(MaskArithmeticsTest, ORAssign)
+{
   using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
   Mask_t rhs(false);
   rhs |= Mask_t(true);
@@ -274,7 +274,9 @@ REGISTER_TYPED_TEST_CASE_P(MaskArithmeticsTest, AND, OR, NEG, ANDAssign, ORAssig
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class VectorInterfaceTest : public VectorTypeTest<T> {};
+template <class T>
+class VectorInterfaceTest : public VectorTypeTest<T> {
+};
 
 TYPED_TEST_CASE_P(VectorInterfaceTest);
 
@@ -294,18 +296,19 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable)
   EXPECT_TRUE(vecCore::VectorSize(x) > 0);
 }
 
-TYPED_TEST_P(VectorInterfaceTest, StoreToPtr) {
+TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
   auto kVS = vecCore::VectorSize<Vector_t>();
-  auto N = 2 * kVS;
+  auto N   = 2 * kVS;
   Scalar_t input[N];
   Scalar_t output[N];
 
   // init input; output
   for (vecCore::UInt_s i = 0; i < N; ++i) {
-    input[i] = 2 * i;
+    input[i]  = 2 * i;
     output[i] = 0;
   }
 
@@ -347,7 +350,8 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
     EXPECT_EQ(output[i], input[i] > Scalar_t(1));
 }
 
-TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead) {
+TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
@@ -364,8 +368,8 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead) {
     EXPECT_EQ(input[i], vecCore::LaneAt<Vector_t>(tmp, i));
 }
 
-
-TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite) {
+TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
@@ -385,7 +389,8 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite) {
     EXPECT_EQ(Scalar_t(10), vecCore::LaneAt<Vector_t>(tmp, i));
 }
 
-TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
+TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
@@ -404,17 +409,19 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead) {
     EXPECT_EQ(input[i] > Scalar_t(0), vecCore::MaskLaneAt(mask, i));
 }
 
-TYPED_TEST_P(VectorInterfaceTest, Gather) {
+TYPED_TEST_P(VectorInterfaceTest, Gather)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
-  using Index_v = typename vecCore::Index_v<Vector_t>;
-  using Index_t = typename vecCore::ScalarType<Index_v>::Type;
+  using Index_v  = typename vecCore::Index_v<Vector_t>;
+  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
 
   size_t N = vecCore::VectorSize<Vector_t>();
 
   Scalar_t input[N * N];
-  for (vecCore::UInt_s i = 0; i < N*N; ++i)
+  for (vecCore::UInt_s i = 0; i < N * N; ++i) {
     input[i] = i;
+  }
 
   Index_v idx;
   for (vecCore::UInt_s i = 0; i < N; ++i)
@@ -426,19 +433,20 @@ TYPED_TEST_P(VectorInterfaceTest, Gather) {
     Vector_t x = vecCore::Gather<Vector_t>(input, iidx);
 
     for (vecCore::UInt_s j = 0; j < N; ++j)
-      EXPECT_TRUE(vecCore::LaneAt(x, j) == input[i*j]);
+      EXPECT_TRUE(vecCore::LaneAt(x, j) == input[i * j]);
   }
 }
 
-TYPED_TEST_P(VectorInterfaceTest, Scatter) {
+TYPED_TEST_P(VectorInterfaceTest, Scatter)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
-  using Index_v = typename vecCore::Index_v<Vector_t>;
-  using Index_t = typename vecCore::ScalarType<Index_v>::Type;
+  using Index_v  = typename vecCore::Index_v<Vector_t>;
+  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
 
   size_t N = vecCore::VectorSize<Vector_t>();
 
-  Index_t  index[N];
+  Index_t index[N];
   Scalar_t input[N], output[N];
 
   for (vecCore::UInt_s i = 0; i < N; ++i) {
@@ -462,7 +470,9 @@ REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class T> class VectorMaskTest : public VectorTypeTest<T> {};
+template <class T>
+class VectorMaskTest : public VectorTypeTest<T> {
+};
 
 TYPED_TEST_CASE_P(VectorMaskTest);
 
@@ -495,15 +505,16 @@ TYPED_TEST_P(VectorMaskTest, MaskEmpty)
   EXPECT_TRUE(vecCore::MaskEmpty(!tmask));
 }
 
-TYPED_TEST_P(VectorMaskTest, MaskAssign) {
+TYPED_TEST_P(VectorMaskTest, MaskAssign)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
   // casting 0 with Scalar_t is necessary here
   // as 0 can be interpreted as the null-pointer
   // which leads to ambiguities with some vector types constructors
-  // (For example the float instantiation of UME::SIMD vector has 'only' 
-  //  constructor taking a float and another taking a float* both requiring 
+  // (For example the float instantiation of UME::SIMD vector has 'only'
+  //  constructor taking a float and another taking a float* both requiring
   //  one conversion from an integer '0'.)
   Vector_t a(Scalar_t(0)), b(1);
 
@@ -514,7 +525,8 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign) {
   EXPECT_TRUE(vecCore::MaskFull(a == b));
 }
 
-TYPED_TEST_P(VectorMaskTest, MaskAssign2) {
+TYPED_TEST_P(VectorMaskTest, MaskAssign2)
+{
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
@@ -523,7 +535,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2) {
   Scalar_t output[kVS];
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i) {
-    input[i] = (i % 2 == 0) ? i : -i;
+    input[i]  = (i % 2 == 0) ? i : -i;
     output[i] = (input[i] > 0) ? input[i] : 0;
   }
 
@@ -546,11 +558,11 @@ TYPED_TEST_P(VectorMaskTest, Blend)
 
 REGISTER_TYPED_TEST_CASE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, MaskAssign2, Blend);
 
-#define TEST_BACKEND_P(name, x)                                                                   \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, ConstructorTest, VectorTypes<vecCore::backend::x>);         \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, ArithmeticsTest, VectorTypes<vecCore::backend::x>);         \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, MaskArithmeticsTest, VectorTypes<vecCore::backend::x>);  \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, VectorMaskTest, VectorTypes<vecCore::backend::x>);          \
+#define TEST_BACKEND_P(name, x)                                                               \
+  INSTANTIATE_TYPED_TEST_CASE_P(name, ConstructorTest, VectorTypes<vecCore::backend::x>);     \
+  INSTANTIATE_TYPED_TEST_CASE_P(name, ArithmeticsTest, VectorTypes<vecCore::backend::x>);     \
+  INSTANTIATE_TYPED_TEST_CASE_P(name, MaskArithmeticsTest, VectorTypes<vecCore::backend::x>); \
+  INSTANTIATE_TYPED_TEST_CASE_P(name, VectorMaskTest, VectorTypes<vecCore::backend::x>);      \
   INSTANTIATE_TYPED_TEST_CASE_P(name, VectorInterfaceTest, VectorTypes<vecCore::backend::x>)
 
 #define TEST_BACKEND(x) TEST_BACKEND_P(x, x)
@@ -572,10 +584,13 @@ TEST_BACKEND_P(UMESimdArray, UMESimdArray<16>);
 #endif
 
 #else // if !GTEST_HAS_TYPED_TEST
-TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform) {}
+TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform)
+{
+}
 #endif
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
