@@ -1,19 +1,18 @@
 #ifndef VECCORE_UTILITIES_H
 #define VECCORE_UTILITIES_H
 
-#include <cstdlib>
-#include <system_error>
+#include <mm_malloc.h>
 
 namespace vecCore {
 
 inline void *AlignedAlloc(size_t alignment, size_t size)
 {
-  int status;
-  void *ptr = NULL;
+  return _mm_malloc(size, alignment);
+}
 
-  if ((status = posix_memalign(&ptr, alignment, size)) != 0) throw std::system_error(status, std::system_category());
-
-  return ptr;
+inline void AlignedFree(void *ptr)
+{
+  _mm_free(ptr);
 }
 }
 

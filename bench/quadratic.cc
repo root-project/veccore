@@ -248,5 +248,12 @@ int main(int argc, char *argv[])
   TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "UME::SIMD backend");
 #endif
 
+  AlignedFree(a);
+  AlignedFree(b);
+  AlignedFree(c);
+  AlignedFree(x1);
+  AlignedFree(x2);
+  AlignedFree(roots);
+
   return 0;
 }
