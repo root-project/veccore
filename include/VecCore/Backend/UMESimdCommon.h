@@ -130,6 +130,8 @@ UMESIMD_REAL_FUNC(Round, round)
 UMESIMD_REAL_FUNC(Floor, floor)
 UMESIMD_REAL_FUNC(Ceil, ceil)
 
+#undef UMESIMD_REAL_FUNC
+
 } // end namespace math
 } // end namespace vecCore
 
