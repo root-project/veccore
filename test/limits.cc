@@ -1,5 +1,4 @@
 #undef NDEBUG
-#include <cassert>
 #include <cstdio>
 #include <type_traits>
 

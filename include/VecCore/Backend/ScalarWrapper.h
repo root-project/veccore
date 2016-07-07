@@ -1,9 +1,6 @@
 #ifndef VECCORE_BACKEND_SCALAR_WRAPPER_H
 #define VECCORE_BACKEND_SCALAR_WRAPPER_H
 
-#ifndef VECGEOM_ASSERT_H
-#include <cassert>
-#endif
 #include <type_traits>
 
 namespace vecCore {
