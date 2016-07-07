@@ -2,6 +2,7 @@
 #define __VECCORE_INCLUDED
 
 #include "Config.h"
+#include "Assert.h"
 #include "Types.h"
 #include "Common.h"
 #include "Backend.h"
