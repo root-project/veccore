@@ -11,10 +11,13 @@ set(FLAGS_NATIVE "-march=native")
 set(FLAGS_KNC    "-mmic")
 set(FLAGS_KNL    "-xMIC-AVX512")
 
-if("${CMAKE_CXX_STANDARD}" MATCHES "11|14")
-  add_compile_options(-std=c++${CMAKE_CXX_STANDARD})
-else()
-  message(FATAL_ERROR "Unsupported C++ standard requested")
+if("${CMAKE_VERSION}" VERSION_LESS "3.6")
+  # add flag by hand if CMake does not support ICC
+  if("${CMAKE_CXX_STANDARD}" MATCHES "11|14")
+    add_compile_options(-std=c++${CMAKE_CXX_STANDARD})
+  else()
+    message(FATAL_ERROR "Unsupported C++ standard requested")
+  endif()
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -DDEBUG -g")
