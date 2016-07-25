@@ -1,23 +1,98 @@
 #ifndef VECCORE_LIMITS_H
 #define VECCORE_LIMITS_H
 
-#include <limits>
+#include <float.h>
+#include <limits.h>
+#include <stdint.h>
 
 namespace vecCore {
 
 template <typename T>
-class NumericLimits {
-public:
+struct NumericLimits {
   using ScalarT = typename ScalarType<T>::Type;
 
-  static constexpr T Min() noexcept { return T(std::numeric_limits<ScalarT>::min()); }
-  static constexpr T Max() noexcept { return T(std::numeric_limits<ScalarT>::max()); }
+  static constexpr T Min() noexcept { return T(NumericLimits<ScalarT>::Min()); }
+  static constexpr T Max() noexcept { return T(NumericLimits<ScalarT>::Max()); }
 
-  static constexpr T Lowest() noexcept { return T(std::numeric_limits<ScalarT>::lowest()); }
-  static constexpr T Highest() noexcept { return T(std::numeric_limits<ScalarT>::max()); }
+  static constexpr T Lowest() noexcept { return T(NumericLimits<ScalarT>::Lowest()); }
+  static constexpr T Highest() noexcept { return T(NumericLimits<ScalarT>::Highest()); }
 
-  static constexpr T Epsilon() noexcept { return T(std::numeric_limits<ScalarT>::epsilon()); }
-  static constexpr T Infinity() noexcept { return T(std::numeric_limits<ScalarT>::infinity()); }
+  static constexpr T Epsilon() noexcept { return T(NumericLimits<ScalarT>::Epsilon()); }
+  static constexpr T Infinity() noexcept { return T(NumericLimits<ScalarT>::Infinity()); }
+};
+
+template <>
+struct NumericLimits<bool> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr bool Min() { return false; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr bool Max() { return true; }
+};
+
+template <>
+struct NumericLimits<int8_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr int8_t Min() { return INT8_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr int8_t Max() { return INT8_MAX; }
+};
+
+template <>
+struct NumericLimits<uint8_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint8_t Min() { return 0; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint8_t Max() { return UINT8_MAX; }
+};
+
+template <>
+struct NumericLimits<int16_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr int16_t Min() { return INT16_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr int16_t Max() { return INT16_MAX; }
+};
+
+template <>
+struct NumericLimits<uint16_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint16_t Min() { return 0; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint16_t Max() { return UINT16_MAX; }
+};
+
+template <>
+struct NumericLimits<int32_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr int32_t Min() { return INT32_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr int32_t Max() { return INT32_MAX; }
+};
+
+template <>
+struct NumericLimits<uint32_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint32_t Min() { return 0; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint32_t Max() { return UINT32_MAX; }
+};
+
+template <>
+struct NumericLimits<int64_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr int64_t Min() { return INT64_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr int64_t Max() { return INT64_MAX; }
+};
+
+template <>
+struct NumericLimits<uint64_t> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint64_t Min() { return 0; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr uint64_t Max() { return UINT64_MAX; }
+};
+
+template <>
+struct NumericLimits<float> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Min() { return FLT_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Max() { return FLT_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Lowest() { return -FLT_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Highest() { return FLT_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Epsilon() { return FLT_EPSILON; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Infinity() { return 1.0f / 0.0f; }
+};
+
+template <>
+struct NumericLimits<double> {
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Min() { return DBL_MIN; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Max() { return DBL_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Lowest() { return -DBL_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Highest() { return DBL_MAX; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Epsilon() { return DBL_EPSILON; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Infinity() { return 1.0 / 0.0; }
 };
 
 } // namespace vecCore
