@@ -40,21 +40,15 @@ if (UMESIMD)
   endif()
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/include/Config.in
-              "${PROJECT_BINARY_DIR}/include/Config.h")
-configure_file(${PROJECT_SOURCE_DIR}/cmake/VecCoreConfig.cmake.in
-               ${PROJECT_BINARY_DIR}/cmake/VecCoreConfig.cmake)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/VecCoreConfigVersion.cmake.in
-               ${PROJECT_BINARY_DIR}/cmake/VecCoreConfigVersion.cmake)
+configure_file(include/Config.in include/Config.h)
+configure_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake)
+configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_BINARY_DIR}/include)
+include_directories(include ${PROJECT_BINARY_DIR}/include)
 
 install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION include/${PROJECT_NAME})
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME} DESTINATION include)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/"
-        DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME} FILES_MATCHING PATTERN *.cmake)
-install(DIRECTORY "${PROJECT_BINARY_DIR}/cmake/"
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
+install(DIRECTORY cmake/ ${PROJECT_BINARY_DIR}/cmake/
         DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME} FILES_MATCHING PATTERN *.cmake)
 
 enable_testing()
