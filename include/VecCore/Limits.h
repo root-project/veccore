@@ -82,7 +82,7 @@ struct NumericLimits<float> {
   VECCORE_CUDA_HOST_DEVICE static constexpr float Lowest() { return -FLT_MAX; }
   VECCORE_CUDA_HOST_DEVICE static constexpr float Highest() { return FLT_MAX; }
   VECCORE_CUDA_HOST_DEVICE static constexpr float Epsilon() { return FLT_EPSILON; }
-  VECCORE_CUDA_HOST_DEVICE static constexpr float Infinity() { return 1.0f / 0.0f; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr float Infinity() noexcept { return HUGE_VALF; }
 };
 
 template <>
@@ -92,7 +92,7 @@ struct NumericLimits<double> {
   VECCORE_CUDA_HOST_DEVICE static constexpr double Lowest() { return -DBL_MAX; }
   VECCORE_CUDA_HOST_DEVICE static constexpr double Highest() { return DBL_MAX; }
   VECCORE_CUDA_HOST_DEVICE static constexpr double Epsilon() { return DBL_EPSILON; }
-  VECCORE_CUDA_HOST_DEVICE static constexpr double Infinity() { return 1.0 / 0.0; }
+  VECCORE_CUDA_HOST_DEVICE static constexpr double Infinity() noexcept { return HUGE_VAL; }
 };
 
 } // namespace vecCore
