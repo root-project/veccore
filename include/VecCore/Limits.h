@@ -4,6 +4,7 @@
 #include <float.h>
 #include <limits.h>
 #include <stdint.h>
+#include <cmath>
 
 namespace vecCore {
 
