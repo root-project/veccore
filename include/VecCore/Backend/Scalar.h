@@ -1,6 +1,9 @@
 #ifndef VECCORE_BACKEND_SCALAR_H
 #define VECCORE_BACKEND_SCALAR_H
 
+#include "Interface.h"
+#include "Implementation.h"
+
 namespace vecCore {
 
 template <typename T>
@@ -48,22 +51,6 @@ VECCORE_CUDA_HOST_DEVICE
 Bool_s MaskFull<Bool_s>(const Bool_s &mask)
 {
   return mask;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
-void MaskedAssign(T &dest, const Bool_s &mask, const T &src)
-{
-  if (mask) dest = src;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
-T Blend(const Bool_s &mask, const T &tval, const T &fval)
-{
-  return mask ? tval : fval;
 }
 
 } // namespace vecCore
