@@ -5,6 +5,14 @@
 namespace vecCore {
 
 // type traits for UME::SIMD
+
+template <uint32_t N>
+struct TypeTraits<UME::SIMD::SIMDVecMask<N>> {
+  using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
+  using IndexType  = int;
+  using ScalarType = bool;
+};
+
 template <typename T, uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVec_f<T, N>> {
   using ScalarType = T;
@@ -42,53 +50,70 @@ Bool_s MaskEmpty(const UME::SIMD::SIMDVecMask<N> &cond)
   return !cond.hlor();
 }
 
-template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-void MaskedAssign(UME::SIMD::SIMDVec_f<T, N> &dest, const UME::SIMD::SIMDVecMask<N> &mask,
-                  const UME::SIMD::SIMDVec_f<T, N> &src)
-{
-  dest.assign(mask, src);
-}
+template <uint32_t N>
+struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
+  using M = UME::SIMD::SIMDVecMask<N>;
+
+  VECCORE_BACKEND_FUNCTION
+  static bool Get(const M &mask, int i)
+  {
+    return mask[i];
+  }
+
+  VECCORE_BACKEND_FUNCTION
+  static void Set(M &mask, int i, const bool val)
+  {
+    mask.insert(i, val);
+  }
+};
 
 template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-void MaskedAssign(UME::SIMD::SIMDVec_i<T, N> &dest, const UME::SIMD::SIMDVecMask<N> &mask,
-                  const UME::SIMD::SIMDVec_i<T, N> &src)
-{
-  dest.assign(mask, src);
-}
+struct MaskingImplementation<UME::SIMD::SIMDVec_f<T, N>> {
+  using V = UME::SIMD::SIMDVec_f<T, N>;
+  using M = UME::SIMD::SIMDVecMask<N>;
+
+  static inline void Assign(V& dst, M const &mask, V const &src)
+  {
+    dst.assign(mask, src);
+  }
+
+  static inline void Blend(V& dst, M const &mask, V const &src1, V const &src2)
+  {
+    dst = src2.blend(mask, src1);
+  }
+};
 
 template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-void MaskedAssign(UME::SIMD::SIMDVec_u<T, N> &dest, const UME::SIMD::SIMDVecMask<N> &mask,
-                  const UME::SIMD::SIMDVec_u<T, N> &src)
-{
-  dest.assign(mask, src);
-}
+struct MaskingImplementation<UME::SIMD::SIMDVec_i<T, N>> {
+  using V = UME::SIMD::SIMDVec_i<T, N>;
+  using M = UME::SIMD::SIMDVecMask<N>;
+
+  static inline void Assign(V& dst, M const &mask, V const &src)
+  {
+    dst.assign(mask, src);
+  }
+
+  static inline void Blend(V& dst, M const &mask, V const &src1, V const &src2)
+  {
+    dst = src2.blend(mask, src1);
+  }
+};
 
 template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-typename UME::SIMD::SIMDVec_f<T, N> Blend(const UME::SIMD::SIMDVecMask<N> &mask, const UME::SIMD::SIMDVec_f<T, N> &tval,
-                                          const UME::SIMD::SIMDVec_f<T, N> &fval)
-{
-  return tval.blend(mask, fval);
-}
+struct MaskingImplementation<UME::SIMD::SIMDVec_u<T, N>> {
+  using V = UME::SIMD::SIMDVec_u<T, N>;
+  using M = UME::SIMD::SIMDVecMask<N>;
 
-template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-typename UME::SIMD::SIMDVec_i<T, N> Blend(const UME::SIMD::SIMDVecMask<N> &mask, const UME::SIMD::SIMDVec_i<T, N> &tval,
-                                          const UME::SIMD::SIMDVec_i<T, N> &fval)
-{
-  return tval.blend(mask, fval);
-}
+  static inline void Assign(V& dst, M const &mask, V const &src)
+  {
+    dst.assign(mask, src);
+  }
 
-template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-typename UME::SIMD::SIMDVec_u<T, N> Blend(const UME::SIMD::SIMDVecMask<N> &mask, const UME::SIMD::SIMDVec_u<T, N> &tval,
-                                          const UME::SIMD::SIMDVec_u<T, N> &fval)
-{
-  return tval.blend(mask, fval);
-}
+  static inline void Blend(V& dst, M const &mask, V const &src1, V const &src2)
+  {
+    dst = src2.blend(mask, src1);
+  }
+};
 
 namespace math {
 
