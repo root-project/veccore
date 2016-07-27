@@ -394,19 +394,52 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
-  Scalar_t input[kVS];
+  vecCore::Mask_v<Vector_t> fmask(false), tmask(true), mmask;
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
-    input[i] = (i % 2 == 0) ? i : -i;
+  size_t kVS = vecCore::VectorSize<Vector_t>();
+
+  Vector_t input;
+
+  for (size_t i = 0; i < kVS; ++i)
+    vecCore::AssignLane(input, i, (i % 2 == 0) ? Scalar_t(1) : Scalar_t(0));
+
+  mmask = input > Vector_t(Scalar_t(0));
+
+  for (size_t i = 0; i < kVS; ++i) {
+    EXPECT_EQ(vecCore::MaskLaneAt(tmask, i), true);
+    EXPECT_EQ(vecCore::MaskLaneAt(fmask, i), false);
+    EXPECT_EQ(vecCore::MaskLaneAt(mmask, i), i % 2 == 0);
   }
+}
 
-  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
+{
+  using Vector_t = typename TestFixture::Vector_t;
 
-  auto mask = tmp > Scalar_t(0);
+  vecCore::Mask_v<Vector_t> mask(false);
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i)
-    EXPECT_EQ(input[i] > Scalar_t(0), vecCore::MaskLaneAt(mask, i));
+  auto kVS = vecCore::VectorSize<Vector_t>();
+
+  // check for all false
+
+  for (size_t i = 0; i < kVS; ++i)
+    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), false);
+
+  // check for all true
+
+  for (size_t i = 0; i < kVS; ++i)
+    vecCore::AssignMaskLane(mask, i, true);
+
+  for (size_t i = 0; i < kVS; ++i)
+    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), true);
+
+  // check for interleaving true/false
+
+  for (size_t i = 0; i < kVS; ++i)
+    vecCore::AssignMaskLane(mask, i, i % 2 == 0);
+
+  for (size_t i = 0; i < kVS; ++i)
+    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), i % 2 == 0);
 }
 
 TYPED_TEST_P(VectorInterfaceTest, Gather)
@@ -466,7 +499,7 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
 }
 
 REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr, StoreMaskToPtr,
-                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, Gather, Scatter);
+                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, MaskLaneWrite, Gather, Scatter);
 
 ///////////////////////////////////////////////////////////////////////////////
 
