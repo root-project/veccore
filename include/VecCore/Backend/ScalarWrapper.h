@@ -11,6 +11,12 @@ class MaskedScalar;
 template <typename>
 class WrappedScalar;
 
+template <>
+struct TypeTraits<WrappedBool> {
+  using ScalarType = bool;
+  using IndexType  = WrappedScalar<size_t>;
+};
+
 template <typename T>
 struct TypeTraits<WrappedScalar<T>> {
   using ScalarType = T;
@@ -227,22 +233,6 @@ VECCORE_CUDA_HOST_DEVICE
 Bool_s MaskFull<WrappedBool>(const WrappedBool &mask)
 {
   return mask;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
-void MaskedAssign(WrappedScalar<T> &dest, const WrappedBool &mask, const WrappedScalar<T> &src)
-{
-  if (mask) dest = src;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
-WrappedScalar<T> Blend(const WrappedBool &mask, const WrappedScalar<T> &tval, const WrappedScalar<T> &fval)
-{
-  return mask ? tval : fval;
 }
 
 } // namespace vecCore
