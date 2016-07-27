@@ -8,6 +8,12 @@
 namespace vecCore {
 
 template <typename T>
+struct TypeTraits<Vc::Scalar::Mask<T>> {
+  using IndexType  = size_t;
+  using ScalarType = bool;
+};
+
+template <typename T>
 struct TypeTraits<Vc::Scalar::Vector<T>> {
   using ScalarType = T;
   using MaskType   = typename Vc::Scalar::Vector<T>::MaskType;
@@ -59,21 +65,35 @@ Bool_s MaskFull(const Vc::Scalar::Mask<T> &mask)
 }
 
 template <typename T>
-VECCORE_FORCE_INLINE
-void MaskedAssign(Vc::Scalar::Vector<T> &dest, const Vc::Scalar::Mask<T> &mask, const Vc::Scalar::Vector<T> &src)
-{
-  dest(mask) = src;
-}
+struct IndexingImplementation<Vc::Scalar::Mask<T>> {
+  using M = Vc::Scalar::Mask<T>;
+  static inline bool Get(const M &mask, size_t i)
+  {
+    return mask[i];
+  }
+
+  static inline void Set(M &mask, size_t i, const bool val)
+  {
+    mask[i] = val;
+  }
+};
 
 template <typename T>
-VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Blend(const Vc::Scalar::Mask<T> &mask, const Vc::Scalar::Vector<T> &tval,
-                            const Vc::Scalar::Vector<T> &fval)
-{
-  typename Vc::Scalar::Vector<T> tmp(tval);
-  tmp(mask) = fval;
-  return tmp;
-}
+struct MaskingImplementation<Vc::Scalar::Vector<T>> {
+  using M = Vc::Scalar::Mask<T>;
+  using V = Vc::Scalar::Vector<T>;
+
+  static inline void Assign(V& dst, M const& mask, V const &src)
+  {
+    dst(mask) = src;
+  }
+
+  static inline void Blend(V& dst, M const &mask, V const &src1, V const src2)
+  {
+	  dst = src2;
+    dst(mask) = src1;
+  }
+};
 
 namespace math {
 
