@@ -39,7 +39,7 @@ using Scalar = ScalarT<>;
 
 template <>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 Bool_s MaskEmpty<Bool_s>(const Bool_s &mask)
 {
   return !mask;
@@ -47,7 +47,7 @@ Bool_s MaskEmpty<Bool_s>(const Bool_s &mask)
 
 template <>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 Bool_s MaskFull<Bool_s>(const Bool_s &mask)
 {
   return mask;

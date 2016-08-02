@@ -3,41 +3,47 @@
 
 #if !defined(VECCORE_ENABLE_CUDA)
 
-#define VECCORE_CUDA_HOST              /* empty */
-#define VECCORE_CUDA_DEVICE            /* empty */
-#define VECCORE_CUDA_HOST_DEVICE       /* empty */
-#define VECCORE_CUDA_GLOBAL            /* empty */
+#define VECCORE_IMPL_NAMESPACE cxx
+
+#define VECCORE_ATT_HOST              /* empty */
+#define VECCORE_ATT_DEVICE            /* empty */
+#define VECCORE_ATT_HOST_DEVICE       /* empty */
+#define VECCORE_ATT_GLOBAL            /* empty */
 #define VECCORE_CUDA_ALIGN             /* empty */
 #define VECCORE_DECLARE_CUDA(x)        /* empty */
 #define VECCORE_DECLARE_CUDA_TYPE(T)   /* empty */
 #define VECCORE_DECLARE_CUDA_CLASS(x)  /* empty */
 #define VECCORE_DECLARE_CUDA_STRUCT(x) /* empty */
+#define VECCORE_DEVICE_CONSTANT
 
 #elif (defined(__CUDACC__) || defined(__NVCC__))
 
-#define VECCORE_NVCC
+#define VECCORE_IMPL_NAMESPACE cuda
+
+#define VECCORE_CUDA
 #ifdef __CUDA_ARCH__
-#define VECCORE_NVCC_DEVICE
+#define VECCORE_CUDA_DEVICE_COMPILATION
 #endif
 
-#define VECCORE_CUDA_HOST __host__
-#define VECCORE_CUDA_DEVICE __device__
-#define VECCORE_CUDA_HOST_DEVICE __host__ __device__
-#define VECCORE_CUDA_GLOBAL __global__
+#define VECCORE_ATT_HOST __host__
+#define VECCORE_ATT_DEVICE __device__
+#define VECCORE_ATT_HOST_DEVICE __host__ __device__
+#define VECCORE_ATT_GLOBAL __global__
 #define VECCORE_CUDA_ALIGN __align__((64))
 #define VECCORE_DECLARE_CUDA(x)          /* empty */
 #define VECCORE_DECLARE_CUDA_TYPE(T)     /* empty */
 #define VECCORE_DECLARE_CUDA_CLASS(x)    /* empty */
 #define VECCORE_DECLARE_CUDA_STRUCT(x)   /* empty */
 #define VECCORE_DECLARE_CUDA_TEMPLATE(x) /* empty */
+#define VECCORE_DEVICE_CONSTANT __constant__
 
 #else // CUDA enabled, but compiling regular C++ code
 
 #define VECCORE_CUDA_INTERFACE
-#define VECCORE_CUDA_HOST        /* empty */
-#define VECCORE_CUDA_DEVICE      /* empty */
-#define VECCORE_CUDA_HOST_DEVICE /* empty */
-#define VECCORE_CUDA_GLOBAL      /* empty */
+#define VECCORE_ATT_HOST        /* empty */
+#define VECCORE_ATT_DEVICE      /* empty */
+#define VECCORE_ATT_HOST_DEVICE /* empty */
+#define VECCORE_ATT_GLOBAL      /* empty */
 #define VECCORE_CUDA_ALIGN       /* empty */
 
 // Keep the macro compact

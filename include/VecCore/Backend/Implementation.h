@@ -217,7 +217,7 @@ T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 VECCORE_BACKEND_FUNCTION
 constexpr bool EarlyReturnAllowed()
 {
-#ifdef VECCORE_NVCC_DEVICE
+#ifdef VECCORE_CUDA_DEVICE_COMPILATION
   return false;
 #else
   return true;

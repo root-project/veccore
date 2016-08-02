@@ -10,7 +10,7 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Abs(const T &x)
 {
   return std::abs(x);
@@ -18,7 +18,7 @@ T Abs(const T &x)
 
 template <class T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Min(const T &a, const T &b)
 {
   return Blend(a < b, a, b);
@@ -26,7 +26,7 @@ T Min(const T &a, const T &b)
 
 template <class T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Max(const T &a, const T &b)
 {
   return Blend(a > b, a, b);
@@ -34,7 +34,7 @@ T Max(const T &a, const T &b)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Min(const T &a, const T &b, const T &c)
 {
   return Min(a, Min(b, c));
@@ -42,7 +42,7 @@ T Min(const T &a, const T &b, const T &c)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Max(const T &a, const T &b, const T &c)
 {
   return Max(a, Max(b, c));
@@ -50,7 +50,7 @@ T Max(const T &a, const T &b, const T &c)
 
 template <typename T, template <typename> class Wrapper>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 Wrapper<T> Min(const Wrapper<T> &a, const Wrapper<T> &b)
 {
   return Blend(a < b, a, b);
@@ -58,7 +58,7 @@ Wrapper<T> Min(const Wrapper<T> &a, const Wrapper<T> &b)
 
 template <typename T, template <typename> class Wrapper>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 Wrapper<T> Max(const Wrapper<T> &a, const Wrapper<T> &b)
 {
   return Blend(a > b, a, b);
@@ -66,7 +66,7 @@ Wrapper<T> Max(const Wrapper<T> &a, const Wrapper<T> &b)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Sign(const T &x)
 {
   return Blend(x < T(0), T(-1), T(1));
@@ -76,7 +76,7 @@ T Sign(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Sin(const T &x)
 {
   return std::sin(x);
@@ -84,7 +84,7 @@ T Sin(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Cos(const T &x)
 {
   return std::cos(x);
@@ -92,7 +92,7 @@ T Cos(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 void SinCos(const T &x, T *s, T *c)
 {
   sincos(x, s, c);
@@ -114,7 +114,7 @@ void sincos(const double &x, double *s, double *c)
 
 template <>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 void SinCos(const Float_s &x, Float_s *s, Float_s *c)
 {
   sincosf(x, s, c);
@@ -122,7 +122,7 @@ void SinCos(const Float_s &x, Float_s *s, Float_s *c)
 
 template <>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 void SinCos(const Double_s &x, Double_s *s, Double_s *c)
 {
   sincos(x, s, c);
@@ -130,7 +130,7 @@ void SinCos(const Double_s &x, Double_s *s, Double_s *c)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Tan(const T &x)
 {
   return std::tan(x);
@@ -138,7 +138,7 @@ T Tan(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Asin(const T &x)
 {
   return std::asin(x);
@@ -146,7 +146,7 @@ T Asin(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Acos(const T &x)
 {
   return std::acos(x);
@@ -154,7 +154,7 @@ T Acos(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Atan(const T &x)
 {
   return std::atan(x);
@@ -162,7 +162,7 @@ T Atan(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Atan2(const T &x, const T &y)
 {
   return std::atan2(x, y);
@@ -172,7 +172,7 @@ T Atan2(const T &x, const T &y)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Sinh(const T &x)
 {
   return std::sinh(x);
@@ -180,7 +180,7 @@ T Sinh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Cosh(const T &x)
 {
   return std::cosh(x);
@@ -188,7 +188,7 @@ T Cosh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Tanh(const T &x)
 {
   return std::tanh(x);
@@ -196,7 +196,7 @@ T Tanh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Asinh(const T &x)
 {
   return std::asinh(x);
@@ -204,7 +204,7 @@ T Asinh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Acosh(const T &x)
 {
   return std::acosh(x);
@@ -212,7 +212,7 @@ T Acosh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Atanh(const T &x)
 {
   return std::atanh(x);
@@ -222,7 +222,7 @@ T Atanh(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Exp(const T &x)
 {
   return std::exp(x);
@@ -230,7 +230,7 @@ T Exp(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Frexp(const T &x, int *exp)
 {
   return std::frexp(x, exp);
@@ -238,7 +238,7 @@ T Frexp(const T &x, int *exp)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Ldexp(const T &x, int exp)
 {
   return std::ldexp(x, exp);
@@ -246,7 +246,7 @@ T Ldexp(const T &x, int exp)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Log(const T &x)
 {
   return std::log(x);
@@ -254,7 +254,7 @@ T Log(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Log10(const T &x)
 {
   return std::log10(x);
@@ -262,7 +262,7 @@ T Log10(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Modf(const T &x, T *intpart)
 {
   return std::modf(x, intpart);
@@ -270,7 +270,7 @@ T Modf(const T &x, T *intpart)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Exp2(const T &x)
 {
   return std::exp2(x);
@@ -278,7 +278,7 @@ T Exp2(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Expm1(const T &x)
 {
   return std::expm1(x);
@@ -286,7 +286,7 @@ T Expm1(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Ilogb(const T &x)
 {
   return std::ilogb(x);
@@ -294,7 +294,7 @@ T Ilogb(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Log1p(const T &x)
 {
   return std::log1p(x);
@@ -302,7 +302,7 @@ T Log1p(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Log2(const T &x)
 {
   return std::log2(x);
@@ -310,7 +310,7 @@ T Log2(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Logb(const T &x)
 {
   return std::logb(x);
@@ -318,7 +318,7 @@ T Logb(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Scalbn(const T &x, int n)
 {
   return std::scalbn(x, n);
@@ -326,7 +326,7 @@ T Scalbn(const T &x, int n)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Scalbln(const T &x, long int n)
 {
   return std::scalbln(x, n);
@@ -336,7 +336,7 @@ T Scalbln(const T &x, long int n)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Sqrt(const T &x)
 {
   return std::sqrt(x);
@@ -344,7 +344,7 @@ T Sqrt(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Cbrt(const T &x)
 {
   return std::cbrt(x);
@@ -352,7 +352,7 @@ T Cbrt(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Pow(const T &x, const T &y)
 {
   return std::pow(x, y);
@@ -360,7 +360,7 @@ T Pow(const T &x, const T &y)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Hypot(const T &x, const T &y)
 {
   return std::hypot(x, y);
@@ -370,7 +370,7 @@ T Hypot(const T &x, const T &y)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Ceil(const T &x)
 {
   return std::ceil(x);
@@ -378,7 +378,7 @@ T Ceil(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Floor(const T &x)
 {
   return std::floor(x);
@@ -386,7 +386,7 @@ T Floor(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Fmod(const T &x, const T &y)
 {
   return std::fmod(x, y);
@@ -394,7 +394,7 @@ T Fmod(const T &x, const T &y)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Trunc(const T &x)
 {
   return std::trunc(x);
@@ -402,7 +402,7 @@ T Trunc(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 T Round(const T &x)
 {
   return std::round(x);
@@ -412,7 +412,7 @@ T Round(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 constexpr T Deg(const T &x)
 {
   return (x * T(180.0 / M_PI));
@@ -420,7 +420,7 @@ constexpr T Deg(const T &x)
 
 template <typename T>
 VECCORE_FORCE_INLINE
-VECCORE_CUDA_HOST_DEVICE
+VECCORE_ATT_HOST_DEVICE
 constexpr T Rad(const T &x)
 {
   return (x * T(M_PI / 180.0));

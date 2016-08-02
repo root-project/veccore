@@ -15,7 +15,7 @@
 #include "Backend/Scalar.h"
 #include "Backend/ScalarWrapper.h"
 
-#if !defined(VECCORE_NVCC)
+#if !defined(VECCORE_CUDA)
 #include "Backend/SIMDSizes.h"
 #include "Backend/VcScalar.h"
 #include "Backend/VcVector.h"
