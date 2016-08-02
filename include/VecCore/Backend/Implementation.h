@@ -191,13 +191,17 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx)
 
 template <typename T>
 struct MaskingImplementation {
-  static inline void Assign(T &dst, Mask<T> const &mask, T const &src)
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Assign(T &dst, Mask<T> const &mask, T const &src)
   {
     for (size_t i = 0; i < VectorSize<T>(); i++)
       if (Get(mask, i)) Set(dst, i, Get(src, i));
   }
 
-  static inline void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2)
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2)
   {
     for (size_t i = 0; i < VectorSize<T>(); i++)
       Set(dst, i, Get(mask, i) ? Get(src1, i) : Get(src2, i));
@@ -205,12 +209,16 @@ struct MaskingImplementation {
 };
 
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void MaskedAssign(T &dst, const Mask<T> &mask, const T &src)
 {
   MaskingImplementation<T>::Assign(dst, mask, src);
 }
 
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 {
   T v;

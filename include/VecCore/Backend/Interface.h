@@ -8,8 +8,10 @@ struct TypeTraits;
 
 template <typename T>
 using Mask = typename TypeTraits<T>::MaskType;
+
 template <typename T>
 using Index = typename TypeTraits<T>::IndexType;
+
 template <typename T>
 using Scalar = typename TypeTraits<T>::ScalarType;
 
@@ -19,14 +21,17 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 Scalar<T> *Begin(T &v);
+
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 Scalar<T> *End(T &v);
+
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 Scalar<T> const *Begin(T const &v);
+
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
@@ -45,6 +50,7 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 Scalar<T> Get(const T &v, size_t i);
+
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
@@ -56,6 +62,7 @@ template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void Load(T &v, Scalar<T> const *ptr);
+
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
@@ -76,13 +83,23 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx);
 // Masking/Blending
 
 template <typename M>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 bool MaskFull(M const &mask);
+
 template <typename M>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 bool MaskEmpty(M const &mask);
 
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void MaskedAssign(T &dst, const Mask<T> &mask, const T &src);
+
 template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 T Blend(const Mask<T> &mask, const T &src1, const T &src2);
 
 VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed();
