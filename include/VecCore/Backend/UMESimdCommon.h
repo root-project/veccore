@@ -54,13 +54,13 @@ template <uint32_t N>
 struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
   using M = UME::SIMD::SIMDVecMask<N>;
 
-  VECCORE_BACKEND_FUNCTION
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
   static bool Get(const M &mask, int i)
   {
     return mask[i];
   }
 
-  VECCORE_BACKEND_FUNCTION
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
   static void Set(M &mask, int i, const bool val)
   {
     mask.insert(i, val);
