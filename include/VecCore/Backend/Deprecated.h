@@ -13,10 +13,13 @@ namespace vecCore {
 
 // old interface, scalar was added first, so is different than others...
 
-template <typename T> using Mask_v   = typename TypeTraits<T>::MaskType;
-template <typename T> using Index_v  = typename TypeTraits<T>::IndexType;
+template <typename T>
+using Mask_v = typename TypeTraits<T>::MaskType;
+template <typename T>
+using Index_v = typename TypeTraits<T>::IndexType;
 
-template <typename T> struct ScalarType {
+template <typename T>
+struct ScalarType {
   using Type = typename TypeTraits<T>::ScalarType;
 };
 
@@ -25,7 +28,8 @@ template <typename T> struct ScalarType {
 // when you have a variable x of a backend type.
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 constexpr Size_s VectorSize(const T &)
 {
   return sizeof(T) / sizeof(typename ScalarType<T>::Type);
@@ -34,14 +38,16 @@ constexpr Size_s VectorSize(const T &)
 // Get/Set
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 Scalar<T> LaneAt(const T &v, size_t i)
 {
   return Get(v, i);
 }
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void AssignLane(T &v, size_t i, Scalar<T> const val)
 {
   Set(v, i, val);
@@ -50,7 +56,8 @@ void AssignLane(T &v, size_t i, Scalar<T> const val)
 // Load/Store
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 T FromPtr(Scalar<T> const *ptr)
 {
   T v;
@@ -59,7 +66,8 @@ T FromPtr(Scalar<T> const *ptr)
 }
 
 template <typename M>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void StoreMask(M const &mask, bool *ptr)
 {
   LoadStoreImplementation<M>::template Store<bool>(mask, ptr);
@@ -67,18 +75,22 @@ void StoreMask(M const &mask, bool *ptr)
 
 // Masking
 
-template <typename M> bool MaskFull(const M &mask);
-template <typename M> bool MaskEmpty(const M &mask);
+template <typename M>
+bool MaskFull(const M &mask);
+template <typename M>
+bool MaskEmpty(const M &mask);
 
 template <typename M>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 bool MaskLaneAt(const M &mask, size_t i)
 {
   return Get(mask, i);
 }
 
 template <typename T>
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void AssignMaskLane(T &mask, size_t i, bool val)
 {
   Set(mask, i, val);

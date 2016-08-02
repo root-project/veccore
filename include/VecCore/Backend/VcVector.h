@@ -63,15 +63,9 @@ Bool_s MaskFull(const Vc::Mask<T> &mask)
 template <typename T>
 struct IndexingImplementation<Vc::Mask<T>> {
   using M = Vc::Mask<T>;
-  static inline bool Get(const M &mask, size_t i)
-  {
-    return mask[i];
-  }
+  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const bool val)
-  {
-    mask[i] = val;
-  }
+  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
 };
 
 template <typename T>
@@ -79,7 +73,7 @@ struct LoadStoreImplementation<Vc::Mask<T>> {
   using M = Vc::Mask<T>;
 
   template <typename S = Scalar<T>>
-  static inline void Load(M& mask, bool const *ptr)
+  static inline void Load(M &mask, bool const *ptr)
   {
     mask.load(ptr);
   }
@@ -96,14 +90,11 @@ struct MaskingImplementation<Vc::Vector<T>> {
   using M = Vc::Mask<T>;
   using V = Vc::Vector<T>;
 
-  static inline void Assign(V& dst, M const& mask, V const &src)
-  {
-    dst(mask) = src;
-  }
+  static inline void Assign(V &dst, M const &mask, V const &src) { dst(mask) = src; }
 
-  static inline void Blend(V& dst, M const &mask, V const &src1, V const src2)
+  static inline void Blend(V &dst, M const &mask, V const &src1, V const src2)
   {
-	  dst = src2;
+    dst       = src2;
     dst(mask) = src1;
   }
 };

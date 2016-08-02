@@ -59,15 +59,9 @@ Bool_s MaskFull(const Vc::SimdMaskArray<T, N> &mask)
 template <typename T, size_t N>
 struct IndexingImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
-  static inline bool Get(const M &mask, size_t i)
-  {
-    return mask[i];
-  }
+  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const bool val)
-  {
-    mask[i] = val;
-  }
+  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
 };
 
 template <typename T, size_t N>
@@ -75,7 +69,7 @@ struct LoadStoreImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
 
   template <typename S = Scalar<T>>
-  static inline void Load(M& mask, bool const *ptr)
+  static inline void Load(M &mask, bool const *ptr)
   {
     mask.load(ptr);
   }
@@ -92,14 +86,11 @@ struct MaskingImplementation<Vc::SimdArray<T, N>> {
   using V = Vc::SimdArray<T, N>;
   using M = Vc::SimdMaskArray<T, N>;
 
-  static inline void Assign(V& dst, M const &mask, V const &src)
-  {
-    dst(mask) = src;
-  }
+  static inline void Assign(V &dst, M const &mask, V const &src) { dst(mask) = src; }
 
-  static inline void Blend(V& dst, M const &mask, V const &src1, V const &src2)
+  static inline void Blend(V &dst, M const &mask, V const &src1, V const &src2)
   {
-    dst = src2;
+    dst       = src2;
     dst(mask) = src1;
   }
 };

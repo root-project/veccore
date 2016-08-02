@@ -108,7 +108,7 @@ public:
   MaskedScalar(T &ref, Mask mask = true) : fRef(ref), fMask(mask) {}
 
 #define MASK_ASSIGN_OPERATOR(OP) \
-  VECCORE_ATT_HOST_DEVICE       \
+  VECCORE_ATT_HOST_DEVICE        \
   T &operator OP(const T &ref)   \
   {                              \
     if (fMask) fRef OP ref;      \
@@ -200,11 +200,11 @@ public:
 
 #define SCALAR_WRAPPER_OPERATOR(OP)                                                                 \
   VECCORE_FORCE_INLINE                                                                              \
-  VECCORE_ATT_HOST_DEVICE                                                                          \
+  VECCORE_ATT_HOST_DEVICE                                                                           \
   WrappedScalar operator OP(const WrappedScalar &x) const { return WrappedScalar(fVal OP x.fVal); } \
                                                                                                     \
   VECCORE_FORCE_INLINE                                                                              \
-  VECCORE_ATT_HOST_DEVICE                                                                          \
+  VECCORE_ATT_HOST_DEVICE                                                                           \
   WrappedScalar operator OP(const T &x) const { return WrappedScalar(fVal OP x); }
 
   SCALAR_WRAPPER_OPERATOR(+)

@@ -5,10 +5,10 @@
 
 #define VECCORE_IMPL_NAMESPACE cxx
 
-#define VECCORE_ATT_HOST              /* empty */
-#define VECCORE_ATT_DEVICE            /* empty */
-#define VECCORE_ATT_HOST_DEVICE       /* empty */
-#define VECCORE_ATT_GLOBAL            /* empty */
+#define VECCORE_ATT_HOST               /* empty */
+#define VECCORE_ATT_DEVICE             /* empty */
+#define VECCORE_ATT_HOST_DEVICE        /* empty */
+#define VECCORE_ATT_GLOBAL             /* empty */
 #define VECCORE_CUDA_ALIGN             /* empty */
 #define VECCORE_DECLARE_CUDA(x)        /* empty */
 #define VECCORE_DECLARE_CUDA_TYPE(T)   /* empty */
@@ -44,7 +44,7 @@
 #define VECCORE_ATT_DEVICE      /* empty */
 #define VECCORE_ATT_HOST_DEVICE /* empty */
 #define VECCORE_ATT_GLOBAL      /* empty */
-#define VECCORE_CUDA_ALIGN       /* empty */
+#define VECCORE_CUDA_ALIGN      /* empty */
 
 // Keep the macro compact
 // clang-format off
