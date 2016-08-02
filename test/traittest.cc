@@ -6,7 +6,6 @@
 // a compile time test - testing the type traits for backends
 // test passes, if compilation passes
 using namespace vecCore;
-using namespace vecCore::backend;
 
 // testing the ScalarType property of TypeTraits
 #define TEST_SCALAR_TRAIT(x, vector, scalar) \
@@ -21,18 +20,18 @@ using namespace vecCore::backend;
   TEST_SCALAR_TRAIT(x, Int16_v, Int16_s)   \
   TEST_SCALAR_TRAIT(x, UInt16_v, UInt16_s)
 
-TEST_TRAIT(Scalar);
-TEST_TRAIT(ScalarWrapper);
+TEST_TRAIT(backend::Scalar);
+TEST_TRAIT(backend::ScalarWrapper);
 
 #ifdef VECCORE_ENABLE_VC
-TEST_TRAIT(VcScalar);
-TEST_TRAIT(VcVector);
-TEST_TRAIT(VcSimdArray<8>);
+TEST_TRAIT(backend::VcScalar);
+TEST_TRAIT(backend::VcVector);
+TEST_TRAIT(backend::VcSimdArray<8>);
 #endif
 
 #ifdef VECCORE_ENABLE_UMESIMD
-TEST_TRAIT(UMESimd)
-TEST_TRAIT(UMESimdArray<16>)
+TEST_TRAIT(backend::UMESimd)
+TEST_TRAIT(backend::UMESimdArray<16>)
 #endif
 
 TEST(TraitTest, TraitTest)
