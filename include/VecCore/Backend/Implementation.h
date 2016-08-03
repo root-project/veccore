@@ -3,6 +3,8 @@
 
 #include "Interface.h"
 
+#include <type_traits>
+
 namespace vecCore {
 
 template <typename T>
@@ -200,8 +202,10 @@ bool MaskEmpty(const M &mask)
   return true;
 }
 
-template <typename T>
-struct MaskingImplementation {
+// Split generic scalar/vector implementations to avoid performance loss
+
+template <typename T, bool>
+struct GenericMaskingImplementation {
   VECCORE_FORCE_INLINE
   VECCORE_ATT_HOST_DEVICE
   static void Assign(T &dst, Mask<T> const &mask, T const &src)
@@ -216,6 +220,37 @@ struct MaskingImplementation {
   {
     for (size_t i = 0; i < VectorSize<T>(); i++)
       Set(dst, i, Get(mask, i) ? Get(src1, i) : Get(src2, i));
+  }
+};
+
+template <typename T>
+struct GenericMaskingImplementation<T, true> {
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Assign(T &dst, Mask<T> const &mask, T const &src)
+  {
+    if (mask) dst = src;
+  }
+
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2) { dst = mask ? src1 : src2; }
+};
+
+template <typename T>
+struct MaskingImplementation {
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Assign(T &dst, Mask<T> const &mask, T const &src)
+  {
+    GenericMaskingImplementation<T, std::is_scalar<T>::value>::Assign(dst, mask, src);
+  }
+
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2)
+  {
+    GenericMaskingImplementation<T, std::is_scalar<T>::value>::Blend(dst, mask, src1, src2);
   }
 };
 
