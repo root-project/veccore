@@ -184,10 +184,21 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx)
 
 // Masking
 
-// functions commented below must be provided by each backend
+template <typename M>
+bool MaskFull(const M &mask)
+{
+  for (size_t i = 0; i < VectorSize<M>(); i++)
+    if (Get(mask, i) == false) return false;
+  return true;
+}
 
-// template <typename M> bool MaskFull(const M &mask);
-// template <typename M> bool MaskEmpty(const M &mask);
+template <typename M>
+bool MaskEmpty(const M &mask)
+{
+  for (size_t i = 0; i < VectorSize<M>(); i++)
+    if (Get(mask, i) == true) return false;
+  return true;
+}
 
 template <typename T>
 struct MaskingImplementation {
