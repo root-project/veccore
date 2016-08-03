@@ -59,6 +59,23 @@ struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const bool val) { mask.insert(i, val); }
 };
 
+template <uint32_t N>
+struct LoadStoreImplementation<UME::SIMD::SIMDVecMask<N>> {
+  using M = UME::SIMD::SIMDVecMask<N>;
+
+  template <typename S = Scalar<M>>
+  static inline void Load(M &mask, S const *ptr)
+  {
+    mask.load(ptr);
+  }
+
+  template <typename S = Scalar<M>>
+  static inline void Store(M const &mask, S *ptr)
+  {
+    mask.store(ptr);
+  }
+};
+
 template <typename T, uint32_t N>
 struct MaskingImplementation<UME::SIMD::SIMDVec_f<T, N>> {
   using V = UME::SIMD::SIMDVec_f<T, N>;
