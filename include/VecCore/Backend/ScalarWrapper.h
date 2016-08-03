@@ -235,6 +235,24 @@ Bool_s MaskFull<WrappedBool>(const WrappedBool &mask)
   return mask;
 }
 
+template <typename T>
+struct MaskingImplementation<WrappedScalar<T>> {
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Assign(WrappedScalar<T> &dst, WrappedBool const &mask, WrappedScalar<T> const &src)
+  {
+    if (mask) dst = src;
+  }
+
+  VECCORE_FORCE_INLINE
+  VECCORE_ATT_HOST_DEVICE
+  static void Blend(WrappedScalar<T> &dst, WrappedBool const &mask, WrappedScalar<T> const &src1,
+                    WrappedScalar<T> const &src2)
+  {
+    dst = mask ? src1 : src2;
+  }
+};
+
 } // namespace vecCore
 
 #endif
