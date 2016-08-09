@@ -10,7 +10,7 @@ namespace vecCore {
 template <typename T>
 struct TypeTraits<Vc::Scalar::Mask<T>> {
   using IndexType  = size_t;
-  using ScalarType = bool;
+  using ScalarType = Bool_s;
 };
 
 template <typename T>
@@ -67,9 +67,9 @@ Bool_s MaskFull(const Vc::Scalar::Mask<T> &mask)
 template <typename T>
 struct IndexingImplementation<Vc::Scalar::Mask<T>> {
   using M = Vc::Scalar::Mask<T>;
-  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
+  static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
+  static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
 };
 
 template <typename T>

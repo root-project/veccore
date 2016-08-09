@@ -187,7 +187,7 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx)
 // Masking
 
 template <typename M>
-bool MaskFull(const M &mask)
+Bool_s MaskFull(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
     if (Get(mask, i) == false) return false;
@@ -195,7 +195,7 @@ bool MaskFull(const M &mask)
 }
 
 template <typename M>
-bool MaskEmpty(const M &mask)
+Bool_s MaskEmpty(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
     if (Get(mask, i) == true) return false;
@@ -204,7 +204,7 @@ bool MaskEmpty(const M &mask)
 
 // Split generic scalar/vector implementations to avoid performance loss
 
-template <typename T, bool>
+template <typename T, Bool_s>
 struct GenericMaskingImplementation {
   VECCORE_FORCE_INLINE
   VECCORE_ATT_HOST_DEVICE
@@ -274,7 +274,7 @@ T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 
 // Miscellaneous
 
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr bool EarlyReturnAllowed()
+VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed()
 {
 #ifdef VECCORE_CUDA_DEVICE_COMPILATION
   return false;

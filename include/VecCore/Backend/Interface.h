@@ -85,12 +85,12 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx);
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-bool MaskFull(M const &mask);
+Bool_s MaskFull(M const &mask);
 
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-bool MaskEmpty(M const &mask);
+Bool_s MaskEmpty(M const &mask);
 
 template <typename T>
 VECCORE_FORCE_INLINE

@@ -9,7 +9,7 @@ namespace vecCore {
 
 template <typename T, size_t N>
 struct TypeTraits<Vc::SimdMaskArray<T, N>> {
-  using ScalarType = bool;
+  using ScalarType = Bool_s;
   using IndexType  = size_t;
 };
 
@@ -59,9 +59,9 @@ Bool_s MaskFull(const Vc::SimdMaskArray<T, N> &mask)
 template <typename T, size_t N>
 struct IndexingImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
-  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
+  static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
+  static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
 };
 
 template <typename T, size_t N>
@@ -69,7 +69,7 @@ struct LoadStoreImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
 
   template <typename S = Scalar<T>>
-  static inline void Load(M &mask, bool const *ptr)
+  static inline void Load(M &mask, Bool_s const *ptr)
   {
     mask.load(ptr);
   }

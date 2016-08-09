@@ -10,7 +10,7 @@ template <uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVecMask<N>> {
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = int;
-  using ScalarType = bool;
+  using ScalarType = Bool_s;
 };
 
 template <typename T, uint32_t N>
@@ -54,9 +54,9 @@ template <uint32_t N>
 struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
   using M = UME::SIMD::SIMDVecMask<N>;
 
-  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static bool Get(const M &mask, int i) { return mask[i]; }
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Bool_s Get(const M &mask, int i) { return mask[i]; }
 
-  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const bool val) { mask.insert(i, val); }
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const Bool_s val) { mask.insert(i, val); }
 };
 
 template <uint32_t N>

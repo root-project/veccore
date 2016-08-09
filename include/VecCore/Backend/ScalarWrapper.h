@@ -13,7 +13,7 @@ class WrappedScalar;
 
 template <>
 struct TypeTraits<WrappedBool> {
-  using ScalarType = bool;
+  using ScalarType = Bool_s;
   using IndexType  = WrappedScalar<size_t>;
 };
 
@@ -56,25 +56,25 @@ public:
   WrappedBool() { /* uninitialized */}
 
   VECCORE_ATT_HOST_DEVICE
-  WrappedBool(bool val) : fBool(val) {}
+  WrappedBool(Bool_s val) : fBool(val) {}
 
   VECCORE_ATT_HOST_DEVICE
-  bool isFull() const { return fBool; }
+  Bool_s isFull() const { return fBool; }
 
   VECCORE_ATT_HOST_DEVICE
-  bool isEmpty() const { return !fBool; }
+  Bool_s isEmpty() const { return !fBool; }
 
   VECCORE_ATT_HOST_DEVICE
   static constexpr size_t size() { return 1; }
 
   VECCORE_ATT_HOST_DEVICE
-  operator bool &() noexcept { return fBool; }
+  operator Bool_s &() noexcept { return fBool; }
 
   VECCORE_ATT_HOST_DEVICE
-  operator bool const &() const noexcept { return fBool; }
+  operator Bool_s const &() const noexcept { return fBool; }
 
   VECCORE_ATT_HOST_DEVICE
-  bool &operator[](int index)
+  Bool_s &operator[](int index)
   {
     assert(index == 0);
     (void)index;
@@ -82,7 +82,7 @@ public:
   }
 
   VECCORE_ATT_HOST_DEVICE
-  bool operator[](int index) const
+  Bool_s operator[](int index) const
   {
     assert(index == 0);
     (void)index;
@@ -90,10 +90,10 @@ public:
   }
 
   VECCORE_ATT_HOST_DEVICE
-  void store(bool *dest) const { *dest = fBool; }
+  void store(Bool_s *dest) const { *dest = fBool; }
 
 private:
-  bool fBool;
+  Bool_s fBool;
 };
 
 template <class T>
