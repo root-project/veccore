@@ -56,7 +56,10 @@ struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
 
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Bool_s Get(const M &mask, int i) { return mask[i]; }
 
-  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const Bool_s val) { mask.insert(i, val); }
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const Bool_s val)
+  {
+    mask.insert(i, val);
+  }
 };
 
 template <uint32_t N>
