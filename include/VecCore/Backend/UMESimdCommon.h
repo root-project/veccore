@@ -111,6 +111,13 @@ struct MaskingImplementation<UME::SIMD::SIMDVec_u<T, N>> {
 
 namespace math {
 
+template <typename T, uint32_t N>
+VECCORE_FORCE_INLINE
+UME::SIMD::SIMDVec_f<T, N> CopySign(const UME::SIMD::SIMDVec_f<T, N> &x, const UME::SIMD::SIMDVec_f<T, N> &y)
+{
+  return x.copysign(y);
+}
+
 #define UMESIMD_REAL_FUNC(f, name)                                                                \
   template <typename T, uint32_t N>                                                               \
   VECCORE_FORCE_INLINE typename UME::SIMD::SIMDVec_f<T, N> f(const UME::SIMD::SIMDVec_f<T, N> &x) \

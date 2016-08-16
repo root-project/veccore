@@ -67,9 +67,17 @@ Wrapper<T> Max(const Wrapper<T> &a, const Wrapper<T> &b)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
+T CopySign(const T &x, const T &y)
+{
+  return std::copysign(x, y);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 T Sign(const T &x)
 {
-  return Blend(x < T(0), T(-1), T(1));
+  return CopySign(T(1), x);
 }
 
 // Trigonometric Functions

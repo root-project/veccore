@@ -116,10 +116,11 @@ TEST_MATH_FUNCTION_POS(Sqrt, sqrt);
 // TEST_MATH_FUNCTION(Cbrt, cbrt);
 
 TEST_MATH_FUNCTION_2(Atan2, atan2);
+TEST_MATH_FUNCTION_2(CopySign, copysign);
 TEST_MATH_FUNCTION_2(Pow, pow);
 
-REGISTER_TYPED_TEST_CASE_P(MathFunctions, Abs, Floor, Ceil, Sin, Asin, Cos, Tan, Atan, Exp, Log, Sqrt, Atan2, Pow);
-//  Abs, Floor, Ceil, Sin, Asin, Sinh, Asihn, Cos, Acos, Cosh, Acosh, Tan, Atan, Exp, Log, Sqrt, Cbrt);
+REGISTER_TYPED_TEST_CASE_P(MathFunctions, Abs, Floor, Ceil, Sin, Asin, Cos, Tan, Atan, Exp, Log, Sqrt, Atan2, CopySign,
+                           Pow);
 
 #define TEST_BACKEND_P(name, x) INSTANTIATE_TYPED_TEST_CASE_P(name, MathFunctions, FloatTypes<vecCore::backend::x>);
 

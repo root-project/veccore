@@ -90,6 +90,13 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
+Vc::Scalar::Vector<T> CopySign(const Vc::Scalar::Vector<T> &x, const Vc::Scalar::Vector<T> &y)
+{
+  return Vc::copysign(x, y);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
 Vc::Scalar::Vector<T> Pow(const Vc::Scalar::Vector<T> &x, const Vc::Scalar::Vector<T> &y)
 {
   return std::exp(std::log(x[0]) * y[0]);

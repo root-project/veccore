@@ -99,6 +99,13 @@ namespace math {
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
+Vc::SimdArray<T, N> CopySign(const Vc::SimdArray<T, N> &x, const Vc::SimdArray<T, N> &y)
+{
+  return Vc::copysign(x, y);
+}
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
 Vc::SimdArray<T, N> Pow(const Vc::SimdArray<T, N> &x, const Vc::SimdArray<T, N> &y)
 {
   return Vc::exp(Vc::log(x) * y);
