@@ -23,7 +23,3 @@ endif()
 message(STATUS "Compiling for ${TARGET_ISA} SIMD instructions")
 
 add_compile_options(${FLAGS_${ISA}})
-
-if (CUDA)
-  include(CUDA)
-endif()

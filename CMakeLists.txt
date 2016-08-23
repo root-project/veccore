@@ -24,6 +24,10 @@ option(BENCHMARKS "Enable performance benchmarking" ON)
 
 include(CompilerSetup)
 
+if (CUDA)
+  include(CUDA)
+endif()
+
 if (VC)
   find_package(Vc 1.2.0 REQUIRED)
   set(VECCORE_ENABLE_VC True)
