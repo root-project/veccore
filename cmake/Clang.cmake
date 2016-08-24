@@ -9,10 +9,6 @@ set(FLAGS_AVX2  "-mf16c;-mavx2;-mfma;-mlzcnt;-mbmi;-mbmi2")
 set(FLAGS_AVX512 "-mavx512")
 set(FLAGS_NATIVE "-march=native")
 
-set(CMAKE_CXX_FLAGS_DEBUG          "-DDEBUG  -g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE        "-DNDEBUG    -O3")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DDEBUG  -g -O3")
-
 if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
   set(FLAGS_KNL "-march=knl")
 endif()

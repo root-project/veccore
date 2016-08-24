@@ -20,10 +20,6 @@ if("${CMAKE_VERSION}" VERSION_LESS "3.6")
   endif()
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -DDEBUG -g")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG -restrict")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -DDEBUG -g -restrict")
-
 if (DEFINED ARCH AND "${ARCH}" MATCHES "KNC")
   list(APPEND CMAKE_EXE_LINKER_FLAGS -mmic)
   list(APPEND CMAKE_SHARED_LINKER_FLAGS -static-intel)

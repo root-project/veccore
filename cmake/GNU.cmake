@@ -13,10 +13,6 @@ if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 5)
   set(FLAGS_KNL "-march=knl")
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG          "-DDEBUG  -g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE        "-DNDEBUG    -O3")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DDEBUG  -g -O3")
-
 if (VC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)
   add_compile_options(-fabi-version=6)
 endif()
