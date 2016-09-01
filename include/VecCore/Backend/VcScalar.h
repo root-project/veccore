@@ -108,6 +108,13 @@ Vc::Scalar::Vector<T> Tan(const Vc::Scalar::Vector<T> &x)
 {
   return std::tan(x[0]);
 }
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Scalar::Mask<T> IsInf(const Vc::Scalar::Vector<T> &x)
+{
+  return Vc::isinf(x);
+}
 }
 
 } // namespace vecCore

@@ -139,6 +139,13 @@ UMESIMD_REAL_FUNC(Ceil, ceil)
 
 #undef UMESIMD_REAL_FUNC
 
+template <typename T, uint32_t N>
+VECCORE_FORCE_INLINE
+UME::SIMD::SIMDVecMask<N> IsInf(const UME::SIMD::SIMDVec_f<T, N> &x)
+{
+  return x.isinf();
+}
+
 } // end namespace math
 } // end namespace vecCore
 

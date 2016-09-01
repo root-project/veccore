@@ -421,6 +421,17 @@ T Round(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
+Mask<T> IsInf(const T &x)
+{
+#ifndef VECCORE_CUDA
+  using std::isinf;
+#endif
+  return isinf(x);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 constexpr T Deg(const T &x)
 {
   return (x * T(180.0 / M_PI));

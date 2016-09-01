@@ -123,6 +123,13 @@ Vc::Vector<T> Tan(const Vc::Vector<T> &x)
   Vc::sincos(x, &s, &c);
   return s / c;
 }
+
+template <typename T>
+VECCORE_FORCE_INLINE
+Vc::Mask<T> IsInf(const Vc::Vector<T> &x)
+{
+  return Vc::isinf(x);
+}
 }
 
 } // namespace vecCore

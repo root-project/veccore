@@ -119,6 +119,13 @@ Vc::SimdArray<T, N> Tan(const Vc::SimdArray<T, N> &x)
   Vc::sincos(x, &s, &c);
   return s / c;
 }
+
+template <typename T, size_t N>
+VECCORE_FORCE_INLINE
+Vc::SimdMaskArray<T, N> IsInf(const Vc::SimdArray<T, N> &x)
+{
+  return Vc::isinf(x);
+}
 }
 
 } // namespace vecCore
