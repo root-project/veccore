@@ -19,6 +19,8 @@
 #define assert(x)
 #else
 
+#include <cstdio>
+
 #ifndef __CUDA_ARCH__
 #define assert(x)                                                                 \
   do {                                                                            \
