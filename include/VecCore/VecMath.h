@@ -147,7 +147,7 @@ T Tan(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Asin(const T &x)
+T ASin(const T &x)
 {
   return std::asin(x);
 }
@@ -155,7 +155,7 @@ T Asin(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Acos(const T &x)
+T ACos(const T &x)
 {
   return std::acos(x);
 }
@@ -163,7 +163,7 @@ T Acos(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Atan(const T &x)
+T ATan(const T &x)
 {
   return std::atan(x);
 }
@@ -171,7 +171,7 @@ T Atan(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Atan2(const T &x, const T &y)
+T ATan2(const T &x, const T &y)
 {
   return std::atan2(x, y);
 }
@@ -205,7 +205,7 @@ T Tanh(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Asinh(const T &x)
+T ASinh(const T &x)
 {
   return std::asinh(x);
 }
@@ -213,7 +213,7 @@ T Asinh(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Acosh(const T &x)
+T ACosh(const T &x)
 {
   return std::acosh(x);
 }
@@ -221,7 +221,7 @@ T Acosh(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-T Atanh(const T &x)
+T ATanh(const T &x)
 {
   return std::atanh(x);
 }

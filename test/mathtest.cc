@@ -101,25 +101,25 @@ TEST_MATH_FUNCTION(Abs, abs);
 TEST_MATH_FUNCTION(Floor, floor);
 TEST_MATH_FUNCTION(Ceil, ceil);
 TEST_MATH_FUNCTION_TRIG(Sin, sin);
-TEST_MATH_FUNCTION_ONE(Asin, asin);
+TEST_MATH_FUNCTION_ONE(ASin, asin);
 // TEST_MATH_FUNCTION(Sinh, sinh);
-// TEST_MATH_FUNCTION(Asinh, asinh);
+// TEST_MATH_FUNCTION(ASinh, asinh);
 TEST_MATH_FUNCTION_TRIG(Cos, cos);
-// TEST_MATH_FUNCTION(Acos, acos);
+// TEST_MATH_FUNCTION(ACos, acos);
 // TEST_MATH_FUNCTION(Cosh, cosh);
-// TEST_MATH_FUNCTION(Acosh, acosh);
+// TEST_MATH_FUNCTION(ACosh, acosh);
 TEST_MATH_FUNCTION_TRIG(Tan, tan);
-TEST_MATH_FUNCTION(Atan, atan);
+TEST_MATH_FUNCTION(ATan, atan);
 TEST_MATH_FUNCTION(Exp, exp);
 TEST_MATH_FUNCTION_POS(Log, log);
 TEST_MATH_FUNCTION_POS(Sqrt, sqrt);
 // TEST_MATH_FUNCTION(Cbrt, cbrt);
 
-TEST_MATH_FUNCTION_2(Atan2, atan2);
+TEST_MATH_FUNCTION_2(ATan2, atan2);
 TEST_MATH_FUNCTION_2(CopySign, copysign);
 TEST_MATH_FUNCTION_2(Pow, pow);
 
-REGISTER_TYPED_TEST_CASE_P(MathFunctions, Abs, Floor, Ceil, Sin, Asin, Cos, Tan, Atan, Exp, Log, Sqrt, Atan2, CopySign,
+REGISTER_TYPED_TEST_CASE_P(MathFunctions, Abs, Floor, Ceil, Sin, ASin, Cos, Tan, ATan, Exp, Log, Sqrt, ATan2, CopySign,
                            Pow);
 
 #define TEST_BACKEND_P(name, x) INSTANTIATE_TYPED_TEST_CASE_P(name, MathFunctions, FloatTypes<vecCore::backend::x>);
