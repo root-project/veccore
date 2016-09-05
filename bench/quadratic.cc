@@ -8,14 +8,15 @@
 
 using namespace vecCore;
 
-static const int N = (8 * 1024 * 1024);
+static constexpr size_t nruns = 10;
+static constexpr size_t N = (128 * 1024 * 1024);
 
 // solve ax2 + bx + c = 0
 
 // naive scalar code
 
 template <typename T>
-int QuadSolveNaive(T a, T b, T c, T &x1, T &x2)
+int QuadSolve(T a, T b, T c, T &x1, T &x2)
 {
   T delta = b * b - 4.0 * a * c;
 
@@ -67,11 +68,10 @@ void QuadSolveOptimized(const T &a, const T &b, const T &c, T &x1, T &x2, int &r
   }
 }
 
-#if !defined(VECCORE_DISABLE_SIMD) && defined(__AVX2__)
+#if defined(__AVX2__)
 
 // explicit AVX2 code using intrinsics
 
-VECCORE_FORCE_NOINLINE
 void QuadSolveAVX(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots)
 {
@@ -147,7 +147,106 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
   MaskedAssign(x2, mask1, root1);
 }
 
+VECCORE_FORCE_NOINLINE
+void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
+                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+{
+  Timer<milliseconds> timer;
+  double t[nruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < nruns; n++) {
+    timer.Start();
+    for (size_t i = 0; i < N; i ++)
+      roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
+    t[n] = timer.Elapsed();
+  }
+
+  for (size_t n = 0; n < nruns; n++)
+    mean += t[n];
+
+  mean = mean / nruns;
+
+  for (size_t n = 0; n < nruns; n++)
+    sigma += std::pow(t[n] - mean, 2.0);
+
+  sigma = std::sqrt(sigma);
+
+#ifdef VERBOSE
+  size_t index = (size_t)((N - 100) * drand48());
+  for (size_t i = index; i < index + 10; i++)
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
+           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+#endif
+  printf("%20s %8.1lf %7.1lf\n", "Scalar", mean, sigma);
+}
+
+VECCORE_FORCE_NOINLINE
+void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
+                            float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+{
+  Timer<milliseconds> timer;
+  double t[nruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < nruns; n++) {
+    timer.Start();
+    for (size_t i = 0; i < N; i ++)
+      QuadSolveOptimized(a[i], b[i], c[i], x1[i], x2[i], roots[i]);
+    t[n] = timer.Elapsed();
+  }
+
+  for (size_t n = 0; n < nruns; n++)
+    mean += t[n];
+
+  mean = mean / nruns;
+
+  for (size_t n = 0; n < nruns; n++)
+    sigma += std::pow(t[n] - mean, 2.0);
+
+  sigma = std::sqrt(sigma);
+
+#ifdef VERBOSE
+  size_t index = (size_t)((N - 100) * drand48());
+  for (size_t i = index; i < index + 10; i++)
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
+           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+#endif
+  printf("%20s %8.1lf %7.1lf\n", "Optimized Scalar", mean, sigma);
+}
+
+#ifdef __AVX2__
+VECCORE_FORCE_NOINLINE
+void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
+                       float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+{
+  Timer<milliseconds> timer;
+  double t[nruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < nruns; n++) {
+    timer.Start();
+    for (size_t i = 0; i < N; i += 8)
+      QuadSolveAVX(&a[i], &b[i], &c[i], &x1[i], &x2[i], &roots[i]);
+    t[n] = timer.Elapsed();
+  }
+
+  for (size_t n = 0; n < nruns; n++)
+    mean += t[n];
+
+  mean = mean / nruns;
+
+  for (size_t n = 0; n < nruns; n++)
+    sigma += std::pow(t[n] - mean, 2.0);
+
+  sigma = std::sqrt(sigma);
+
+#ifdef VERBOSE
+  size_t index = (size_t)((N - 100) * drand48());
+  for (size_t i = index; i < index + 10; i++)
+    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
+           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
+#endif
+  printf("%20s %8.1lf %7.1lf\n", "AVX2 Intrinsics", mean, sigma);
+}
+#endif
+
 template <class Backend>
+VECCORE_FORCE_NOINLINE
 void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                    float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N, const char *name)
 {
@@ -155,18 +254,32 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   using Int32_v = typename Backend::Int32_v;
 
   Timer<milliseconds> timer;
-  for (size_t i = 0; i < N; i += VectorSize<Float_v>())
-    QuadSolveSIMD<Backend>((Float_v &)(a[i]), (Float_v &)(b[i]), (Float_v &)(c[i]), (Float_v &)(x1[i]),
-                           (Float_v &)(x2[i]), (Int32_v &)(roots[i]));
-  double t = timer.Elapsed();
+  double t[nruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < nruns; n++) {
+    timer.Start();
+    for (size_t i = 0; i < N; i += VectorSize<Float_v>())
+      QuadSolveSIMD<Backend>((Float_v &)(a[i]), (Float_v &)(b[i]), (Float_v &)(c[i]), (Float_v &)(x1[i]),
+          (Float_v &)(x2[i]), (Int32_v &)(roots[i]));
+    t[n] = timer.Elapsed();
+  }
+
+  for (size_t n = 0; n < nruns; n++)
+    mean += t[n];
+
+  mean = mean / nruns;
+
+  for (size_t n = 0; n < nruns; n++)
+    sigma += std::pow(t[n] - mean, 2.0);
+
+  sigma = std::sqrt(sigma);
 
 #ifdef VERBOSE
-  int index = (int)((N - 100) * drand48());
-  for (int i = index; i < index + 10; i++)
+  size_t index = (size_t)((N - 100) * drand48());
+  for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("%32s: %7.3lfms\n", name, t);
+  printf("%20s %8.1lf %7.1lf\n", name, mean, sigma);
 }
 
 int main(int argc, char *argv[])
@@ -183,7 +296,7 @@ int main(int argc, char *argv[])
 
   srand48(time(NULL));
 
-  for (int i = 0; i < N; i++) {
+  for (size_t i = 0; i < N; i++) {
     a[i]     = 10.0 * (drand48() - 0.5);
     b[i]     = 10.0 * (drand48() - 0.5);
     c[i]     = 50.0 * (drand48() - 0.5);
@@ -192,61 +305,34 @@ int main(int argc, char *argv[])
     roots[i] = 0;
   }
 
-  Timer<milliseconds> timer;
-  for (int i = 0; i < N; i++)
-    roots[i] = QuadSolveNaive(a[i], b[i], c[i], x1[i], x2[i]);
+  printf("             Backend     Mean / Sigma (ms)\n");
+  printf("------------------------------------------\n");
 
-  double t = timer.Elapsed();
+  TestQuadSolve(a, b, c, x1, x2, roots, N);
+  TestQuadSolveOptimized(a, b, c, x1, x2, roots, N);
 
-#ifdef VERBOSE
-  int index = (int)((N - 100) * drand48());
-  // print random values to check results across backends
-  for (int i = index; i < index + 10; i++)
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
-           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
-#endif
-  printf("%32s: %7.3lfms\n", "naive scalar", t);
-
-  timer.Start();
-  for (int i = 0; i < N; i++)
-    QuadSolveOptimized<float>(a[i], b[i], c[i], x1[i], x2[i], roots[i]);
-  t = timer.Elapsed();
-
-#ifdef VERBOSE
-  for (int i = index; i < index + 10; i++)
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
-           roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
-#endif
-  printf("%32s: %7.3lfms\n", "optimized scalar", t);
-
-#if !defined(VECCORE_DISABLE_SIMD) && defined(__AVX2__)
-  timer.Start();
-  for (int i = 0; i < N; i += 8)
-    QuadSolveAVX(&a[i], &b[i], &c[i], &x1[i], &x2[i], &roots[i]);
-  t = timer.Elapsed();
-
-#ifdef VERBOSE
-  for (int i = index; i < index + 10; i++)
-    printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
-           roots[i], x1[i], x2[i]);
-#endif
-  printf("%32s: %7.3lfms\n", "AVX2 intrinsics", t);
+#ifdef __AVX2__
+  TestQuadSolveAVX2(a, b, c, x1, x2, roots, N);
 #endif
 
-  TestQuadSolve<backend::Scalar>(a, b, c, x1, x2, roots, N, "plain scalar backend");
-  TestQuadSolve<backend::ScalarWrapper>(a, b, c, x1, x2, roots, N, "scalarwrapper backend");
+  TestQuadSolve<backend::Scalar>(a, b, c, x1, x2, roots, N, "Scalar Backend");
+  TestQuadSolve<backend::ScalarWrapper>(a, b, c, x1, x2, roots, N, "ScalarWrapper");
 
 #ifdef VECCORE_ENABLE_VC
-  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, N, "Vc scalar backend");
-  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, N, "Vc vector backend");
-  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, N, "VcSimdArray<8> backend");
-  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, N, "VcSimdArray<16> backend");
-  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, N, "VcSimdArray<32> backend");
+  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, N, "VcScalar");
+  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, N, "VcVector");
+  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, N, "VcSimdArray<8>");
+  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, N, "VcSimdArray<16>");
+  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, N, "VcSimdArray<32>");
 #endif
 
 #ifdef VECCORE_ENABLE_UMESIMD
-  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "UME::SIMD backend");
+  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "UME::SIMD");
+  TestQuadSolve<backend::UMESimdArray<8>>(a, b, c, x1, x2, roots, N, "UME::SIMD<8>");
+  TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, N, "UME::SIMD<16>");
+  TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, N, "UME::SIMD<32>");
 #endif
+  printf("------------------------------------------\n");
 
   AlignedFree(a);
   AlignedFree(b);
