@@ -8,8 +8,8 @@
 
 using namespace vecCore;
 
-static constexpr size_t nruns = 10;
-static constexpr size_t N = (128 * 1024 * 1024);
+static constexpr size_t kNruns = 10;
+static constexpr size_t kN = (128 * 1024 * 1024);
 
 // solve ax2 + bx + c = 0
 
@@ -149,29 +149,29 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
 
 VECCORE_FORCE_NOINLINE
 void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
-                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
   Timer<milliseconds> timer;
-  double t[nruns], mean = 0.0, sigma = 0.0;
-  for (size_t n = 0; n < nruns; n++) {
+  double t[kNruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
-    for (size_t i = 0; i < N; i ++)
+    for (size_t i = 0; i < kN; i ++)
       roots[i] = QuadSolve(a[i], b[i], c[i], x1[i], x2[i]);
     t[n] = timer.Elapsed();
   }
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / nruns;
+  mean = mean / kNruns;
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     sigma += std::pow(t[n] - mean, 2.0);
 
   sigma = std::sqrt(sigma);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((N - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * drand48());
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
@@ -181,29 +181,29 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
 
 VECCORE_FORCE_NOINLINE
 void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
-                            float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+                            float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
   Timer<milliseconds> timer;
-  double t[nruns], mean = 0.0, sigma = 0.0;
-  for (size_t n = 0; n < nruns; n++) {
+  double t[kNruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
-    for (size_t i = 0; i < N; i ++)
+    for (size_t i = 0; i < kN; i ++)
       QuadSolveOptimized(a[i], b[i], c[i], x1[i], x2[i], roots[i]);
     t[n] = timer.Elapsed();
   }
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / nruns;
+  mean = mean / kNruns;
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     sigma += std::pow(t[n] - mean, 2.0);
 
   sigma = std::sqrt(sigma);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((N - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * drand48());
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
@@ -214,29 +214,29 @@ void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict
 #ifdef __AVX2__
 VECCORE_FORCE_NOINLINE
 void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
-                       float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N)
+                       float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
   Timer<milliseconds> timer;
-  double t[nruns], mean = 0.0, sigma = 0.0;
-  for (size_t n = 0; n < nruns; n++) {
+  double t[kNruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
-    for (size_t i = 0; i < N; i += 8)
+    for (size_t i = 0; i < kN; i += 8)
       QuadSolveAVX(&a[i], &b[i], &c[i], &x1[i], &x2[i], &roots[i]);
     t[n] = timer.Elapsed();
   }
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / nruns;
+  mean = mean / kNruns;
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     sigma += std::pow(t[n] - mean, 2.0);
 
   sigma = std::sqrt(sigma);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((N - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * drand48());
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
@@ -248,33 +248,33 @@ void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b,
 template <class Backend>
 VECCORE_FORCE_NOINLINE
 void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
-                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t N, const char *name)
+                   float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN, const char *name)
 {
   using Float_v = typename Backend::Float_v;
   using Int32_v = typename Backend::Int32_v;
 
   Timer<milliseconds> timer;
-  double t[nruns], mean = 0.0, sigma = 0.0;
-  for (size_t n = 0; n < nruns; n++) {
+  double t[kNruns], mean = 0.0, sigma = 0.0;
+  for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
-    for (size_t i = 0; i < N; i += VectorSize<Float_v>())
+    for (size_t i = 0; i < kN; i += VectorSize<Float_v>())
       QuadSolveSIMD<Backend>((Float_v &)(a[i]), (Float_v &)(b[i]), (Float_v &)(c[i]), (Float_v &)(x1[i]),
           (Float_v &)(x2[i]), (Int32_v &)(roots[i]));
     t[n] = timer.Elapsed();
   }
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / nruns;
+  mean = mean / kNruns;
 
-  for (size_t n = 0; n < nruns; n++)
+  for (size_t n = 0; n < kNruns; n++)
     sigma += std::pow(t[n] - mean, 2.0);
 
   sigma = std::sqrt(sigma);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((N - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * drand48());
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
@@ -287,16 +287,16 @@ int main(int argc, char *argv[])
   float *a, *b, *c, *x1, *x2;
   int *roots;
 
-  a     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  b     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  c     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  x1    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  x2    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(float));
-  roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, N * sizeof(int));
+  a     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  b     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  c     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  x1    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  x2    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(int));
 
   srand48(time(NULL));
 
-  for (size_t i = 0; i < N; i++) {
+  for (size_t i = 0; i < kN; i++) {
     a[i]     = 10.0 * (drand48() - 0.5);
     b[i]     = 10.0 * (drand48() - 0.5);
     c[i]     = 50.0 * (drand48() - 0.5);
@@ -308,29 +308,29 @@ int main(int argc, char *argv[])
   printf("             Backend     Mean / Sigma (ms)\n");
   printf("------------------------------------------\n");
 
-  TestQuadSolve(a, b, c, x1, x2, roots, N);
-  TestQuadSolveOptimized(a, b, c, x1, x2, roots, N);
+  TestQuadSolve(a, b, c, x1, x2, roots, kN);
+  TestQuadSolveOptimized(a, b, c, x1, x2, roots, kN);
 
 #ifdef __AVX2__
-  TestQuadSolveAVX2(a, b, c, x1, x2, roots, N);
+  TestQuadSolveAVX2(a, b, c, x1, x2, roots, kN);
 #endif
 
-  TestQuadSolve<backend::Scalar>(a, b, c, x1, x2, roots, N, "Scalar Backend");
-  TestQuadSolve<backend::ScalarWrapper>(a, b, c, x1, x2, roots, N, "ScalarWrapper");
+  TestQuadSolve<backend::Scalar>(a, b, c, x1, x2, roots, kN, "Scalar Backend");
+  TestQuadSolve<backend::ScalarWrapper>(a, b, c, x1, x2, roots, kN, "ScalarWrapper");
 
 #ifdef VECCORE_ENABLE_VC
-  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, N, "VcScalar");
-  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, N, "VcVector");
-  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, N, "VcSimdArray<8>");
-  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, N, "VcSimdArray<16>");
-  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, N, "VcSimdArray<32>");
+  TestQuadSolve<backend::VcScalar>(a, b, c, x1, x2, roots, kN, "VcScalar");
+  TestQuadSolve<backend::VcVector>(a, b, c, x1, x2, roots, kN, "VcVector");
+  TestQuadSolve<backend::VcSimdArray<8>>(a, b, c, x1, x2, roots, kN, "VcSimdArray<8>");
+  TestQuadSolve<backend::VcSimdArray<16>>(a, b, c, x1, x2, roots, kN, "VcSimdArray<16>");
+  TestQuadSolve<backend::VcSimdArray<32>>(a, b, c, x1, x2, roots, kN, "VcSimdArray<32>");
 #endif
 
 #ifdef VECCORE_ENABLE_UMESIMD
-  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, N, "UME::SIMD");
-  TestQuadSolve<backend::UMESimdArray<8>>(a, b, c, x1, x2, roots, N, "UME::SIMD<8>");
-  TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, N, "UME::SIMD<16>");
-  TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, N, "UME::SIMD<32>");
+  TestQuadSolve<backend::UMESimd>(a, b, c, x1, x2, roots, kN, "UME::SIMD");
+  TestQuadSolve<backend::UMESimdArray<8>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<8>");
+  TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<16>");
+  TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<32>");
 #endif
   printf("------------------------------------------\n");
 
