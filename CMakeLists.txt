@@ -20,7 +20,7 @@ endif()
 option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
-option(BENCHMARKS "Enable performance benchmarking" ON)
+option(BUILD_BENCHMARKS "Enable performance benchmarking" OFF)
 
 include(CompilerSetup)
 
@@ -59,5 +59,8 @@ enable_testing()
 
 if (BUILD_TESTING)
   add_subdirectory(test)
+endif()
+
+if (BUILD_BENCHMARKS)
   add_subdirectory(bench)
 endif()
