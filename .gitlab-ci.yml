@@ -1,0 +1,54 @@
+image: ubuntu:latest
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get install -y cmake
+
+build-gcc:
+  stage: build
+  before_script:
+    - apt-get update -y && apt-get upgrade -y
+    - apt-get install -y cmake g++
+  script:
+    - mkdir build && cd build
+    - cmake .. -DBUILD_TESTING=ON
+    - make
+  artifacts:
+    paths:
+      - build/
+
+build-clang:
+  stage: build
+  before_script:
+    - apt-get update -y && apt-get upgrade -y
+    - apt-get install -y cmake clang
+  script:
+    - mkdir build && cd build
+    - cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTING=ON
+    - make
+  artifacts:
+    paths:
+      - build/
+
+test-gcc:
+  stage: test
+  before_script:
+  - apt-get update -y && apt-get upgrade -y
+  - apt-get install -y make cmake
+  script:
+    - cd build && make test
+  dependencies:
+    - build-gcc
+
+test-clang:
+  stage: test
+  before_script:
+  - apt-get update -y && apt-get upgrade -y
+  - apt-get install -y make cmake
+  script:
+    - cd build && make test
+  dependencies:
+    - build-clang
