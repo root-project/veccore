@@ -6,9 +6,14 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   add_compile_options(-qopt-streaming-stores=never)
 endif()
 
-if (VC)
-  link_libraries(${Vc_LIBRARIES})
+add_executable(quadratic quadratic.cc)
+
+if(VECCORE_ENABLE_VC)
+  target_link_libraries(quadratic ${Vc_LIBRARIES})
 endif()
 
-add_executable(quadratic quadratic.cc)
+if(VECCORE_ENABLE_UMESIMD)
+  add_dependencies(quadratic UMESIMD)
+endif()
+
 add_test(QuadraticBenchmark quadratic)
