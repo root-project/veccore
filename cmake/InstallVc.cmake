@@ -24,6 +24,7 @@ add_dependencies(Vc ${Vc_PROJECT})
 
 set(Vc_ROOT ${INSTALL_DIR} CACHE INTERNAL "Vc ROOT directory")
 set(Vc_LIBRARIES Vc)
-set(Vc_LIBRARIES_OPTIONAL ${Vc_LIBRARIES})
+set(VecCore_LIBRARIES ${VecCore_LIBRARIES}
+  ${CMAKE_INSTALL_PREFIX}/lib/libVc${CMAKE_STATIC_LIBRARY_SUFFIX})
 set(Vc_INCLUDE_DIRS ${INSTALL_DIR}/install/include CACHE INTERNAL "Vc include directories")
 set(Vc_DEFINITIONS "" CACHE INTERNAL "Vc definitions")
