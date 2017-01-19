@@ -4,23 +4,30 @@
 
 cmake_minimum_required(VERSION 3.1.0)
 
-project(VecCore VERSION 0.2.0)
+project(VecCore LANGUAGES C CXX VERSION 0.2.0)
 
-enable_language(CXX)
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Specifies the build type." FORCE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Select build type" FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo)
 endif()
 
 option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
-option(BUILD_BENCHMARKS "Enable performance benchmarking" OFF)
+
+option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
+
+option(BUILD_UMESIMD  "Build UME::SIMD library from source")
+option(BUILD_VC       "Build Vc library from source")
+
+if (BUILD_VC OR BUILD_UMESIMD)
+  include(ExternalProject)
+endif()
 
 include(CompilerSetup)
 
@@ -28,27 +35,35 @@ if (CUDA)
   include(CUDA)
 endif()
 
-if (VC)
-  find_package(Vc 1.2.0 REQUIRED)
+if (VC OR BUILD_VC)
   set(VECCORE_ENABLE_VC True)
-  include_directories(SYSTEM ${Vc_INCLUDE_DIR})
+  if (BUILD_VC)
+    include(InstallVc)
+  else()
+    find_package(Vc 1.2.0 REQUIRED)
+  endif()
+  include_directories(SYSTEM ${Vc_INCLUDE_DIRS})
 endif()
 
-if (UMESIMD)
+if (UMESIMD OR BUILD_UMESIMD)
   set(VECCORE_ENABLE_UMESIMD True)
-  find_path(UMESIMD_INCLUDE_DIR umesimd/UMESimd.h HINTS ${UMESIMD_DIR} $ENV{UMESIMD_DIR})
-  if ("${UMESIMD_INCLUDE_DIR}" MATCHES "NOTFOUND")
-    message(FATAL_ERROR "UME::SIMD library headers not found")
+  if (BUILD_UMESIMD)
+    include(InstallUMESIMD)
   else()
-    include_directories(SYSTEM ${UMESIMD_INCLUDE_DIR})
+    find_package(UMESIMD 0.5.2 REQUIRED)
   endif()
+  include_directories(SYSTEM ${UMESIMD_INCLUDE_DIRS})
 endif()
+
+include_directories(include ${PROJECT_BINARY_DIR}/include)
 
 configure_file(include/Config.in include/Config.h)
 configure_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake)
 configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake)
 
-include_directories(include ${PROJECT_BINARY_DIR}/include)
+if(BUILD_VC OR BUILD_UMESIMD)
+  install(DIRECTORY ${PROJECT_BINARY_DIR}/ext/install/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()
 
 install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
