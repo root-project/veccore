@@ -1,5 +1,9 @@
 # VecCore Library
 
+|**Travis CI**|**GitLab CI**|
+|-------------|-------------|
+|[![build status](https://gitlab.cern.ch/VecGeom/VecCore/badges/master/build.svg)](https://gitlab.cern.ch/VecGeom/VecCore/commits/master)|[![Build Status](https://travis-ci.org/amadio/veccore.svg?branch=master)](https://travis-ci.org/amadio/veccore)|
+
 **VecCore** is an open source SIMD abstraction library. It provides an
 architecture independent [API](doc/API.md) for expressing vector operations on
 data.
