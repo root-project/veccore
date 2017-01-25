@@ -1,54 +1,31 @@
-image: ubuntu:latest
+image: ubuntu
 
 stages:
   - build
-  - test
 
-before_script:
-  - apt-get install -y cmake
-
-build-gcc:
-  stage: build
-  before_script:
-    - apt-get update -y && apt-get upgrade -y
-    - apt-get install -y cmake g++
+.build_job: &build_def
   script:
     - mkdir build && cd build
-    - cmake .. -DBUILD_TESTING=ON
-    - make
-  artifacts:
-    paths:
-      - build/
+    - cmake .. -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX}
+        -DBUILD_TESTING=ON -DBUILD_VC=ON -DBUILD_UMESIMD=ON
+    - make && make test
 
-build-clang:
+gcc:
   stage: build
+  <<: *build_def
   before_script:
     - apt-get update -y && apt-get upgrade -y
-    - apt-get install -y cmake clang
-  script:
-    - mkdir build && cd build
-    - cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTING=ON
-    - make
-  artifacts:
-    paths:
-      - build/
+    - apt-get install -y cmake git g++
+  variables:
+    CC: gcc
+    CXX: g++
 
-test-gcc:
-  stage: test
+clang:
+  stage: build
+  <<: *build_def
   before_script:
-  - apt-get update -y && apt-get upgrade -y
-  - apt-get install -y make cmake
-  script:
-    - cd build && make test
-  dependencies:
-    - build-gcc
-
-test-clang:
-  stage: test
-  before_script:
-  - apt-get update -y && apt-get upgrade -y
-  - apt-get install -y make cmake
-  script:
-    - cd build && make test
-  dependencies:
-    - build-clang
+    - apt-get update -y && apt-get upgrade -y
+    - apt-get install -y cmake git clang
+  variables:
+    CC: clang
+    CXX: clang++
