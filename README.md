@@ -1,6 +1,6 @@
 # VecCore Library
 
-|**Travis CI**|**GitLab CI**|
+|**GitLab CI**|**Travis CI**|
 |-------------|-------------|
 |[![build status](https://gitlab.cern.ch/VecGeom/VecCore/badges/master/build.svg)](https://gitlab.cern.ch/VecGeom/VecCore/commits/master)|[![Build Status](https://travis-ci.org/amadio/veccore.svg?branch=master)](https://travis-ci.org/amadio/veccore)|
 
