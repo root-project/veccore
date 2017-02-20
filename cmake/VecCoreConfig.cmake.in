@@ -4,9 +4,27 @@ set(VecCore_VERSION_MAJOR @VecCore_VERSION_MAJOR@)
 set(VecCore_VERSION_MINOR @VecCore_VERSION_MINOR@)
 set(VecCore_VERSION_PATCH @VecCore_VERSION_PATCH@)
 
-set(VecCore_ROOT @CMAKE_INSTALL_PREFIX@)
-set(VecCore_CMAKE_DIR @CMAKE_INSTALL_PREFIX@/lib@LIB_SUFFIX@/cmake/VecCore)
-set(VecCore_DEFINITIONS @VecCore_DEFINITIONS@)
-set(VecCore_INCLUDE_DIR @CMAKE_INSTALL_PREFIX@/include)
-set(VecCore_INCLUDE_DIRS @CMAKE_INSTALL_PREFIX@/include @VecCore_INCLUDE_DIRS@)
-set(VecCore_LIBRARIES @VecCore_LIBRARIES@)
+get_filename_component(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+set(VecCore_ROOT "${VecCore_CMAKE_DIR}/../../..")
+set(VecCore_INCLUDE_DIR  "${VecCore_ROOT}/include")
+set(VecCore_INCLUDE_DIRS "${VecCore_ROOT}/include")
+
+set(VecCore_BUILD_UMESIMD @BUILD_UMESIMD@)
+set(VecCore_ENABLE_UMESIMD @VECCORE_ENABLE_UMESIMD@)
+set(VecCore_ENABLE_VC @VECCORE_ENABLE_VC@)
+
+if (${VecCore_ENABLE_UMESIMD})
+  # If UME::SIMD was built by VecCore, we need our own FindUMESIMD.cmake
+  if (${VecCore_BUILD_UMESIMD})
+    list(APPEND CMAKE_MODULE_PATH "${VecCore_CMAKE_DIR}")
+  endif()
+  find_package(UMESIMD 0.6.1 QUIET REQUIRED)
+  set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${UMESIMD_INCLUDE_DIRS})
+endif()
+
+if (${VecCore_ENABLE_VC})
+  find_package(Vc 1.2.0 CONFIG QUIET REQUIRED)
+  set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${Vc_INCLUDE_DIRS})
+  set(VecCore_LIBRARIES ${Vc_LIBRARIES})
+endif()
