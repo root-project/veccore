@@ -60,8 +60,8 @@ endif()
 include_directories(include ${PROJECT_BINARY_DIR}/include)
 
 configure_file(include/Config.in include/Config.h)
-configure_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake)
-configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake)
+configure_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake @ONLY)
+configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake @ONLY)
 
 if(BUILD_VC OR BUILD_UMESIMD)
   install(DIRECTORY ${PROJECT_BINARY_DIR}/ext/install/ DESTINATION ${CMAKE_INSTALL_PREFIX})
