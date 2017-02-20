@@ -1,7 +1,7 @@
 #.rst:
 # FindUMESIMD
 # -----------
-# 
+#
 # Find the UME::SIMD library headers and define variables.
 #
 # Result Variables
