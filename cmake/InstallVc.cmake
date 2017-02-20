@@ -1,7 +1,8 @@
 set(Vc_VERSION "1.3.0")
-set(Vc_PROJECT  "Vc-${Vc_VERSION}")
+set(Vc_PROJECT "Vc-${Vc_VERSION}")
 set(Vc_SRC_URI "https://github.com/VcDevel/Vc")
 set(Vc_SRC_MD5 "a248e904f0b1a330ad8f37ec50cbad30")
+set(Vc_DESTDIR "${CMAKE_BINARY_DIR}/${Vc_PROJECT}")
 
 ExternalProject_Add(${Vc_PROJECT}
   PREFIX ext
@@ -13,18 +14,21 @@ ExternalProject_Add(${Vc_PROJECT}
              -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
              -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
              -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>/install
+             -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+  INSTALL_COMMAND make DESTDIR=${Vc_DESTDIR} install
 )
 
-ExternalProject_Get_Property(${Vc_PROJECT} INSTALL_DIR)
+set(Vc_ROOT ${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "Vc temporary install directory")
 
 add_library(Vc UNKNOWN IMPORTED)
-set_property(TARGET Vc PROPERTY IMPORTED_LOCATION ${INSTALL_DIR}/install/lib/libVc${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Vc PROPERTY IMPORTED_LOCATION
+  ${Vc_ROOT}/lib${LIB_SUFFIX}/${CMAKE_STATIC_LIBRARY_PREFIX}Vc${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_dependencies(Vc ${Vc_PROJECT})
 
-set(Vc_ROOT ${INSTALL_DIR} CACHE INTERNAL "Vc ROOT directory")
 set(Vc_LIBRARIES Vc)
-set(VecCore_LIBRARIES ${VecCore_LIBRARIES}
-  ${CMAKE_INSTALL_PREFIX}/lib/libVc${CMAKE_STATIC_LIBRARY_SUFFIX})
-set(Vc_INCLUDE_DIRS ${INSTALL_DIR}/install/include CACHE INTERNAL "Vc include directories")
 set(Vc_DEFINITIONS "" CACHE INTERNAL "Vc definitions")
+set(Vc_INCLUDE_DIRS "${Vc_ROOT}/include" CACHE INTERNAL "Vc include directories")
+
+set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_LIBRARIES})
+
+install(DIRECTORY ${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}/ DESTINATION ".")
