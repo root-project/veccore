@@ -31,7 +31,7 @@ Additionally, you will need CMake 3.1.0 or greater, and you may want to install
 a SIMD library such as
 
  - [Vc](https://github.com/VcDevel/Vc) (version 1.2.0 or later)
- - [UME::SIMD](https://github.com/edanor/umesimd) (version 0.5.2 or later)
+ - [UME::SIMD](https://github.com/edanor/umesimd) (version 0.6.1 or later)
 
 and/or
 
