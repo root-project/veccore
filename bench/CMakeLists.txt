@@ -15,5 +15,3 @@ endif()
 if(VECCORE_ENABLE_UMESIMD)
   add_dependencies(quadratic UMESIMD)
 endif()
-
-add_test(QuadraticBenchmark quadratic)
