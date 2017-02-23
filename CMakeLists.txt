@@ -25,10 +25,6 @@ option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
 option(BUILD_UMESIMD  "Build UME::SIMD library from source")
 option(BUILD_VC       "Build Vc library from source")
 
-if (BUILD_VC OR BUILD_UMESIMD)
-  include(ExternalProject)
-endif()
-
 include(CompilerSetup)
 
 if (CUDA)
