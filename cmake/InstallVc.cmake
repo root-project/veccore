@@ -1,15 +1,27 @@
+include(ExternalProject)
+
 set(Vc_VERSION "1.3.0")
 set(Vc_PROJECT "Vc-${Vc_VERSION}")
 set(Vc_SRC_URI "https://github.com/VcDevel/Vc")
 set(Vc_SRC_MD5 "a248e904f0b1a330ad8f37ec50cbad30")
 set(Vc_DESTDIR "${CMAKE_BINARY_DIR}/${Vc_PROJECT}")
+set(Vc_ROOTDIR "${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}")
+
+if ("${TARGET_ISA}" MATCHES "knc|KNC")
+  set(MIC_SUFFIX "_MIC")
+endif()
+
+set(Vc_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}Vc${MIC_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(Vc_LIBRARY ${Vc_ROOTDIR}/lib${LIB_SUFFIX}/${Vc_LIBNAME})
 
 ExternalProject_Add(${Vc_PROJECT}
-  PREFIX ext
+  PREFIX externals
   URL "${Vc_SRC_URI}/releases/download/${Vc_VERSION}/${Vc_PROJECT}.tar.gz"
   URL_MD5 ${Vc_SRC_MD5}
   BUILD_IN_SOURCE 0
-  CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+  BUILD_BYPRODUCTS ${Vc_LIBRARY}
+  CMAKE_ARGS -G ${CMAKE_GENERATOR}
+             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
              -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
              -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
              -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
@@ -18,17 +30,17 @@ ExternalProject_Add(${Vc_PROJECT}
   INSTALL_COMMAND env DESTDIR=${Vc_DESTDIR} ${CMAKE_COMMAND} --build . --target install
 )
 
-set(Vc_ROOT ${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "Vc temporary install directory")
+add_library(Vc${MIC_SUFFIX} STATIC IMPORTED)
+set_property(TARGET Vc${MIC_SUFFIX} PROPERTY IMPORTED_LOCATION ${Vc_LIBRARY})
+add_dependencies(Vc${MIC_SUFFIX} ${Vc_PROJECT})
 
-add_library(Vc UNKNOWN IMPORTED)
-set_property(TARGET Vc PROPERTY IMPORTED_LOCATION
-  ${Vc_ROOT}/lib${LIB_SUFFIX}/${CMAKE_STATIC_LIBRARY_PREFIX}Vc${CMAKE_STATIC_LIBRARY_SUFFIX})
-add_dependencies(Vc ${Vc_PROJECT})
-
-set(Vc_LIBRARIES Vc)
-set(Vc_DEFINITIONS "" CACHE INTERNAL "Vc definitions")
-set(Vc_INCLUDE_DIRS "${Vc_ROOT}/include" CACHE INTERNAL "Vc include directories")
+set(Vc_LIBRARIES Vc${MIC_SUFFIX})
+set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include")
 
 set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_LIBRARIES})
 
-install(DIRECTORY ${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}/ DESTINATION ".")
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Vc
+  REQUIRED_VARS Vc_INCLUDE_DIRS Vc_LIBRARIES VERSION_VAR Vc_VERSION)
+
+install(DIRECTORY ${Vc_ROOTDIR}/ DESTINATION ".")
