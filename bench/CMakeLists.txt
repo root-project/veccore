@@ -8,8 +8,8 @@ endif()
 
 add_executable(quadratic quadratic.cc)
 
-if(VECCORE_ENABLE_VC)
-  target_link_libraries(quadratic ${Vc_LIBRARIES})
+if(DEFINED VecCore_LIBRARIES)
+  target_link_libraries(quadratic ${VecCore_LIBRARIES})
 endif()
 
 if(VECCORE_ENABLE_UMESIMD)
