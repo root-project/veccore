@@ -15,7 +15,7 @@ ExternalProject_Add(${Vc_PROJECT}
              -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
              -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
              -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-  INSTALL_COMMAND make DESTDIR=${Vc_DESTDIR} install
+  INSTALL_COMMAND env DESTDIR=${Vc_DESTDIR} ${CMAKE_COMMAND} --build . --target install
 )
 
 set(Vc_ROOT ${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "Vc temporary install directory")
