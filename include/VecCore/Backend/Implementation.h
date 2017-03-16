@@ -12,7 +12,8 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 constexpr Size_s VectorSize()
 {
-  return sizeof(T) / sizeof(Scalar<T>);
+  using V = typename std::decay<T>::type;
+  return sizeof(V) / sizeof(Scalar<V>);
 }
 
 // Iterators

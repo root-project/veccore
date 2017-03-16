@@ -284,7 +284,14 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSize)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
+  Vector_t v;
+  Vector_t &vref = v;
+
+  EXPECT_TRUE(vecCore::VectorSize(v) > 0);
+  EXPECT_TRUE(vecCore::VectorSize(v) == vecCore::VectorSize(vref));
+
   EXPECT_TRUE(vecCore::VectorSize<Vector_t>() > 0);
+  EXPECT_TRUE(vecCore::VectorSize<Vector_t&>() == vecCore::VectorSize<Vector_t>());
 }
 
 TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable)

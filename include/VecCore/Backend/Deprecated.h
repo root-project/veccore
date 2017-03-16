@@ -32,7 +32,7 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 constexpr Size_s VectorSize(const T &)
 {
-  return sizeof(T) / sizeof(typename ScalarType<T>::Type);
+  return VectorSize<T>();
 }
 
 // Get/Set
