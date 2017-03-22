@@ -12,7 +12,7 @@
 # ::
 #
 #   UMESIMD_FOUND          - True if UME::SIMD is found.
-#   UMESIMD_INCLUDE_DIRS   - Where to find umesimd.h, etc.
+#   UMESIMD_INCLUDE_DIRS   - Where to find umesimd/UMESimd.h
 #
 # ::
 #
@@ -24,8 +24,8 @@
 # Hints
 # ^^^^^
 #
-# A user may set ``UMESIMD_ROOT`` to a UME::SIMD installation root to tell this
-# module where to look.
+# A user may set the ``UMESIMD_ROOT`` environment variable to a UME::SIMD
+# installation root to tell this module where to look.
 
 set(_UMESIMD_PATHS)
 
@@ -49,17 +49,16 @@ endforeach()
 
 mark_as_advanced(UMESIMD_INCLUDE_DIR)
 
-if(UMESIMD_INCLUDE_DIR AND EXISTS "${UMESIMD_INCLUDE_DIR}/umesimd/README.md")
-    file(STRINGS "${UMESIMD_INCLUDE_DIR}/umesimd/README.md" UMESIMD_VERSION REGEX "^.*Current stable release.*$")
-    string(REGEX REPLACE "^[^0-9]*([0-9\.]+).*$" "\\1" UMESIMD_VERSION "${UMESIMD_VERSION}")
-    string(REGEX REPLACE "^([0-9]+).*$" "\\1" UMESIMD_VERSION_MAJOR "${UMESIMD_VERSION}")
-    string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*$" "\\1" UMESIMD_VERSION_MINOR  "${UMESIMD_VERSION}")
-    string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*$" "\\1" UMESIMD_VERSION_PATCH "${UMESIMD_VERSION}")
-    set(UMESIMD_VERSION_STRING "${UMESIMD_VERSION}")
-endif()
-
-if(UMESIMD_FOUND)
+if(UMESIMD_INCLUDE_DIR)
+  set(UMESIMD_VERSION_FILE "${UMESIMD_INCLUDE_DIR}/umesimd/UMESimd.h")
+  if (EXISTS "${UMESIMD_VERSION_FILE}")
+    file(STRINGS "${UMESIMD_VERSION_FILE}" UMESIMD_VERSION_PARTS REGEX "#define UME_SIMD_VERSION_[A-Z]+[ ]+")
+    string(REGEX REPLACE ".+UME_SIMD_VERSION_MAJOR[ ]+([0-9]+).*" "\\1" UMESIMD_VERSION_MAJOR "${UMESIMD_VERSION_PARTS}")
+    string(REGEX REPLACE ".+UME_SIMD_VERSION_MINOR[ ]+([0-9]+).*" "\\1" UMESIMD_VERSION_MINOR "${UMESIMD_VERSION_PARTS}")
+    string(REGEX REPLACE ".+UME_SIMD_VERSION_PATCH[ ]+([0-9]+).*" "\\1" UMESIMD_VERSION_PATCH "${UMESIMD_VERSION_PARTS}")
+    set(UMESIMD_VERSION "${UMESIMD_VERSION_MAJOR}.${UMESIMD_VERSION_MINOR}.${UMESIMD_VERSION_PATCH}")
     set(UMESIMD_INCLUDE_DIRS ${UMESIMD_INCLUDE_DIR})
+  endif()
 endif()
 
 include(FindPackageHandleStandardArgs)
