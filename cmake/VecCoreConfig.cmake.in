@@ -17,7 +17,7 @@ set(VecCore_ENABLE_VC @VECCORE_ENABLE_VC@)
 if (${VecCore_ENABLE_UMESIMD})
   # If UME::SIMD is enabled, we need our own FindUMESIMD.cmake
   list(APPEND CMAKE_MODULE_PATH "${VecCore_CMAKE_DIR}")
-  find_package(UMESIMD 0.6.1 QUIET REQUIRED)
+  find_package(UMESIMD 0.8.1 QUIET REQUIRED)
   set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${UMESIMD_INCLUDE_DIRS})
 endif()
 
