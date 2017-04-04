@@ -23,6 +23,12 @@ endif()
 
 if (${VecCore_ENABLE_VC})
   find_package(Vc 1.2.0 CONFIG QUIET REQUIRED)
+
+  if(Vc_FOUND)
+    # Missing from VcConfig.cmake
+    set(Vc_INCLUDE_DIRS ${Vc_INCLUDE_DIR})
+  endif()
+
   set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${Vc_INCLUDE_DIRS})
   set(VecCore_LIBRARIES ${Vc_LIBRARIES})
 endif()
