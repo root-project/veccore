@@ -35,6 +35,7 @@ set_property(TARGET Vc${KNC_SUFFIX} PROPERTY IMPORTED_LOCATION ${Vc_LIBRARY})
 add_dependencies(Vc${KNC_SUFFIX} ${Vc_PROJECT})
 
 set(Vc_LIBRARIES Vc${KNC_SUFFIX})
+set(Vc_INCLUDE_DIR "${Vc_ROOTDIR}/include")
 set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include")
 
 set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_LIBRARIES})
