@@ -275,12 +275,28 @@ T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 
 // Miscellaneous
 
+// Note that SIMDsizeUpTo() is more general, as the code below is equivalent to SIMDsizeUpTo<VeryLargeInt>()
 VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed()
 {
 #ifdef VECCORE_CUDA_DEVICE_COMPILATION
   return false;
 #else
   return true;
+#endif
+}
+
+// An extension of EarlyReturnAllowed(), and new name is a reminder that it can be used for other purposes as well
+template <typename T, size_t simdSize = 1>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+constexpr Bool_s SIMDsizeUpTo()
+{
+#ifdef VECCORE_CUDA_DEVICE_COMPILATION
+  // always false for CUDA
+  return false;
+#else
+  // true only for scalars or small SIMD vector sizes
+  return vecCore::VectorSize<T>() <= simdSize;
 #endif
 }
 
