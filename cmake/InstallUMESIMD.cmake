@@ -2,7 +2,7 @@ include(ExternalProject)
 
 set(UMESIMD_VERSION "0.8.1")
 set(UMESIMD_PROJECT "umesimd-${UMESIMD_VERSION}")
-set(UMESIMD_SRC_URI "https://github.com/edanor/umesimd")
+set(UMESIMD_SRC_URI "http://github.com/edanor/umesimd")
 set(UMESIMD_SRC_MD5 "3960a11a20a4294e68480ab0d39db6d7")
 set(UMESIMD_ROOTDIR "${CMAKE_BINARY_DIR}/${UMESIMD_PROJECT}")
 set(UMESIMD_DESTDIR "${CMAKE_BINARY_DIR}/${UMESIMD_PROJECT}/include/umesimd")

@@ -2,7 +2,7 @@ include(ExternalProject)
 
 set(Vc_VERSION "1.3.1")
 set(Vc_PROJECT "Vc-${Vc_VERSION}")
-set(Vc_SRC_URI "https://github.com/VcDevel/Vc")
+set(Vc_SRC_URI "http://github.com/VcDevel/Vc")
 set(Vc_SRC_MD5 "97f754e878ddae5a481486dcb270bb8e")
 set(Vc_DESTDIR "${CMAKE_BINARY_DIR}/${Vc_PROJECT}")
 set(Vc_ROOTDIR "${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}")
