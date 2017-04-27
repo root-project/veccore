@@ -2,7 +2,7 @@ message(STATUS "Compiling with CUDA enabled")
 
 find_package(CUDA REQUIRED)
 
-set(VECCORE_ENABLE_CUDA True)
+add_definitions(-DVECCORE_ENABLE_CUDA)
 
 if(CMAKE_CXX_STANDARD STREQUAL 11)
   list(APPEND CUDA_NVCC_FLAGS -std=c++11)
