@@ -4,6 +4,8 @@
 
 cmake_minimum_required(VERSION 3.1.0)
 
+include(cmake/RecordCmdLine.cmake)
+
 project(VecCore LANGUAGES C CXX VERSION 0.4.0)
 
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
