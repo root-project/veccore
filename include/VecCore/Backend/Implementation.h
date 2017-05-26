@@ -284,6 +284,13 @@ VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed
 #endif
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
+constexpr Bool_s EarlyReturnMaxLength(T &, size_t n)
+{
+   return EarlyReturnAllowed() && VectorSize<T>() <= n;
+}
+
 } // namespace vecCore
 
 #endif

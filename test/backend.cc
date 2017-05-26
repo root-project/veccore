@@ -303,6 +303,20 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable)
   EXPECT_TRUE(vecCore::VectorSize(x) > 0);
 }
 
+TYPED_TEST_P(VectorInterfaceTest, EarlyReturnMaximumLength)
+{
+  using Vector_t = typename TestFixture::Vector_t;
+
+  Vector_t x;
+
+  // short vector, should return early if it is allowed
+  EXPECT_EQ(vecCore::EarlyReturnAllowed(),
+   vecCore::EarlyReturnMaxLength(x, vecCore::VectorSize<Vector_t>()));
+
+  // long vector, should not return early, even if it is allowed
+  EXPECT_FALSE(vecCore::EarlyReturnMaxLength(x, vecCore::VectorSize<Vector_t>()/2));
+}
+
 TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
 {
   using Vector_t = typename TestFixture::Vector_t;
@@ -505,8 +519,9 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
   EXPECT_TRUE(vecCore::MaskFull(x == y));
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, StoreToPtr, StoreMaskToPtr,
-                           VectorLaneRead, VectorLaneWrite, MaskLaneRead, MaskLaneWrite, Gather, Scatter);
+REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, EarlyReturnMaximumLength,
+                           StoreToPtr, StoreMaskToPtr, VectorLaneRead, VectorLaneWrite, MaskLaneRead,
+                           MaskLaneWrite, Gather, Scatter);
 
 ///////////////////////////////////////////////////////////////////////////////
 

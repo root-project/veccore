@@ -102,7 +102,14 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Blend(const Mask<T> &mask, const T &src1, const T &src2);
 
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed();
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+constexpr Bool_s EarlyReturnAllowed();
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+constexpr Bool_s EarlyReturnMaxLength(T &, size_t);
 
 } // namespace vecCore
 

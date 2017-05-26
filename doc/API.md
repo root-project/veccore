@@ -96,6 +96,11 @@ namespace vecCore {
 
   template <typename T> void MaskedAssign(T &dst, const Mask<T> &mask, const T &src);
   template <typename T> T Blend(const Mask<T> &mask, const T &src1, const T &src2);
+
+  bool EarlyReturnAllowed();
+
+  template <typename T>
+  bool EarlyReturnMaxLength(T& x, size_t n);
 }
 ```
 
