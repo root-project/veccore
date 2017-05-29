@@ -100,7 +100,11 @@ namespace vecCore {
   bool EarlyReturnAllowed();
 
   template <typename T>
-  bool EarlyReturnMaxLength(T& x, size_t n);
+  bool EarlyReturnMaxLength(T &v, size_t n);
+
+  template <typename T> Scalar<T> ReduceAdd(const T &v);
+  template <typename T> Scalar<T> ReduceMin(const T &v);
+  template <typename T> Scalar<T> ReduceMax(const T &v);
 }
 ```
 

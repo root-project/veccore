@@ -111,6 +111,23 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 constexpr Bool_s EarlyReturnMaxLength(T &, size_t);
 
+// Reduction
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceAdd(const T& v);
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceMin(const T& v);
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceMax(const T& v);
+
 } // namespace vecCore
 
 #endif

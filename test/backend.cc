@@ -303,7 +303,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable)
   EXPECT_TRUE(vecCore::VectorSize(x) > 0);
 }
 
-TYPED_TEST_P(VectorInterfaceTest, EarlyReturnMaximumLength)
+TYPED_TEST_P(VectorInterfaceTest, EarlyReturnMaxLength)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
@@ -463,6 +463,30 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
     EXPECT_EQ(vecCore::MaskLaneAt(mask, i), i % 2 == 0);
 }
 
+TYPED_TEST_P(VectorInterfaceTest, ReduceAdd)
+{
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Vector_t = typename TestFixture::Vector_t;
+
+  Vector_t x(1);
+
+  EXPECT_EQ(Scalar_t(vecCore::VectorSize<Vector_t>()), vecCore::ReduceAdd(x));
+}
+
+TYPED_TEST_P(VectorInterfaceTest, ReduceMinMax)
+{
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Vector_t = typename TestFixture::Vector_t;
+
+  Vector_t v;
+
+  for (size_t i = 0; i < vecCore::VectorSize<Vector_t>(); ++i)
+     vecCore::Set(v, i, Scalar_t(i+1));
+
+  EXPECT_EQ(Scalar_t(1), vecCore::ReduceMin(v));
+  EXPECT_EQ(Scalar_t(vecCore::VectorSize<Vector_t>()), vecCore::ReduceMax(v));
+}
+
 TYPED_TEST_P(VectorInterfaceTest, Gather)
 {
   using Vector_t = typename TestFixture::Vector_t;
@@ -519,9 +543,14 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
   EXPECT_TRUE(vecCore::MaskFull(x == y));
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest, VectorSize, VectorSizeVariable, EarlyReturnMaximumLength,
-                           StoreToPtr, StoreMaskToPtr, VectorLaneRead, VectorLaneWrite, MaskLaneRead,
-                           MaskLaneWrite, Gather, Scatter);
+REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest,
+                           EarlyReturnMaxLength,
+                           VectorSize, VectorSizeVariable,
+                           VectorLaneRead, VectorLaneWrite,
+                           MaskLaneRead, MaskLaneWrite,
+                           StoreToPtr, StoreMaskToPtr,
+                           ReduceAdd, ReduceMinMax,
+                           Gather, Scatter);
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -2,7 +2,9 @@
 #define VECCORE_BACKEND_IMPLEMENTATION_H
 
 #include "Interface.h"
+#include "../Limits.h"
 
+#include <algorithm>
 #include <type_traits>
 
 namespace vecCore {
@@ -289,6 +291,41 @@ VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
 constexpr Bool_s EarlyReturnMaxLength(T &, size_t n)
 {
    return EarlyReturnAllowed() && VectorSize<T>() <= n;
+}
+
+// Reduction
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceAdd(const T& v)
+{
+   Scalar<T> result(0);
+   for (size_t i = 0; i < VectorSize<T>(); ++i)
+      result += Get(v, i);
+   return result;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceMin(const T& v)
+{
+   Scalar<T> result(NumericLimits<Scalar<T>>::Max());
+   for (size_t i = 0; i < VectorSize<T>(); ++i)
+      result = std::min(result, Get(v, i));
+   return result;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+Scalar<T> ReduceMax(const T& v)
+{
+   Scalar<T> result(NumericLimits<Scalar<T>>::Lowest());
+   for (size_t i = 0; i < VectorSize<T>(); ++i)
+      result = std::max(result, Get(v, i));
+   return result;
 }
 
 } // namespace vecCore
