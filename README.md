@@ -13,14 +13,14 @@ VecCore was originally developed as part of the
 SIMD programming in both [VecGeom](https://gitlab.cern.ch/VecGeom/VecGeom) and
 [GeantV](https://geant.cern.ch) projects.
 
-VecCore is available at CERN's GitLab
- - [https://gitlab.cern.ch/VecGeom/VecCore](https://gitlab.cern.ch/VecGeom/VecCore).
+VecCore is now under the umbrella of the ROOT project on GitHub, and is available at
+ - [https://github.com/root-project/veccore](https://github.com/root-project/veccore).
 
 ## Supported Platforms
 
 VecCore supports Linux and Mac OS X. To compile software using the VecCore
-library, you need a compiler with support for C++11. VecCore is tested with the
-following compilers:
+library, you need a compiler with support for C++11. We recommend using at least
+the following compiler versions:
 
  - GCC 5.3.0
  - Clang 3.8.0
@@ -39,8 +39,5 @@ and/or
 
 ## Support and Contact
 
-If you encounter any bugs, please report them at:
- - [https://gitlab.cern.ch/VecGeom/VecCore/issues](https://gitlab.cern.ch/VecGeom/VecCore/issues).
-
-For other questions, please contact Guilherme Amadio at <amadio@cern.ch>.
+For support and other questions, please contact Guilherme Amadio at <amadio@cern.ch>.
 
