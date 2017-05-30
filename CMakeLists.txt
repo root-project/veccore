@@ -66,7 +66,7 @@ configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cm
 
 install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
-install(DIRECTORY cmake/ ${PROJECT_BINARY_DIR}/cmake/
+install(DIRECTORY ${PROJECT_BINARY_DIR}/cmake/
         DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME} FILES_MATCHING PATTERN *.cmake)
 
 enable_testing()
