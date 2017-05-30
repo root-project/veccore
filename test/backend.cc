@@ -214,60 +214,56 @@ TYPED_TEST_CASE_P(MaskArithmeticsTest);
 
 TYPED_TEST_P(MaskArithmeticsTest, AND)
 {
-  using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t = typename vecCore::Mask<typename TestFixture::Vector_t>;
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) & Mask_t(true))));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) && Mask_t(true))));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) &  Mask_t(true)));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) && Mask_t(true)));
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(false) & Mask_t(true))));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(true) && Mask_t(false))));
+  EXPECT_TRUE(vecCore::MaskEmpty(Mask_t(true) &  Mask_t(false)));
+  EXPECT_TRUE(vecCore::MaskEmpty(Mask_t(true) && Mask_t(false)));
 }
 
 TYPED_TEST_P(MaskArithmeticsTest, OR)
 {
-  using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t = typename vecCore::Mask<typename TestFixture::Vector_t>;
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) | Mask_t(true))));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) || Mask_t(true))));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) |  Mask_t(true)));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) || Mask_t(true)));
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(false) | Mask_t(true))));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == (Mask_t(true) || Mask_t(false))));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) |  Mask_t(false)));
+  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) || Mask_t(false)));
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(false) | Mask_t(false))));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == (Mask_t(false) || Mask_t(false))));
+  EXPECT_TRUE(vecCore::MaskEmpty(Mask_t(false) |  Mask_t(false)));
+  EXPECT_TRUE(vecCore::MaskEmpty(Mask_t(false) || Mask_t(false)));
 }
 
 TYPED_TEST_P(MaskArithmeticsTest, NEG)
 {
-  using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t = typename vecCore::Mask<typename TestFixture::Vector_t>;
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == !Mask_t(true)));
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == !Mask_t(false)));
+  EXPECT_TRUE(vecCore::MaskEmpty(!Mask_t(true)));
+  EXPECT_TRUE(vecCore::MaskFull(!Mask_t(false)));
 }
 
 TYPED_TEST_P(MaskArithmeticsTest, ANDAssign)
 {
-  using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t = typename vecCore::Mask<typename TestFixture::Vector_t>;
 
-  Mask_t rhs(true);
-  rhs &= Mask_t(false);
+  Mask_t mask(true);
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(false) == rhs));
+  mask &= Mask_t(false);
+
+  EXPECT_TRUE(vecCore::MaskEmpty(mask));
 }
 
 TYPED_TEST_P(MaskArithmeticsTest, ORAssign)
 {
-  using Vector_t = typename TestFixture::Vector_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t = typename vecCore::Mask<typename TestFixture::Vector_t>;
 
-  Mask_t rhs(false);
-  rhs |= Mask_t(true);
+  Mask_t mask(false);
+  mask |= Mask_t(true);
 
-  EXPECT_TRUE(vecCore::MaskFull(Mask_t(true) == rhs));
+  EXPECT_TRUE(vecCore::MaskFull(mask));
 }
 
 REGISTER_TYPED_TEST_CASE_P(MaskArithmeticsTest, AND, OR, NEG, ANDAssign, ORAssign);
