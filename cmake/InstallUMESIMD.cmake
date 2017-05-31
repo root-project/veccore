@@ -2,7 +2,6 @@ include(ExternalProject)
 
 set(UMESIMD_VERSION "0.8.1")
 set(UMESIMD_PROJECT "umesimd-${UMESIMD_VERSION}")
-set(UMESIMD_SRC_URI "http://github.com/edanor/umesimd")
 set(UMESIMD_SRC_MD5 "3960a11a20a4294e68480ab0d39db6d7")
 set(UMESIMD_ROOTDIR "${CMAKE_BINARY_DIR}/${UMESIMD_PROJECT}")
 set(UMESIMD_DESTDIR "${CMAKE_BINARY_DIR}/${UMESIMD_PROJECT}/include/umesimd")
@@ -12,7 +11,7 @@ set(UMESIMD_DST_DIR "${CMAKE_BINARY_DIR}/${UMESIMD_PROJECT}/include/umesimd")
 
 ExternalProject_Add(${UMESIMD_PROJECT}
   PREFIX externals
-  URL "${UMESIMD_SRC_URI}/archive/v${UMESIMD_VERSION}.tar.gz"
+  URL "http://lcgpackages.web.cern.ch/lcgpackages/tarFiles/sources/${UMESIMD_PROJECT}.tar.gz"
   URL_MD5 ${UMESIMD_SRC_MD5}
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
