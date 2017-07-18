@@ -483,6 +483,26 @@ TYPED_TEST_P(VectorInterfaceTest, ReduceMinMax)
   EXPECT_EQ(Scalar_t(vecCore::VectorSize<Vector_t>()), vecCore::ReduceMax(v));
 }
 
+TYPED_TEST_P(VectorInterfaceTest, Convert)
+{
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Vector_t = typename TestFixture::Vector_t;
+  using Index_v  = typename vecCore::Index_v<Vector_t>;
+  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
+
+  Index_v idx;
+  Vector_t v;
+
+  for (size_t i = 0; i < vecCore::VectorSize<Vector_t>(); ++i) {
+     vecCore::Set(v, i, Scalar_t(i));
+     vecCore::Set(idx, i, Index_t(i));
+   }
+
+  idx = vecCore::Convert<Index_v, Vector_t>(v);
+
+  EXPECT_TRUE(vecCore::MaskFull(vecCore::Convert<Vector_t, Index_v>(idx) == v));
+}
+
 TYPED_TEST_P(VectorInterfaceTest, Gather)
 {
   using Vector_t = typename TestFixture::Vector_t;
@@ -546,7 +566,7 @@ REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest,
                            MaskLaneRead, MaskLaneWrite,
                            StoreToPtr, StoreMaskToPtr,
                            ReduceAdd, ReduceMinMax,
-                           Gather, Scatter);
+                           Convert, Gather, Scatter);
 
 ///////////////////////////////////////////////////////////////////////////////
 

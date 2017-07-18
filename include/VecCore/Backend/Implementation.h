@@ -328,6 +328,17 @@ Scalar<T> ReduceMax(const T& v)
    return result;
 }
 
+template<typename Vout, typename Vin>
+Vout Convert(const Vin& v)
+{
+   Vout out;
+   static_assert(VectorSize<Vin>() == VectorSize<Vout>(),
+                 "Cannot convert SIMD vectors of different sizes");
+   for (size_t i = 0; i < VectorSize<Vin>(); ++i)
+      Set(out, i, Get(v, i));
+   return out;
+}
+
 } // namespace vecCore
 
 #endif
