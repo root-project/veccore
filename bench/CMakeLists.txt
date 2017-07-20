@@ -1,5 +1,8 @@
 # VecCore Benchmarks
 
+# Avoid deprecation warning from Vc
+add_compile_options(-Wno-deprecated-declarations)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   # prevent ICC from issuing streaming stores,
   # which obfuscate the timings for benchmarks
