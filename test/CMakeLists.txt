@@ -1,6 +1,6 @@
 # VecCore Tests
 
-add_subdirectory(gtest)
+add_subdirectory(gtest EXCLUDE_FROM_ALL)
 
 if (CUDA)
   add_subdirectory(cuda)
