@@ -1,12 +1,6 @@
 #ifndef VECCORE_BACKEND_VC_VECTOR_H
 #define VECCORE_BACKEND_VC_VECTOR_H
 
-#ifdef VECCORE_ENABLE_VC
-
-#include <Vc/Vc>
-
-#ifndef Vc_IMPL_Scalar
-
 namespace vecCore {
 
 template <typename T>
@@ -134,6 +128,4 @@ Vc::Mask<T> IsInf(const Vc::Vector<T> &x)
 
 } // namespace vecCore
 
-#endif
-#endif
 #endif

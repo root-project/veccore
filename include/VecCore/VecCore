@@ -17,9 +17,7 @@
 
 #if !defined(VECCORE_CUDA)
 #include "Backend/SIMDSizes.h"
-#include "Backend/VcScalar.h"
-#include "Backend/VcVector.h"
-#include "Backend/VcSimdArray.h"
+#include "Backend/Vc.h"
 #include "Backend/UMESimd.h"
 #include "Backend/UMESimdArray.h"
 #endif

@@ -1,10 +1,6 @@
 #ifndef VECCORE_BACKEND_VC_SCALAR_H
 #define VECCORE_BACKEND_VC_SCALAR_H
 
-#ifdef VECCORE_ENABLE_VC
-
-#include <Vc/Vc>
-
 namespace vecCore {
 
 template <typename T>
@@ -41,12 +37,6 @@ public:
 };
 
 using VcScalar = VcScalarT<>;
-
-#ifdef Vc_IMPL_Scalar
-template <typename T>
-using VcVectorT = VcScalarT<T>;
-using VcVector  = VcScalar;
-#endif
 
 } // namespace backend
 
@@ -119,5 +109,4 @@ Vc::Scalar::Mask<T> IsInf(const Vc::Scalar::Vector<T> &x)
 
 } // namespace vecCore
 
-#endif
 #endif

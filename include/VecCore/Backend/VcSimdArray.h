@@ -1,10 +1,6 @@
 #ifndef VECCORE_BACKEND_VC_SIMDARRAY_H
 #define VECCORE_BACKEND_VC_SIMDARRAY_H
 
-#ifdef VECCORE_ENABLE_VC
-
-#include <Vc/Vc>
-
 namespace vecCore {
 
 template <typename T, size_t N>
@@ -130,5 +126,4 @@ Vc::SimdMaskArray<T, N> IsInf(const Vc::SimdArray<T, N> &x)
 
 } // namespace vecCore
 
-#endif
 #endif
