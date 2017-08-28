@@ -28,5 +28,6 @@ pkg_check_modules(GD gdlib)
 
 if (GD_FOUND)
   target_compile_definitions(mandelbrot PRIVATE -DHAVE_GD)
+  target_include_directories(mandelbrot PRIVATE ${GD_INCLUDE_DIRS})
   target_link_libraries(mandelbrot ${GD_LIBRARIES})
 endif()
