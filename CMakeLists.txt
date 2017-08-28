@@ -23,6 +23,7 @@ option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
 
 option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
+option(BUILD_TESTING    "Build test binaries and create test target")
 
 option(BUILD_UMESIMD  "Build UME::SIMD library from source")
 option(BUILD_VC       "Build Vc library from source")
