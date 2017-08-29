@@ -9,8 +9,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   add_compile_options(-qopt-streaming-stores=never)
 endif()
 
-find_package(PkgConfig REQUIRED)
-
 add_executable(mandelbrot mandelbrot.cc png.cc)
 add_executable(quadratic quadratic.cc)
 
@@ -24,11 +22,10 @@ if(VECCORE_ENABLE_UMESIMD)
   add_dependencies(quadratic UMESIMD)
 endif()
 
-pkg_check_modules(GD gdlib)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GD IMPORTED_TARGET gdlib)
 
 if (GD_FOUND)
   target_compile_definitions(mandelbrot PRIVATE -DHAVE_GD)
-  target_include_directories(mandelbrot PRIVATE ${GD_INCLUDE_DIRS})
-  link_directories(${GD_LIBRARY_DIRS})
-  target_link_libraries(mandelbrot ${GD_LIBRARIES})
+  target_link_libraries(mandelbrot PkgConfig::GD)
 endif()
