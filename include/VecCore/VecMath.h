@@ -355,7 +355,13 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Cbrt(const T &x)
 {
-  return std::cbrt(x);
+  T roots;
+  int v_size = vecCore::VectorSize(x);
+  for(int j = 0; j < v_size; j++) {
+    Scalar<T> scalar = vecCore::Get(x, j);
+    vecCore::Set(roots, j, std::cbrt(scalar));
+  }
+  return roots;
 }
 
 template <typename T>
