@@ -2,7 +2,7 @@
 # VecCore Library                                                              #
 ################################################################################
 
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.6.0)
 
 include(cmake/RecordCmdLine.cmake)
 
