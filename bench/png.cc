@@ -61,13 +61,11 @@ void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 
     if (!(output = fopen(filename, "wb"))) {
         fprintf(stderr, "Error: cannot open file %s\n", filename);
-        fflush(stderr);
         return;
     }
 
     if (!(image = gdImageCreate(nx, ny))) {
         fprintf(stderr, "Error: cannot create image\n");
-        fflush(stderr);
         return;
     }
 
