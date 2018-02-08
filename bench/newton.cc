@@ -3,8 +3,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
-#include <functional>
-#include <array>
 
 #include <VecCore/Timer.h>
 #include <VecCore/VecCore>
