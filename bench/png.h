@@ -1,10 +1,11 @@
 #ifndef VECCORE_BENCH_PNG_H
 #define VECCORE_BENCH_PNG_H
 
-#include <VecCore/VecCore>
+#include <cstddef>
+#include <cstdint>
 
 struct Color {
-	uint8_t alpha;
+    uint8_t alpha;
     uint8_t red;
     uint8_t green;
     uint8_t blue;
