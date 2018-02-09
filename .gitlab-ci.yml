@@ -7,7 +7,7 @@ stages:
   script:
     - mkdir build && cd build
     - cmake .. -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX}
-        -DBUILD_TESTING=ON -DBUILD_VC=ON -DBUILD_UMESIMD=ON
+        -DBUILD_VC=ON -DBUILD_UMESIMD=ON -DBUILD_TESTING=ON -DBUILD_BENCHMARKS=ON
     - make && make test
 
 gcc:

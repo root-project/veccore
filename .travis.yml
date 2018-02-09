@@ -16,5 +16,5 @@ compiler:
 
 script:
   - mkdir build && cd build
-  - cmake .. -DBUILD_TESTING=ON -DBUILD_VC=ON -DBUILD_UMESIMD=ON
+  - cmake .. -DBUILD_VC=ON -DBUILD_UMESIMD=ON -DBUILD_TESTING=ON -DBUILD_BENCHMARKS=ON
   - make && make test
