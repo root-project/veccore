@@ -2,7 +2,7 @@
 
 |**GitLab CI**|**Travis CI**|
 |-------------|-------------|
-|[![build status](https://gitlab.cern.ch/VecGeom/VecCore/badges/master/build.svg)](https://gitlab.cern.ch/VecGeom/VecCore/commits/master)|[![Build Status](https://travis-ci.org/amadio/veccore.svg?branch=master)](https://travis-ci.org/amadio/veccore)|
+|[![build status](https://gitlab.cern.ch/VecGeom/VecCore/badges/master/build.svg)](https://gitlab.cern.ch/VecGeom/VecCore/commits/master)|[![Build Status](https://travis-ci.org/root-project/veccore.svg?branch=master)](https://travis-ci.org/root-project/veccore)|
 
 **VecCore** is an open source SIMD abstraction library. It provides an
 architecture independent [API](doc/API.md) for expressing vector operations on
@@ -27,10 +27,10 @@ the following compiler versions:
  - AppleClang 7.3.0
  - Intel® C/C++ Compiler 16.0.2
 
-Additionally, you will need CMake 3.1.0 or greater, and you may want to install
+Additionally, you will need CMake 3.6 or later, and you may want to install
 a SIMD library such as
 
- - [Vc](https://github.com/VcDevel/Vc) (version 1.2.0 or later)
+ - [Vc](https://github.com/VcDevel/Vc) (version 1.3.3 or later)
  - [UME::SIMD](https://github.com/edanor/umesimd) (version 0.8.1 or later)
 
 and/or
