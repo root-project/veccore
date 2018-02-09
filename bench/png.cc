@@ -1,6 +1,13 @@
+#include "png.h"
+
 #include <cstddef>
 
 #ifndef HAVE_GD
+
+void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
+{
+   /* empty */
+}
 
 void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 {
@@ -71,6 +78,33 @@ void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
     for (size_t i = 0; i < nx; ++i)
         for (size_t j = 0; j < ny; ++j)
             gdImageSetPixel(image, i, j, colors[data[ny*i + j]]);
+
+    gdImagePng(image, output);
+    gdImageDestroy(image);
+    fclose(output);
+}
+
+void write_png(const char *filename, Color *data, size_t nx, size_t ny)
+{
+    FILE *output;
+    gdImagePtr image;
+
+    if (!(output = fopen(filename, "wb"))) {
+        fprintf(stderr, "Error: cannot open file %s\n", filename);
+        return;
+    }
+
+    if (!(image = gdImageCreateTrueColor(nx, ny))) {
+        fprintf(stderr, "Error: cannot create image\n");
+        return;
+    }
+
+    for (size_t i = 0; i < nx; ++i) {
+        for (size_t j = 0; j < ny; ++j) {
+            const auto& pixel = data[ny * i + j];
+            gdImageSetPixel(image, i, j, gdTrueColorAlpha(pixel.red, pixel.green, pixel.blue, pixel.alpha));
+        }
+    }
 
     gdImagePng(image, output);
     gdImageDestroy(image);
