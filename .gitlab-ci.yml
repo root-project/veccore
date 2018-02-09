@@ -1,4 +1,4 @@
-image: ubuntu
+image: ubuntu:17.10
 
 stages:
   - build
