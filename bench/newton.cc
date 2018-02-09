@@ -15,6 +15,7 @@ using namespace vecCore;
 */
 
 Color COLORS[] = {
+    {0, 0, 0, 0},     // black
     {0, 255, 255, 0}, // yellow
     {0, 255, 0, 0},   // red
     {0, 0, 255, 0},   // green
@@ -34,22 +35,22 @@ bool converged(T re, T im, int iters, uint8_t& color_index, uint8_t& alpha)
     alpha = std::min(iters * 10, 100);
 
     if (is_equal(re, im, T(1), T(0))) {
-        color_index = 0;
-        return true;
-    }
-
-    if (is_equal(re, im, T(-1), T(0))) {
         color_index = 1;
         return true;
     }
 
-    if (is_equal(re, im, T(0), T(1))) {
+    if (is_equal(re, im, T(-1), T(0))) {
         color_index = 2;
         return true;
     }
 
-    if (is_equal(re, im, T(0), T(-1))) {
+    if (is_equal(re, im, T(0), T(1))) {
         color_index = 3;
+        return true;
+    }
+
+    if (is_equal(re, im, T(0), T(-1))) {
+        color_index = 4;
         return true;
     }
 
@@ -66,7 +67,7 @@ void newton(T xmin, T xmax, size_t nx,
     
     for (size_t i = 0; i < nx; ++i) {
         for (size_t j = 0; j < ny; ++j) {
-            uint8_t color_index, alpha;
+            uint8_t color_index = 0, alpha = 0;
             T re = xmin + T(i) * dx, x = re;
             T im = ymin + T(j) * dy, y = im;
             bool has_converged = false;
@@ -106,16 +107,16 @@ Mask<T> converged_v(T re, T im, Index<T> iters, Index<T>& color_index, Index<T>&
     MaskedAssign<Index<T>>(alphas, alphas > 100, 100);
 
     Mask<T> m0 = is_equal_v(re, im, T(1), T(0));
-    MaskedAssign<Index<T>>(color_index, m0, 0);
+    MaskedAssign<Index<T>>(color_index, m0, 1);
 
     Mask<T> m1 = is_equal_v(re, im, T(-1), T(0));
-    MaskedAssign<Index<T>>(color_index, m1, 1);
+    MaskedAssign<Index<T>>(color_index, m1, 2);
 
     Mask<T> m2 = is_equal_v(re, im, T(0), T(1));
-    MaskedAssign<Index<T>>(color_index, m2, 2);
+    MaskedAssign<Index<T>>(color_index, m2, 3);
 
     Mask<T> m3 = is_equal_v(re, im, T(0), T(-1));
-    MaskedAssign<Index<T>>(color_index, m3, 3);
+    MaskedAssign<Index<T>>(color_index, m3, 4);
 
     return m0 || m1 || m2 || m3;
 }
@@ -139,8 +140,8 @@ void newton_v(T xmin, T xmax, size_t nx,
             T im = ymin + T(j) * dy + dyv, y = im;
 
             Index<T> kv{0};
-            Index<T> color_index;
-            Index<T> alphas;
+            Index<T> color_index{0};
+            Index<T> alphas{0};
             Mask<T> m{false};
 
             for (size_t k = 0; !MaskFull(m) && (k < max_iter); ) {
@@ -157,12 +158,12 @@ void newton_v(T xmin, T xmax, size_t nx,
                 MaskedAssign<Index<T>>(kv, !m, ++k);
             }
 
-            for (size_t kk = 0; kk < VectorSize<T>(); ++kk) {
-                uint8_t ci = Get(color_index, kk);
-                uint8_t alpha = Get(alphas, kk);
+            for (size_t k = 0; k < VectorSize<T>(); ++k) {
+                uint8_t ci = Get(color_index, k);
+                uint8_t alpha = Get(alphas, k);
                 Color color = COLORS[ci];
                 color.alpha = alpha;
-                image[ny*i + j + kk] = color;
+                image[ny * i + j + k] = color;
             }
         }
     }

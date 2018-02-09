@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VECCORE_BENCH_PNG_H
+#define VECCORE_BENCH_PNG_H
 
 #include <VecCore/VecCore>
 
@@ -11,3 +12,5 @@ struct Color {
 
 void write_png(const char *filename, Color *data, size_t nx, size_t ny);
 void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny);
+
+#endif
