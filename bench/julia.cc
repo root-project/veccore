@@ -105,9 +105,10 @@ int main(int argc, char *argv[])
 
     if (argc > 1) {
         if (argc != 3) {
-            std::cerr<<"Error. Incorrect number of parameters for the c parameter in the quadratic polinomial z\x00B2+c.";
-            std::cerr<<" Usage: julia [<realComponent> <imaginary component>] "<<std::endl;
-            exit(-1);
+           fprintf(stderr, "%s: incorrect number of parameters\n\n"
+                           "Usage: julia [<Re(c)> <Im(c)>]\n\n\twhere f(z) = z*z + c\n",
+                           argv[0]);
+           return 1;
         } else {
             cr = atof(argv[1]);
             ci = atof(argv[2]);
