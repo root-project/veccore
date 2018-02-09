@@ -1,8 +1,8 @@
 include(ExternalProject)
 
-set(Vc_VERSION "1.3.2")
+set(Vc_VERSION "1.3.3")
 set(Vc_PROJECT "Vc-${Vc_VERSION}")
-set(Vc_SRC_MD5 "f996a2dcab9f0ef3e21ba0d0feba9c3e")
+set(Vc_SRC_SHA "SHA256=08c629d2e14bfb8e4f1a10f09535e4a3c755292503c971ab46637d2986bdb4fe")
 set(Vc_DESTDIR "${CMAKE_BINARY_DIR}/${Vc_PROJECT}")
 set(Vc_ROOTDIR "${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}")
 
@@ -16,7 +16,7 @@ set(Vc_LIBRARY ${Vc_ROOTDIR}/lib${LIB_SUFFIX}/${Vc_LIBNAME})
 ExternalProject_Add(${Vc_PROJECT}
   PREFIX externals
   URL "http://lcgpackages.web.cern.ch/lcgpackages/tarFiles/sources/${Vc_PROJECT}.tar.gz"
-  URL_MD5 ${Vc_SRC_MD5}
+  URL_HASH ${Vc_SRC_SHA}
   BUILD_IN_SOURCE 0
   BUILD_BYPRODUCTS ${Vc_LIBRARY}
   CMAKE_ARGS -G ${CMAKE_GENERATOR}
