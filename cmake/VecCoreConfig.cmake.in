@@ -3,22 +3,22 @@ set(VecCore_VERSION_MAJOR @VecCore_VERSION_MAJOR@)
 set(VecCore_VERSION_MINOR @VecCore_VERSION_MINOR@)
 set(VecCore_VERSION_PATCH @VecCore_VERSION_PATCH@)
 
-get_filename_component(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+@PACKAGE_INIT@
 
+set_and_check(VecCore_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+
+set(VecCore_INCLUDE_DIRS "${VecCore_INCLUDE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${VecCore_CMAKE_DIR}")
 
-set(VecCore_ROOT_DIR "${VecCore_CMAKE_DIR}/../../..")
-set(VecCore_INCLUDE_DIR  "${VecCore_ROOT_DIR}/include")
-set(VecCore_INCLUDE_DIRS "${VecCore_ROOT_DIR}/include")
-
 set(_VecCore_FIND_QUIET)
-if (VecCore_FIND_QUIETLY)
+if(VecCore_FIND_QUIETLY)
   set(_VecCore_FIND_QUIET QUIET)
 endif()
 
 set(_VecCore_NOT_FOUND_MESSAGE)
 
-if (VecCore_FIND_COMPONENTS MATCHES "CUDA")
+if(VecCore_FIND_COMPONENTS MATCHES "CUDA")
   find_package(CUDA 7.5 ${_VecCore_FIND_QUIET})
   if(NOT CUDA_FOUND)
     if(VecCore_FIND_REQUIRED_CUDA)
@@ -34,7 +34,7 @@ if (VecCore_FIND_COMPONENTS MATCHES "CUDA")
   endif()
 endif()
 
-if (VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
+if(VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
   find_package(UMESIMD 0.8.1 ${_VecCore_FIND_QUIET})
   if(NOT UMESIMD_FOUND)
     if(VecCore_FIND_REQUIRED_UMESIMD)
@@ -50,9 +50,9 @@ if (VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
   endif()
 endif()
 
-if (VecCore_FIND_COMPONENTS MATCHES "Vc")
+if(VecCore_FIND_COMPONENTS MATCHES "Vc")
   find_package(Vc 1.2.0 ${_VecCore_FIND_QUIET})
-  if (NOT Vc_FOUND)
+  if(NOT Vc_FOUND)
     if(VecCore_FIND_REQUIRED_Vc)
       set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
         "Failed to find VecCore component \"Vc\"\n")
@@ -67,7 +67,7 @@ if (VecCore_FIND_COMPONENTS MATCHES "Vc")
   endif()
 endif()
 
-if (_VecCore_NOT_FOUND_MESSAGE)
+if(_VecCore_NOT_FOUND_MESSAGE)
   set(VecCore_FOUND False)
   set(VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE})
   return()
@@ -80,3 +80,21 @@ foreach(backend ${VecCore_FIND_COMPONENTS})
 endforeach()
 
 list(REMOVE_DUPLICATES VecCore_INCLUDE_DIRS)
+
+check_required_components(VecCore)
+
+# Imported target
+add_library(VecCore::VecCore INTERFACE IMPORTED)
+set_target_properties(VecCore::VecCore PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${VecCore_INCLUDE_DIRS}")
+
+if(VecCore_DEFINITIONS)
+  string(REGEX REPLACE "-D" "" _localdefs "${VecCore_DEFINITIONS}")
+  set_target_properties(VecCore::VecCore PROPERTIES
+    INTERFACE_COMPILE_DEFINITIONS ${_localdefs})
+endif()
+
+if(VecCore_LIBRARIES)
+  set_target_properties(VecCore::VecCore PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VecCore_LIBRARIES}")
+endif()
