@@ -1,15 +1,15 @@
+@PACKAGE_INIT@
+
 set(VecCore_VERSION @VecCore_VERSION@)
 set(VecCore_VERSION_MAJOR @VecCore_VERSION_MAJOR@)
 set(VecCore_VERSION_MINOR @VecCore_VERSION_MINOR@)
 set(VecCore_VERSION_PATCH @VecCore_VERSION_PATCH@)
 
-get_filename_component(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set_and_check(VecCore_INCLUDE_DIR "@PACKAGE_VecCore_INSTALL_INCLUDEDIR@")
+set_and_check(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+set(VecCore_INCLUDE_DIRS "${VecCore_INCLUDE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${VecCore_CMAKE_DIR}")
-
-set(VecCore_ROOT_DIR "${VecCore_CMAKE_DIR}/../../..")
-set(VecCore_INCLUDE_DIR  "${VecCore_ROOT_DIR}/include")
-set(VecCore_INCLUDE_DIRS "${VecCore_ROOT_DIR}/include")
 
 set(_VecCore_FIND_QUIET)
 if (VecCore_FIND_QUIETLY)
@@ -80,3 +80,21 @@ foreach(backend ${VecCore_FIND_COMPONENTS})
 endforeach()
 
 list(REMOVE_DUPLICATES VecCore_INCLUDE_DIRS)
+
+check_required_components(VecCore)
+
+add_library(VecCore::VecCore INTERFACE IMPORTED)
+set_target_properties(VecCore::VecCore PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${VecCore_INCLUDE_DIRS}")
+
+if (VecCore_DEFINITIONS)
+  string(REGEX REPLACE "-D" "" _localdefs "${VecCore_DEFINITIONS}")
+  set_target_properties(VecCore::VecCore PROPERTIES
+    INTERFACE_COMPILE_DEFINITIONS "${_localdefs}")
+  unset(_localdefs)
+endif()
+
+if (VecCore_LIBRARIES)
+  set_target_properties(VecCore::VecCore PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VecCore_LIBRARIES}")
+endif()

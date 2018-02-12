@@ -64,14 +64,23 @@ endif()
 include_directories(include ${PROJECT_BINARY_DIR}/include)
 
 configure_file(include/Config.in include/Config.h)
-configure_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake @ONLY)
+
+set(VecCore_INSTALL_INCLUDEDIR "include")
+set(VecCore_INSTALL_CMAKEDIR "share/${PROJECT_NAME}/cmake")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/VecCoreConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake/VecCoreConfig.cmake
+  INSTALL_DESTINATION "${VecCore_INSTALL_CMAKEDIR}"
+  PATH_VARS VecCore_INSTALL_INCLUDEDIR
+  )
 configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake @ONLY)
 
-install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION include/${PROJECT_NAME})
-install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
-install(FILES cmake/FindUMESIMD.cmake DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME})
+install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION ${VecCore_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${VecCore_INSTALL_INCLUDEDIR})
+install(FILES cmake/FindUMESIMD.cmake DESTINATION ${VecCore_INSTALL_CMAKEDIR})
 install(DIRECTORY ${PROJECT_BINARY_DIR}/cmake/
-        DESTINATION lib${LIB_SUFFIX}/cmake/${PROJECT_NAME} FILES_MATCHING PATTERN *.cmake)
+  DESTINATION ${VecCore_INSTALL_CMAKEDIR} FILES_MATCHING PATTERN *.cmake)
 
 enable_testing()
 
