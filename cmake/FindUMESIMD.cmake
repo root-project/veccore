@@ -4,6 +4,12 @@
 #
 # Find the UME::SIMD library headers and define variables.
 #
+# Imported Targets
+# ^^^^^^^^^^^^^^^^
+#
+# This module defines :prop_tgt:`IMPORTED` target ``UMESIMD::UMESIMD``,
+# if UMESIMD has been found
+#
 # Result Variables
 # ^^^^^^^^^^^^^^^^
 #
@@ -56,3 +62,11 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UMESIMD
   REQUIRED_VARS UMESIMD_INCLUDE_DIRS VERSION_VAR UMESIMD_VERSION)
+
+if(UMESIMD_FOUND)
+  if(NOT TARGET UMESIMD::UMESIMD)
+    add_library(UMESIMD::UMESIMD INTERFACE IMPORTED)
+    set_target_properties(UMESIMD::UMESIMD PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${UMESIMD_INCLUDE_DIRS}")
+  endif()
+endif()
