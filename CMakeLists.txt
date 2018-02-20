@@ -21,6 +21,7 @@ endif()
 option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
+option(VECRNG  "Enable support for VecRng")
 
 option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
 option(BUILD_TESTING    "Build test binaries and create test target")
@@ -81,6 +82,9 @@ install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${VecCore_INSTALL_INCLUDED
 install(FILES cmake/FindUMESIMD.cmake DESTINATION ${VecCore_INSTALL_CMAKEDIR})
 install(DIRECTORY ${PROJECT_BINARY_DIR}/cmake/
   DESTINATION ${VecCore_INSTALL_CMAKEDIR} FILES_MATCHING PATTERN *.cmake)
+if (VECRNG)
+  install(DIRECTORY include/VecRng DESTINATION include)
+endif()
 
 enable_testing()
 
