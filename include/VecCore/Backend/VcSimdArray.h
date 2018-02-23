@@ -61,6 +61,23 @@ struct IndexingImplementation<Vc::SimdMaskArray<T, N>> {
 };
 
 template <typename T, size_t N>
+struct LoadStoreImplementation<Vc::SimdArray<T, N>> {
+  using V = Vc::SimdArray<T, N>;
+
+  template <typename S = Scalar<V>>
+  static inline void Load(V &v, S const *ptr)
+  {
+    v.load(ptr);
+  }
+
+  template <typename S = Scalar<V>>
+  static inline void Store(V const &v, S *ptr)
+  {
+    v.store(ptr);
+  }
+};
+
+template <typename T, size_t N>
 struct LoadStoreImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
 

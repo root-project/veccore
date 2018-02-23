@@ -63,6 +63,22 @@ struct IndexingImplementation<Vc::Mask<T>> {
 };
 
 template <typename T>
+struct LoadStoreImplementation<Vc::Vector<T>> {
+   using V = Vc::Vector<T>;
+  template <typename S = Scalar<V>>
+  static inline void Load(V &v, S const *ptr)
+  {
+    v.load(ptr);
+  }
+
+  template <typename S = Scalar<V>>
+  static inline void Store(V const &v, S *ptr)
+  {
+    v.store(ptr);
+  }
+};
+
+template <typename T>
 struct LoadStoreImplementation<Vc::Mask<T>> {
   using M = Vc::Mask<T>;
 
