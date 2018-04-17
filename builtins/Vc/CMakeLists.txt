@@ -6,15 +6,10 @@ set(Vc_SRC_SHA "SHA256=08c629d2e14bfb8e4f1a10f09535e4a3c755292503c971ab46637d298
 set(Vc_DESTDIR "${CMAKE_BINARY_DIR}/${Vc_PROJECT}")
 set(Vc_ROOTDIR "${Vc_DESTDIR}/${CMAKE_INSTALL_PREFIX}")
 
-if (KNC)
-  set(KNC_SUFFIX "_MIC")
-endif()
-
-set(Vc_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}Vc${KNC_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(Vc_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}Vc${CMAKE_STATIC_LIBRARY_SUFFIX})
 set(Vc_LIBRARY ${Vc_ROOTDIR}/lib${LIB_SUFFIX}/${Vc_LIBNAME})
 
 ExternalProject_Add(${Vc_PROJECT}
-  PREFIX externals
   URL "http://lcgpackages.web.cern.ch/lcgpackages/tarFiles/sources/${Vc_PROJECT}.tar.gz"
   URL_HASH ${Vc_SRC_SHA}
   BUILD_IN_SOURCE 0
@@ -29,15 +24,14 @@ ExternalProject_Add(${Vc_PROJECT}
   INSTALL_COMMAND env DESTDIR=${Vc_DESTDIR} ${CMAKE_COMMAND} --build . --target install
 )
 
-add_library(Vc${KNC_SUFFIX} STATIC IMPORTED)
-set_property(TARGET Vc${KNC_SUFFIX} PROPERTY IMPORTED_LOCATION ${Vc_LIBRARY})
-add_dependencies(Vc${KNC_SUFFIX} ${Vc_PROJECT})
+set(Vc_LIBRARIES ${Vc_LIBRARY} CACHE INTERNAL "" FORCE)
+set(Vc_INCLUDE_DIR "${Vc_ROOTDIR}/include" CACHE INTERNAL "" FORCE)
+set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include" CACHE INTERNAL "" FORCE)
 
-set(Vc_LIBRARIES Vc${KNC_SUFFIX})
-set(Vc_INCLUDE_DIR "${Vc_ROOTDIR}/include")
-set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include")
-
-set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_LIBRARIES})
+add_library(Vc STATIC IMPORTED)
+set_property(TARGET Vc PROPERTY IMPORTED_LOCATION ${Vc_LIBRARY})
+set_property(TARGET Vc PROPERTY INTERFACE_INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${Vc_ROOTDIR}/include>)
+add_dependencies(Vc ${Vc_PROJECT})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Vc

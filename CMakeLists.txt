@@ -34,34 +34,32 @@ if (CUDA)
   include(CUDA)
 endif()
 
-if (VC OR BUILD_VC)
-  set(VC ON CACHE BOOL "Enable Vc backend" FORCE)
-  add_definitions(-DVECCORE_ENABLE_VC)
-  if (BUILD_VC)
-    include(InstallVc)
-  else()
-    find_package(Vc 1.2.0 REQUIRED)
-    if (KNC)
-      set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_MIC_LIBRARIES})
-    else()
-      set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${Vc_LIBRARIES})
-    endif()
+include(Builtins)
+
+add_library(VecCore INTERFACE)
+
+if (VC)
+  find_package(Vc 1.2.0 REQUIRED)
+
+  # Vc does not come with an imported target, add our own
+  if(NOT TARGET Vc::Vc)
+    add_library(Vc::Vc INTERFACE IMPORTED)
+    set_property(TARGET Vc::Vc PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Vc_INCLUDE_DIRS})
+    set_property(TARGET Vc::Vc PROPERTY INTERFACE_LINK_LIBRARIES ${Vc_LIBRARIES})
   endif()
-  include_directories(SYSTEM BEFORE ${Vc_INCLUDE_DIRS})
+
+  target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_VC)
+  target_link_libraries(VecCore INTERFACE Vc::Vc)
 endif()
 
-if (UMESIMD OR BUILD_UMESIMD)
-  set(UMESIMD ON CACHE BOOL "Enable UME::SIMD backend" FORCE)
-  add_definitions(-DVECCORE_ENABLE_UMESIMD)
-  if (BUILD_UMESIMD)
-    include(InstallUMESIMD)
-  else()
-    find_package(UMESIMD 0.8.1 REQUIRED)
-  endif()
-  include_directories(SYSTEM BEFORE ${UMESIMD_INCLUDE_DIRS})
+if (UMESIMD)
+  find_package(UMESIMD 0.8.1 REQUIRED)
+  target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_UMESIMD)
+  target_link_libraries(VecCore INTERFACE UMESIMD::UMESIMD)
 endif()
 
-include_directories(include ${PROJECT_BINARY_DIR}/include)
+target_include_directories(VecCore INTERFACE
+  $<BUILD_INTERFACE:include ${PROJECT_BINARY_DIR}/include>)
 
 configure_file(include/Config.in include/Config.h)
 
