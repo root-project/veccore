@@ -42,7 +42,7 @@ public:
 
 TYPED_TEST_CASE_P(AlignmentTest);
 
-static bool
+inline bool
 is_aligned(const void *__restrict__ ptr, size_t align)
 {
   return (uintptr_t)ptr % align == 0;
