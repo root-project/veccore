@@ -68,17 +68,22 @@ if (VecCore_FIND_COMPONENTS MATCHES "Vc")
   endif()
 endif()
 
+foreach(component ${VecCore_FIND_COMPONENTS})
+  if(NOT "${component}" MATCHES "CUDA|UMESIMD|Vc")
+    set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
+      "Unknown VecCore component: ${component} (known components are CUDA, UMESIMD, and Vc)\n")
+  else()
+    set(VecCore_DEFINITIONS ${VecCore_DEFINITIONS} ${VecCore_${component}_DEFINITIONS})
+    set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${VecCore_${component}_INCLUDE_DIR})
+    set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${VecCore_${component}_LIBRARIES})
+  endif()
+endforeach()
+
 if (_VecCore_NOT_FOUND_MESSAGE)
   set(VecCore_FOUND False)
   set(VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE})
   return()
 endif()
-
-foreach(backend ${VecCore_FIND_COMPONENTS})
-  set(VecCore_DEFINITIONS ${VecCore_DEFINITIONS} ${VecCore_${backend}_DEFINITIONS})
-  set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${VecCore_${backend}_INCLUDE_DIR})
-  set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${VecCore_${backend}_LIBRARIES})
-endforeach()
 
 list(REMOVE_DUPLICATES VecCore_INCLUDE_DIRS)
 
