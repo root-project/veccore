@@ -13,7 +13,7 @@ if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 5)
   set(FLAGS_KNL "-march=knl")
 endif()
 
-if (VC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)
+if ((VC OR BUILD_VC) AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)
   add_compile_options(-fabi-version=6)
 endif()
 
