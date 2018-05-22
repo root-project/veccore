@@ -5,10 +5,7 @@ stages:
 
 .build_job: &build_def
   script:
-    - mkdir build && cd build
-    - cmake .. -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX}
-        -DBUILD_VC=ON -DBUILD_UMESIMD=ON -DBUILD_TESTING=ON -DBUILD_BENCHMARKS=ON
-    - make && make test
+    - ctest -VV -S cmake/TestVecCore.cmake
 
 gcc:
   stage: build

@@ -15,6 +15,4 @@ compiler:
   - clang
 
 script:
-  - mkdir build && cd build
-  - cmake .. -DBUILD_VC=ON -DBUILD_UMESIMD=ON -DBUILD_TESTING=ON -DBUILD_BENCHMARKS=ON
-  - make && make test
+  - ctest -VV -S cmake/TestVecCore.cmake
