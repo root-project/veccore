@@ -14,5 +14,8 @@ compiler:
   - gcc
   - clang
 
+install:
+  - export LD_LIBRARY_PATH=$(if [[ $CC == "clang" ]]; then echo -n '/usr/local/clang/lib'; fi)
+
 script:
   - ctest -VV -S cmake/TestVecCore.cmake
