@@ -4,9 +4,10 @@
 
 cmake_minimum_required(VERSION 3.6.0)
 
-include(cmake/RecordCmdLine.cmake)
-
 project(VecCore LANGUAGES C CXX VERSION 0.4.2)
+
+include(cmake/RecordCmdLine.cmake)
+find_package(OpenMP)
 
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -37,6 +38,17 @@ endif()
 include(Builtins)
 
 add_library(VecCore INTERFACE)
+
+if (OpenMP_FOUND)
+  if (OpenMP_CXX_FOUND)
+    target_link_libraries(VecCore INTERFACE OpenMP::OpenMP_CXX)
+  elseif (OpenMP_C_FOUND)
+    target_link_libraries(VecCore INTERFACE OpenMP::OpenMP_C)
+  elseif (OpenMP_FORTRAN_FOUND)
+    target_link_libraries(VecCore INTERFACE OpenMP::OpenMP_FORTRAN)
+  endif()
+  target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_LIBMVEC)
+endif()
 
 if (VC)
   find_package(Vc 1.2.0 REQUIRED)
