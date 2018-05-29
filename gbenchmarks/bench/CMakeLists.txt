@@ -1,0 +1,5 @@
+foreach(target test1)
+  add_executable(${target} ${target}.cc)
+  target_link_libraries(${target} benchmark)
+  target_link_libraries(${target} gtest VecCore)
+endforeach()
