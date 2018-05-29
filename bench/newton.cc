@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <string>
 
-#include <VecCore/Timer.h>
+#include "timer.h"
 #include <VecCore/VecCore>
 
 using namespace vecCore;
