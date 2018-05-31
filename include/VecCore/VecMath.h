@@ -3,18 +3,48 @@
 
 #include <cmath>
 
+#if defined(__APPLE__) && !defined(NVCC)
+VECCORE_FORCE_INLINE
+void sincosf(const float &x, float *s, float *c)
+{
+  __sincosf(x, s, c);
+}
+
+VECCORE_FORCE_INLINE
+void sincos(const double &x, double *s, double *c)
+{
+  __sincos(x, s, c);
+}
+#endif
+
 namespace vecCore {
 namespace math {
 
+#define VECCORE_MATH_UNARY_FUNCTION(F, f)     \
+template <typename T>                         \
+VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE  \
+T F(const T &x)                               \
+{                                             \
+  T ret;                                      \
+  for(size_t i = 0; i < VectorSize<T>(); ++i) \
+    Set(ret, i, std::f(Get(x,i)));            \
+  return ret;                                 \
+}                                             \
+
+#define VECCORE_MATH_BINARY_FUNCTION(F, f)    \
+template <typename T>                         \
+VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE  \
+T F(const T &x, const T &y)                   \
+{                                             \
+  T ret;                                      \
+  for(size_t i = 0; i < VectorSize<T>(); ++i) \
+    Set(ret, i, std::f(Get(x,i), Get(y,i)));  \
+  return ret;                                 \
+}                                             \
+
 // Abs, Min, Max, Sign
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Abs(const T &x)
-{
-  return std::abs(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(Abs, abs)
 
 template <class T>
 VECCORE_FORCE_INLINE
@@ -64,13 +94,7 @@ Wrapper<T> Max(const Wrapper<T> &a, const Wrapper<T> &b)
   return Blend(a > b, a, b);
 }
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T CopySign(const T &x, const T &y)
-{
-  return std::copysign(x, y);
-}
+VECCORE_MATH_BINARY_FUNCTION(CopySign, copysign)
 
 template <typename T>
 VECCORE_FORCE_INLINE
@@ -82,21 +106,14 @@ T Sign(const T &x)
 
 // Trigonometric Functions
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Sin(const T &x)
-{
-  return std::sin(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(Sin, sin)
+VECCORE_MATH_UNARY_FUNCTION(Cos, cos)
+VECCORE_MATH_UNARY_FUNCTION(Tan, tan)
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Cos(const T &x)
-{
-  return std::cos(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(ASin, asin)
+VECCORE_MATH_UNARY_FUNCTION(ACos, acos)
+VECCORE_MATH_UNARY_FUNCTION(ATan, atan)
+VECCORE_MATH_BINARY_FUNCTION(ATan2, atan2)
 
 template <typename T>
 VECCORE_FORCE_INLINE
@@ -106,26 +123,12 @@ void SinCos(const T &x, T *s, T *c)
   sincos(x, s, c);
 }
 
-#if defined(__APPLE__) && !defined(NVCC)
-VECCORE_FORCE_INLINE
-void sincosf(const float &x, float *s, float *c)
-{
-  __sincosf(x, s, c);
-}
-
-VECCORE_FORCE_INLINE
-void sincos(const double &x, double *s, double *c)
-{
-  __sincos(x, s, c);
-}
-#endif
-
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void SinCos(const Float_s &x, Float_s *s, Float_s *c)
 {
-  sincosf(x, s, c);
+  ::sincosf(x, s, c);
 }
 
 template <>
@@ -133,115 +136,41 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void SinCos(const Double_s &x, Double_s *s, Double_s *c)
 {
-  sincos(x, s, c);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Tan(const T &x)
-{
-  return std::tan(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ASin(const T &x)
-{
-  return std::asin(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ACos(const T &x)
-{
-  return std::acos(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ATan(const T &x)
-{
-  return std::atan(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ATan2(const T &x, const T &y)
-{
-  return std::atan2(x, y);
+  ::sincos(x, s, c);
 }
 
 // Hyperbolic Functions
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Sinh(const T &x)
-{
-  return std::sinh(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(Sinh, sinh)
+VECCORE_MATH_UNARY_FUNCTION(Cosh, cosh)
+VECCORE_MATH_UNARY_FUNCTION(Tanh, tanh)
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Cosh(const T &x)
-{
-  return std::cosh(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Tanh(const T &x)
-{
-  return std::tanh(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ASinh(const T &x)
-{
-  return std::asinh(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ACosh(const T &x)
-{
-  return std::acosh(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T ATanh(const T &x)
-{
-  return std::atanh(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(ASinh, asinh)
+VECCORE_MATH_UNARY_FUNCTION(ACosh, acosh)
+VECCORE_MATH_UNARY_FUNCTION(ATanh, atanh)
 
 // Exponential and Logarithmic Functions
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Exp(const T &x)
-{
-  return std::exp(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(Exp, exp)
+VECCORE_MATH_UNARY_FUNCTION(Exp2, exp2)
+VECCORE_MATH_UNARY_FUNCTION(Expm1, expm1)
+VECCORE_MATH_UNARY_FUNCTION(Log, log)
+VECCORE_MATH_UNARY_FUNCTION(Log2, log2)
+VECCORE_MATH_UNARY_FUNCTION(Logb, logb)
+VECCORE_MATH_UNARY_FUNCTION(Log10, log10)
+VECCORE_MATH_UNARY_FUNCTION(Log1p, log1p)
+VECCORE_MATH_UNARY_FUNCTION(Ilogb, ilogb)
+
 
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Frexp(const T &x, int *exp)
 {
-  return std::frexp(x, exp);
+  T ret;
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::frexp(Get(x,i), &exp[i]));
+  return ret;
 }
 
 template <typename T>
@@ -249,23 +178,10 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Ldexp(const T &x, int exp)
 {
-  return std::ldexp(x, exp);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Log(const T &x)
-{
-  return std::log(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Log10(const T &x)
-{
-  return std::log10(x);
+  T ret;
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::ldexp(Get(x,i), exp));
+  return ret;
 }
 
 template <typename T>
@@ -273,55 +189,10 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Modf(const T &x, T *intpart)
 {
-  return std::modf(x, intpart);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Exp2(const T &x)
-{
-  return std::exp2(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Expm1(const T &x)
-{
-  return std::expm1(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Ilogb(const T &x)
-{
-  return std::ilogb(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Log1p(const T &x)
-{
-  return std::log1p(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Log2(const T &x)
-{
-  return std::log2(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Logb(const T &x)
-{
-  return std::logb(x);
+  T ret;
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::modf(Get(x,i), &intpart[i]));
+  return ret;
 }
 
 template <typename T>
@@ -329,7 +200,10 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Scalbn(const T &x, int n)
 {
-  return std::scalbn(x, n);
+  T ret;
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::scalbn(Get(x,i), n));
+  return ret;
 }
 
 template <typename T>
@@ -337,90 +211,26 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Scalbln(const T &x, long int n)
 {
-  return std::scalbln(x, n);
+  T ret;
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::scalbln(Get(x,i), n));
+  return ret;
 }
 
 // Power Functions
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Sqrt(const T &x)
-{
-  return std::sqrt(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Cbrt(const T &x)
-{
-  T roots;
-  int v_size = vecCore::VectorSize(x);
-  for(int j = 0; j < v_size; j++) {
-    Scalar<T> scalar = vecCore::Get(x, j);
-    vecCore::Set(roots, j, std::cbrt(scalar));
-  }
-  return roots;
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Pow(const T &x, const T &y)
-{
-  return std::pow(x, y);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Hypot(const T &x, const T &y)
-{
-  return std::hypot(x, y);
-}
+VECCORE_MATH_UNARY_FUNCTION(Sqrt, sqrt)
+VECCORE_MATH_UNARY_FUNCTION(Cbrt, cbrt)
+VECCORE_MATH_BINARY_FUNCTION(Pow, pow)
+VECCORE_MATH_BINARY_FUNCTION(Hypot, hypot)
 
 // Rounding and Remainder Functions
 
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Ceil(const T &x)
-{
-  return std::ceil(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Floor(const T &x)
-{
-  return std::floor(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Fmod(const T &x, const T &y)
-{
-  return std::fmod(x, y);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Trunc(const T &x)
-{
-  return std::trunc(x);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-T Round(const T &x)
-{
-  return std::round(x);
-}
+VECCORE_MATH_UNARY_FUNCTION(Ceil, ceil)
+VECCORE_MATH_UNARY_FUNCTION(Floor, floor)
+VECCORE_MATH_BINARY_FUNCTION(Fmod, fmod)
+VECCORE_MATH_UNARY_FUNCTION(Round, round)
+VECCORE_MATH_UNARY_FUNCTION(Trunc, trunc)
 
 // Miscellaneous Utilities
 
@@ -450,6 +260,9 @@ constexpr T Rad(const T &x)
 {
   return (x * T(M_PI / 180.0));
 }
+
+#undef VECCORE_MATH_UNARY_FUNCTION
+#undef VECCORE_MATH_BINARY_FUNCTION
 
 } // namespace math
 } // namespace vecCore
