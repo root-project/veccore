@@ -1,5 +1,7 @@
 # VecCore Benchmarks
 
+add_subdirectory(gbench)
+
 # Avoid deprecation warning from Vc
 add_compile_options(-Wno-deprecated-declarations)
 
