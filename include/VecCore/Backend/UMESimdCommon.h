@@ -168,6 +168,7 @@ UMESIMD_REAL_FUNC(Sqrt, sqrt)
 UMESIMD_REAL_FUNC(Round, round)
 UMESIMD_REAL_FUNC(Floor, floor)
 UMESIMD_REAL_FUNC(Ceil, ceil)
+UMESIMD_REAL_FUNC(Trunc, trunc)
 
 #undef UMESIMD_REAL_FUNC
 
