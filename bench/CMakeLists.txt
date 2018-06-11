@@ -11,6 +11,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   add_compile_options(-qopt-streaming-stores=never)
 endif()
 
+add_executable(mathbench math_benchmarks.cc)
+target_link_libraries(mathbench benchmark benchmark_main VecCore)
+
 add_executable(quadratic quadratic.cc)
 target_link_libraries(quadratic VecCore)
 
