@@ -143,34 +143,29 @@ void SinCos(const UME::SIMD::SIMDVec_f<T, N> &x, UME::SIMD::SIMDVec_f<T, N> *s, 
   *c = x.cos();
 }
 
-template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
-UME::SIMD::SIMDVec_f<T, N> Pow(const UME::SIMD::SIMDVec_f<T, N> &x, const UME::SIMD::SIMDVec_f<T, N> &y)
-{
-  return (x.log() * y).exp();
-}
+#define UMESIMD_MATH_UNARY_FUNCTION(F, f) \
+template <typename T, uint32_t N>         \
+VECCORE_FORCE_INLINE                      \
+typename UME::SIMD::SIMDVec_f<T, N>       \
+F(const UME::SIMD::SIMDVec_f<T, N> &x)    \
+{ return x.f(); }
 
-#define UMESIMD_REAL_FUNC(f, name)                                                                \
-  template <typename T, uint32_t N>                                                               \
-  VECCORE_FORCE_INLINE typename UME::SIMD::SIMDVec_f<T, N> f(const UME::SIMD::SIMDVec_f<T, N> &x) \
-  {                                                                                               \
-    return x.name();                                                                              \
-  }
+UMESIMD_MATH_UNARY_FUNCTION(Abs, abs)
 
-UMESIMD_REAL_FUNC(Abs, abs)
-UMESIMD_REAL_FUNC(Exp, exp)
-UMESIMD_REAL_FUNC(Log, log)
-UMESIMD_REAL_FUNC(Sin, sin)
-UMESIMD_REAL_FUNC(Cos, cos)
-UMESIMD_REAL_FUNC(Tan, tan)
-UMESIMD_REAL_FUNC(ATan, atan)
-UMESIMD_REAL_FUNC(Sqrt, sqrt)
-UMESIMD_REAL_FUNC(Round, round)
-UMESIMD_REAL_FUNC(Floor, floor)
-UMESIMD_REAL_FUNC(Ceil, ceil)
-UMESIMD_REAL_FUNC(Trunc, trunc)
+UMESIMD_MATH_UNARY_FUNCTION(Sin, sin)
+UMESIMD_MATH_UNARY_FUNCTION(Cos, cos)
+UMESIMD_MATH_UNARY_FUNCTION(Tan, tan)
+UMESIMD_MATH_UNARY_FUNCTION(ATan, atan)
 
-#undef UMESIMD_REAL_FUNC
+UMESIMD_MATH_UNARY_FUNCTION(Exp, exp)
+// UMESIMD_MATH_UNARY_FUNCTION(Log, log) // broken
+UMESIMD_MATH_UNARY_FUNCTION(Sqrt, sqrt)
+
+UMESIMD_MATH_UNARY_FUNCTION(Round, round)
+UMESIMD_MATH_UNARY_FUNCTION(Floor, floor)
+UMESIMD_MATH_UNARY_FUNCTION(Ceil, ceil)
+
+#undef UMESIMD_MATH_UNARY_FUNCTION
 
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
