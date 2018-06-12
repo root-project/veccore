@@ -80,31 +80,11 @@ namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> CopySign(const Vc::Scalar::Vector<T> &x, const Vc::Scalar::Vector<T> &y)
-{
-  return Vc::copysign(x, y);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Pow(const Vc::Scalar::Vector<T> &x, const Vc::Scalar::Vector<T> &y)
-{
-  return std::exp(std::log(x[0]) * y[0]);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
-Vc::Scalar::Vector<T> Tan(const Vc::Scalar::Vector<T> &x)
-{
-  return std::tan(x[0]);
-}
-
-template <typename T>
-VECCORE_FORCE_INLINE
 Vc::Scalar::Mask<T> IsInf(const Vc::Scalar::Vector<T> &x)
 {
   return Vc::isinf(x);
 }
+
 }
 
 } // namespace vecCore

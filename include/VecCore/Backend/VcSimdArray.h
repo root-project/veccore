@@ -117,12 +117,28 @@ Vc::SimdArray<T, N> CopySign(const Vc::SimdArray<T, N> &x, const Vc::SimdArray<T
   return Vc::copysign(x, y);
 }
 
-template <typename T, size_t N>
-VECCORE_FORCE_INLINE
-Vc::SimdArray<T, N> Pow(const Vc::SimdArray<T, N> &x, const Vc::SimdArray<T, N> &y)
-{
-  return Vc::exp(Vc::log(x) * y);
-}
+#define VC_MATH_UNARY_FUNCTION(F, f)                \
+template <typename T, size_t N>                     \
+VECCORE_FORCE_INLINE                                \
+Vc::SimdArray<T, N> F(const Vc::SimdArray<T, N> &x) \
+{ return Vc::f(x); }                                \
+
+VC_MATH_UNARY_FUNCTION(Exp, exp)
+VC_MATH_UNARY_FUNCTION(Log, log)
+VC_MATH_UNARY_FUNCTION(Log2, log2)
+VC_MATH_UNARY_FUNCTION(Log10, log10)
+VC_MATH_UNARY_FUNCTION(Sqrt, sqrt)
+
+VC_MATH_UNARY_FUNCTION(Sin, sin)
+VC_MATH_UNARY_FUNCTION(Cos, cos)
+VC_MATH_UNARY_FUNCTION(ASin, asin)
+VC_MATH_UNARY_FUNCTION(ATan, atan)
+
+// VC_MATH_UNARY_FUNCTION(Floor, floor) // broken
+// VC_MATH_UNARY_FUNCTION(Ceil, ceil)   // broken
+// VC_MATH_UNARY_FUNCTION(Trunc, trunc) // broken
+
+#undef VC_MATH_UNARY_FUNCTION
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
@@ -139,6 +155,7 @@ Vc::SimdMaskArray<T, N> IsInf(const Vc::SimdArray<T, N> &x)
 {
   return Vc::isinf(x);
 }
+
 }
 
 } // namespace vecCore

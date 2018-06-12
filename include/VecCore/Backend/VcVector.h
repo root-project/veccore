@@ -118,12 +118,28 @@ Vc::Vector<T> CopySign(const Vc::Vector<T> &x, const Vc::Vector<T> &y)
   return Vc::copysign(x, y);
 }
 
-template <typename T>
-VECCORE_FORCE_INLINE
-Vc::Vector<T> Pow(const Vc::Vector<T> &x, const Vc::Vector<T> &y)
-{
-  return Vc::exp(Vc::log(x) * y);
-}
+#define VC_MATH_UNARY_FUNCTION(F, f)                \
+template <typename T>                               \
+VECCORE_FORCE_INLINE                                \
+Vc::Vector<T> F(const Vc::Vector<T> &x)             \
+{ return Vc::f(x); }                                \
+
+VC_MATH_UNARY_FUNCTION(Exp, exp)
+VC_MATH_UNARY_FUNCTION(Log, log)
+VC_MATH_UNARY_FUNCTION(Log2, log2)
+VC_MATH_UNARY_FUNCTION(Log10, log10)
+VC_MATH_UNARY_FUNCTION(Sqrt, sqrt)
+
+VC_MATH_UNARY_FUNCTION(Sin, sin)
+VC_MATH_UNARY_FUNCTION(Cos, cos)
+VC_MATH_UNARY_FUNCTION(ASin, asin)
+VC_MATH_UNARY_FUNCTION(ATan, atan)
+
+// VC_MATH_UNARY_FUNCTION(Floor, floor) // broken
+// VC_MATH_UNARY_FUNCTION(Ceil, ceil)   // broken
+// VC_MATH_UNARY_FUNCTION(Trunc, trunc) // broken
+
+#undef VC_MATH_UNARY_FUNCTION
 
 template <typename T>
 VECCORE_FORCE_INLINE
@@ -140,6 +156,7 @@ Vc::Mask<T> IsInf(const Vc::Vector<T> &x)
 {
   return Vc::isinf(x);
 }
+
 }
 
 } // namespace vecCore
