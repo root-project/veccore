@@ -49,17 +49,34 @@ double uniform_random(double a, double b)
     }                                                                          \
   }                                                                            \
 
-#define BENCHMARK_MATH_FUNCTION(f, a, b)                                       \
+#define BENCHMARK_MATH_FUNCTION_SCALAR(f, a, b)                                \
    BENCHMARK_MATH_FUNCTION_RANGE(f, Scalar, a, b);                             \
    BENCHMARK_MATH_FUNCTION_RANGE(f, ScalarWrapper, a, b);                      \
-   BENCHMARK_MATH_FUNCTION_RANGE(f, VcScalar, a, b);                           \
-   BENCHMARK_MATH_FUNCTION_RANGE(f, VcVector, a, b);                           \
-   BENCHMARK_MATH_FUNCTION_RANGE(f, UMESimd,  a, b);                           \
    BENCHMARK(f##_Scalar);                                                      \
    BENCHMARK(f##_ScalarWrapper);                                               \
-   BENCHMARK(f##_VcScalar);                                                    \
-   BENCHMARK(f##_VcVector);                                                    \
-   BENCHMARK(f##_UMESimd);                                                     \
+
+#ifdef VECCORE_ENABLE_VC
+  #define BENCHMARK_MATH_FUNCTION_VC(f, a, b)                                  \
+     BENCHMARK_MATH_FUNCTION_RANGE(f, VcScalar, a, b);                         \
+     BENCHMARK_MATH_FUNCTION_RANGE(f, VcVector, a, b);                         \
+     BENCHMARK(f##_VcScalar);                                                  \
+     BENCHMARK(f##_VcVector);
+#else
+  #define BENCHMARK_MATH_FUNCTION_VC(f, a, b)
+#endif
+
+#ifdef VECCORE_ENABLE_UMESIMD
+  #define BENCHMARK_MATH_FUNCTION_UMESIMD(f, a, b)                             \
+     BENCHMARK_MATH_FUNCTION_RANGE(f, UMESimd, a, b);                          \
+     BENCHMARK(f##_UMESimd);
+#else
+  #define BENCHMARK_MATH_FUNCTION_UMESIMD(f, a, b)
+#endif
+
+#define BENCHMARK_MATH_FUNCTION(f, a, b)                                       \
+   BENCHMARK_MATH_FUNCTION_SCALAR(f, a, b);                                    \
+   BENCHMARK_MATH_FUNCTION_VC(f, a, b);                                        \
+   BENCHMARK_MATH_FUNCTION_UMESIMD(f, a, b);                                   \
 
 BENCHMARK_MATH_FUNCTION(Abs,   -FLT_MAX, FLT_MAX);
 BENCHMARK_MATH_FUNCTION(Floor, -FLT_MAX, FLT_MAX);
