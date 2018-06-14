@@ -130,13 +130,6 @@ namespace math {
 
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE
-UME::SIMD::SIMDVec_f<T, N> CopySign(const UME::SIMD::SIMDVec_f<T, N> &x, const UME::SIMD::SIMDVec_f<T, N> &y)
-{
-  return x.copysign(y);
-}
-
-template <typename T, uint32_t N>
-VECCORE_FORCE_INLINE
 void SinCos(const UME::SIMD::SIMDVec_f<T, N> &x, UME::SIMD::SIMDVec_f<T, N> *s, UME::SIMD::SIMDVec_f<T, N> *c)
 {
   *s = x.sin();
@@ -150,7 +143,7 @@ typename UME::SIMD::SIMDVec_f<T, N>       \
 F(const UME::SIMD::SIMDVec_f<T, N> &x)    \
 { return x.f(); }
 
-UMESIMD_MATH_UNARY_FUNCTION(Abs, abs)
+// UMESIMD_MATH_UNARY_FUNCTION(Abs, abs)  // Generic implementation is faster
 
 UMESIMD_MATH_UNARY_FUNCTION(Sin, sin)
 UMESIMD_MATH_UNARY_FUNCTION(Cos, cos)
