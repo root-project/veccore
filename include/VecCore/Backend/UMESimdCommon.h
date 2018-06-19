@@ -152,11 +152,11 @@ UMESIMD_MATH_UNARY_FUNCTION(ATan, atan)
 
 UMESIMD_MATH_UNARY_FUNCTION(Exp, exp)
 // UMESIMD_MATH_UNARY_FUNCTION(Log, log) // broken
-UMESIMD_MATH_UNARY_FUNCTION(Sqrt, sqrt)
+// UMESIMD_MATH_UNARY_FUNCTION(Sqrt, sqrt) // slower than std::sqrt()
 
 UMESIMD_MATH_UNARY_FUNCTION(Round, round)
-UMESIMD_MATH_UNARY_FUNCTION(Floor, floor)
-UMESIMD_MATH_UNARY_FUNCTION(Ceil, ceil)
+// UMESIMD_MATH_UNARY_FUNCTION(Floor, floor) // slower than std::floor()
+// UMESIMD_MATH_UNARY_FUNCTION(Ceil, ceil) // slower than std::ceil()
 
 #undef UMESIMD_MATH_UNARY_FUNCTION
 

@@ -124,6 +124,7 @@ VECCORE_FORCE_INLINE                                \
 Vc::Vector<T> F(const Vc::Vector<T> &x)             \
 { return Vc::f(x); }                                \
 
+VC_MATH_UNARY_FUNCTION(Abs, abs)
 VC_MATH_UNARY_FUNCTION(Exp, exp)
 VC_MATH_UNARY_FUNCTION(Log, log)
 VC_MATH_UNARY_FUNCTION(Log2, log2)
@@ -133,7 +134,7 @@ VC_MATH_UNARY_FUNCTION(Sqrt, sqrt)
 VC_MATH_UNARY_FUNCTION(Sin, sin)
 VC_MATH_UNARY_FUNCTION(Cos, cos)
 VC_MATH_UNARY_FUNCTION(ASin, asin)
-VC_MATH_UNARY_FUNCTION(ATan, atan)
+// VC_MATH_UNARY_FUNCTION(ATan, atan) // slower than std::atan()
 
 // VC_MATH_UNARY_FUNCTION(Floor, floor) // broken
 // VC_MATH_UNARY_FUNCTION(Ceil, ceil)   // broken
