@@ -88,7 +88,7 @@ double uniform_random(double a, double b)
 #define TEST_MATH_FUNCTION(F, f) TEST_MATH_FUNCTION_RANGE(F, f, -FLT_MAX, FLT_MAX)
 #define TEST_MATH_FUNCTION_ONE(F, f) TEST_MATH_FUNCTION_RANGE(F, f, -1.0, 1.0)
 #define TEST_MATH_FUNCTION_NEG(F, f) TEST_MATH_FUNCTION_RANGE(F, f, -1.0, 0.0)
-#define TEST_MATH_FUNCTION_POS(F, f) TEST_MATH_FUNCTION_RANGE(F, f, 0.0, 1.0)
+#define TEST_MATH_FUNCTION_POS(F, f) TEST_MATH_FUNCTION_RANGE(F, f, FLT_MIN, FLT_MAX)
 #define TEST_MATH_FUNCTION_TRIG(F, f) TEST_MATH_FUNCTION_RANGE(F, f, 0.0, 2.0 * M_PI)
 
 #define TEST_MATH_FUNCTION_2(F, f) TEST_MATH_FUNCTION_RANGE_2(F, f, -FLT_MAX, FLT_MAX, -FLT_MAX, FLT_MAX)
@@ -114,6 +114,7 @@ TEST_MATH_FUNCTION_ONE(ATanh, atanh);
 TEST_MATH_FUNCTION(Exp, exp);
 TEST_MATH_FUNCTION_POS(Log, log);
 TEST_MATH_FUNCTION_POS(Sqrt, sqrt);
+TEST_MATH_FUNCTION_POS(TGamma, tgamma);
 TEST_MATH_FUNCTION(Cbrt, cbrt);
 TEST_MATH_FUNCTION(Trunc, trunc);
 
@@ -126,7 +127,7 @@ REGISTER_TYPED_TEST_CASE_P(MathFunctions,
    Abs, CopySign, Floor, Ceil,
    Sin, Cos, Tan, ASin, ACos, ATan, ATan2,
    Sinh, Cosh, Tanh, ASinh, ACosh, ATanh,
-   Exp, Log, Sqrt, Cbrt, Pow, Trunc);
+   Exp, Log, TGamma, Sqrt, Cbrt, Pow, Trunc);
 
 #define TEST_BACKEND_P(name, x) \
   INSTANTIATE_TYPED_TEST_CASE_P(name, MathFunctions, FloatTypes<vecCore::backend::x>);
