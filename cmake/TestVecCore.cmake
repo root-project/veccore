@@ -5,13 +5,19 @@ set(CTEST_BINARY_DIRECTORY "$ENV{PWD}/build")
 
 set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
 
+if(DEFINED ENV{TARGET_ISA})
+  set(TARGET_ISA $ENV{TARGET_ISA})
+else()
+  set(TARGET_ISA SSE4.2)
+endif()
+
 set(options
   -DBUILD_BENCHMARKS=ON
   -DBUILD_TESTING=ON
   -DBUILD_UMESIMD=ON
   -DBUILD_VC=ON
-  -DTARGET_ISA=SSE4.2
-  )
+  -DTARGET_ISA=${TARGET_ISA}
+)
 
 ctest_start(Continuous)
 ctest_configure(OPTIONS "${options}")
