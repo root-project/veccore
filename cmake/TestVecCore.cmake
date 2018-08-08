@@ -19,6 +19,8 @@ set(options
   -DTARGET_ISA=${TARGET_ISA}
 )
 
+ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
+
 ctest_start(Continuous)
 ctest_configure(OPTIONS "${options}")
 ctest_build()
