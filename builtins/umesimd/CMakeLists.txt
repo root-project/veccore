@@ -27,9 +27,10 @@ set(UMESIMD_INCLUDE_DIRS ${UMESIMD_ROOTDIR}/include)
 
 add_library(umesimd INTERFACE)
 target_include_directories(umesimd INTERFACE $<BUILD_INTERFACE:${UMESIMD_ROOTDIR}/include>)
-add_dependencies(umesimd ${UMESIMD_PROJECT})
-
 add_library(UMESIMD::UMESIMD ALIAS umesimd)
+
+add_dependencies(umesimd ${UMESIMD_PROJECT})
+add_dependencies(VecCore ${UMESIMD_PROJECT})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UMESIMD

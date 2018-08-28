@@ -34,9 +34,9 @@ if (CUDA)
   include(CUDA)
 endif()
 
-include(Builtins)
-
 add_library(VecCore INTERFACE)
+
+include(Builtins)
 
 if (VC)
   find_package(Vc 1.2.0 REQUIRED)

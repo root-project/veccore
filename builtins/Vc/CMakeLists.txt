@@ -24,6 +24,7 @@ ExternalProject_Add(${Vc_PROJECT}
   INSTALL_COMMAND env DESTDIR=${Vc_DESTDIR} ${CMAKE_COMMAND} --build . --target install
 )
 
+set(Vc_LIBRARY ${Vc_LIBRARY} CACHE INTERNAL "" FORCE)
 set(Vc_LIBRARIES ${Vc_LIBRARY} CACHE INTERNAL "" FORCE)
 set(Vc_INCLUDE_DIR "${Vc_ROOTDIR}/include" CACHE INTERNAL "" FORCE)
 set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include" CACHE INTERNAL "" FORCE)
@@ -31,7 +32,9 @@ set(Vc_INCLUDE_DIRS "${Vc_ROOTDIR}/include" CACHE INTERNAL "" FORCE)
 add_library(Vc STATIC IMPORTED)
 set_property(TARGET Vc PROPERTY IMPORTED_LOCATION ${Vc_LIBRARY})
 set_property(TARGET Vc PROPERTY INTERFACE_INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${Vc_ROOTDIR}/include>)
+
 add_dependencies(Vc ${Vc_PROJECT})
+add_dependencies(VecCore ${Vc_PROJECT})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Vc
