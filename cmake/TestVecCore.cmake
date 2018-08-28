@@ -23,5 +23,5 @@ ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 
 ctest_start(Continuous)
 ctest_configure(OPTIONS "${options}")
-ctest_build()
+ctest_build(FLAGS -j)
 ctest_test()
