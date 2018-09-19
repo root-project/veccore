@@ -5,7 +5,6 @@
 
 #include <cfloat>
 #include <climits>
-#include <cstdint>
 #include <cmath>
 
 namespace vecCore {
@@ -31,67 +30,83 @@ struct NumericLimits<bool> {
 };
 
 template <>
-struct NumericLimits<int8_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr int8_t Min() { return INT8_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int8_t Max() { return INT8_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int8_t Lowest() { return INT8_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int8_t Highest() { return INT8_MAX; }
+struct NumericLimits<char> {
+  VECCORE_ATT_HOST_DEVICE static constexpr char Min() { return CHAR_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr char Max() { return CHAR_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr char Lowest() { return CHAR_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr char Highest() { return CHAR_MAX; }
 };
 
 template <>
-struct NumericLimits<uint8_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr uint8_t Min() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint8_t Max() { return UINT8_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint8_t Lowest() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint8_t Highest() { return UINT8_MAX; }
+struct NumericLimits<unsigned char> {
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned char Min() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned char Max() { return UCHAR_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned char Lowest() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned char Highest() { return UCHAR_MAX; }
 };
 
 template <>
-struct NumericLimits<int16_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr int16_t Min() { return INT16_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int16_t Max() { return INT16_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int16_t Lowest() { return INT16_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int16_t Highest() { return INT16_MAX; }
+struct NumericLimits<short> {
+  VECCORE_ATT_HOST_DEVICE static constexpr short Min() { return SHRT_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr short Max() { return SHRT_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr short Lowest() { return SHRT_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr short Highest() { return SHRT_MAX; }
 };
 
 template <>
-struct NumericLimits<uint16_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr uint16_t Min() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint16_t Max() { return UINT16_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint16_t Lowest() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint16_t Highest() { return UINT16_MAX; }
+struct NumericLimits<unsigned short> {
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned short Min() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned short Max() { return USHRT_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned short Lowest() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned short Highest() { return USHRT_MAX; }
 };
 
 template <>
-struct NumericLimits<int32_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr int32_t Min() { return INT32_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int32_t Max() { return INT32_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int32_t Lowest() { return INT32_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int32_t Highest() { return INT32_MAX; }
+struct NumericLimits<int> {
+  VECCORE_ATT_HOST_DEVICE static constexpr int Min() { return INT_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr int Max() { return INT_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr int Lowest() { return INT_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr int Highest() { return INT_MAX; }
 };
 
 template <>
-struct NumericLimits<uint32_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr uint32_t Min() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint32_t Max() { return UINT32_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint32_t Lowest() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint32_t Highest() { return UINT32_MAX; }
+struct NumericLimits<unsigned int> {
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned int Min() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned int Max() { return UINT_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned int Lowest() { return 0; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned int Highest() { return UINT_MAX; }
 };
 
 template <>
-struct NumericLimits<int64_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr int64_t Min() { return INT64_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int64_t Max() { return INT64_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int64_t Lowest() { return INT64_MIN; }
-  VECCORE_ATT_HOST_DEVICE static constexpr int64_t Highest() { return INT64_MAX; }
+struct NumericLimits<long> {
+  VECCORE_ATT_HOST_DEVICE static constexpr long Min() { return LONG_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long Max() { return LONG_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long Lowest() { return LONG_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long Highest() { return LONG_MAX; }
 };
 
 template <>
-struct NumericLimits<uint64_t> {
-  VECCORE_ATT_HOST_DEVICE static constexpr uint64_t Min() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint64_t Max() { return UINT64_MAX; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint64_t Lowest() { return 0; }
-  VECCORE_ATT_HOST_DEVICE static constexpr uint64_t Highest() { return UINT64_MAX; }
+struct NumericLimits<unsigned long> {
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long Min() { return 0UL; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long Max() { return ULONG_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long Lowest() { return 0UL; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long Highest() { return ULONG_MAX; }
+};
+
+template <>
+struct NumericLimits<long long> {
+  VECCORE_ATT_HOST_DEVICE static constexpr long long Min() { return LLONG_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long long Max() { return LLONG_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long long Lowest() { return LLONG_MIN; }
+  VECCORE_ATT_HOST_DEVICE static constexpr long long Highest() { return LLONG_MAX; }
+};
+
+template <>
+struct NumericLimits<unsigned long long> {
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long long Min() { return 0ULL; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long long Max() { return ULLONG_MAX; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long long Lowest() { return 0ULL; }
+  VECCORE_ATT_HOST_DEVICE static constexpr unsigned long long Highest() { return ULLONG_MAX; }
 };
 
 template <>
