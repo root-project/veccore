@@ -22,9 +22,13 @@ void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 
 void colormap(int c, int& cr, int& cg, int& cb)
 {
-    double r, g, b, x = 1.0 - 0.7*std::pow(1.0 - c/256.0, 10.0);
+    double x = 1.0 - 0.7*std::pow(1.0 - c/256.0, 10.0);
 
     c = x < 0.50 ? (x < 0.25 ? 0 : 1) : (x < 0.75 ? 2 : 3);
+
+    double r = 0.0;
+    double g = 0.0;
+    double b = 0.0;
 
     switch(c) {
         case 0:
