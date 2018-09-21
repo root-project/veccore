@@ -40,7 +40,7 @@ void julia_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
              Scalar<T> ymin, Scalar<T> ymax, size_t ny,
              Scalar<Index<T>> max_iter, unsigned char *image, Scalar<T> real, Scalar<T> im)
 {
-    T iota;
+    T iota(0.0);
     for (size_t i = 0; i < VectorSize<T>(); ++i)
         Set<T>(iota, i, i);
 

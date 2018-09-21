@@ -25,7 +25,7 @@ template <typename T>                         \
 VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE  \
 T F(const T &x)                               \
 {                                             \
-  T ret;                                      \
+  T ret(x);                                   \
   for(size_t i = 0; i < VectorSize<T>(); ++i) \
     Set(ret, i, std::f(Get(x,i)));            \
   return ret;                                 \
@@ -36,7 +36,7 @@ template <typename T>                         \
 VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE  \
 T F(const T &x, const T &y)                   \
 {                                             \
-  T ret;                                      \
+  T ret(x);                                   \
   for(size_t i = 0; i < VectorSize<T>(); ++i) \
     Set(ret, i, std::f(Get(x,i), Get(y,i)));  \
   return ret;                                 \
