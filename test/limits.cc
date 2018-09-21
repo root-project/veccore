@@ -57,7 +57,7 @@ void Test(const char *name)
   printf("\n\n");
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   Test<backend::Scalar>("Scalar");
   Test<backend::ScalarWrapper>("ScalarWrapper");

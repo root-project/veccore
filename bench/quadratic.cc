@@ -282,7 +282,7 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   printf("%20s %8.1lf %7.1lf\n", name, mean, sigma);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   float *a, *b, *c, *x1, *x2;
   int *roots;

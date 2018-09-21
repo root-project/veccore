@@ -94,7 +94,7 @@ void bench_mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
     write_png(filename.c_str(), image, nx, ny);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     double xmin = -2.1, xmax = 1.1;
     double ymin = -1.35, ymax = 1.35;
