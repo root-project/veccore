@@ -3,68 +3,68 @@
 
 namespace vecCore {
 
-template <typename T>
-struct TypeTraits<Vc::Mask<T>> {
+template <typename T, class Abi>
+struct TypeTraits<Vc::Mask<T, Abi>> {
   using IndexType  = size_t;
   using ScalarType = Bool_s;
 };
 
-template <typename T>
-struct TypeTraits<Vc::Vector<T>> {
+template <typename T, class Abi>
+struct TypeTraits<Vc::Vector<T, Abi>> {
   using ScalarType = T;
-  using MaskType   = typename Vc::Vector<T>::MaskType;
-  using IndexType  = typename Vc::Vector<T>::IndexType;
+  using MaskType   = typename Vc::Vector<T, Abi>::MaskType;
+  using IndexType  = typename Vc::Vector<T, Abi>::IndexType;
 };
 
 namespace backend {
 
-template <typename T = Real_s>
+template <typename T = Real_s, class Abi = Vc::VectorAbi::Best<T>>
 class VcVectorT {
 public:
-  using Real_v   = Vc::Vector<T>;
-  using Float_v  = Vc::Vector<Float_s>;
-  using Double_v = Vc::Vector<Double_s>;
+  using Real_v   = Vc::Vector<T, Abi>;
+  using Float_v  = Vc::Vector<Float_s, Abi>;
+  using Double_v = Vc::Vector<Double_s, Abi>;
 
-  using Int_v   = Vc::Vector<Int_s>;
-  using Int16_v = Vc::Vector<Int16_s>;
-  using Int32_v = Vc::Vector<Int32_s>;
-  using Int64_v = Vc::Vector<Int64_s>;
+  using Int_v   = Vc::Vector<Int_s, Abi>;
+  using Int16_v = Vc::Vector<Int16_s, Abi>;
+  using Int32_v = Vc::Vector<Int32_s, Abi>;
+  using Int64_v = Vc::Vector<Int64_s, Abi>;
 
-  using UInt_v   = Vc::Vector<UInt_s>;
-  using UInt16_v = Vc::Vector<UInt16_s>;
-  using UInt32_v = Vc::Vector<UInt32_s>;
-  using UInt64_v = Vc::Vector<UInt64_s>;
+  using UInt_v   = Vc::Vector<UInt_s, Abi>;
+  using UInt16_v = Vc::Vector<UInt16_s, Abi>;
+  using UInt32_v = Vc::Vector<UInt32_s, Abi>;
+  using UInt64_v = Vc::Vector<UInt64_s, Abi>;
 };
 
 using VcVector = VcVectorT<>;
 
 } // namespace backend
 
-template <typename T>
+template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::Mask<T> &mask)
+Bool_s MaskEmpty(const Vc::Mask<T, Abi> &mask)
 {
   return mask.isEmpty();
 }
 
-template <typename T>
+template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::Mask<T> &mask)
+Bool_s MaskFull(const Vc::Mask<T, Abi> &mask)
 {
   return mask.isFull();
 }
 
-template <typename T>
-struct IndexingImplementation<Vc::Mask<T>> {
-  using M = Vc::Mask<T>;
+template <typename T, class Abi>
+struct IndexingImplementation<Vc::Mask<T, Abi>> {
+  using M = Vc::Mask<T, Abi>;
   static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
 
   static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
 };
 
-template <typename T>
-struct LoadStoreImplementation<Vc::Vector<T>> {
-   using V = Vc::Vector<T>;
+template <typename T, class Abi>
+struct LoadStoreImplementation<Vc::Vector<T, Abi>> {
+   using V = Vc::Vector<T, Abi>;
   template <typename S = Scalar<V>>
   static inline void Load(V &v, S const *ptr)
   {
@@ -78,9 +78,9 @@ struct LoadStoreImplementation<Vc::Vector<T>> {
   }
 };
 
-template <typename T>
-struct LoadStoreImplementation<Vc::Mask<T>> {
-  using M = Vc::Mask<T>;
+template <typename T, class Abi>
+struct LoadStoreImplementation<Vc::Mask<T, Abi>> {
+  using M = Vc::Mask<T, Abi>;
 
   template <typename S = Scalar<T>>
   static inline void Load(M &mask, Bool_s const *ptr)
@@ -95,10 +95,10 @@ struct LoadStoreImplementation<Vc::Mask<T>> {
   }
 };
 
-template <typename T>
-struct MaskingImplementation<Vc::Vector<T>> {
-  using M = Vc::Mask<T>;
-  using V = Vc::Vector<T>;
+template <typename T, class Abi>
+struct MaskingImplementation<Vc::Vector<T, Abi>> {
+  using M = Vc::Mask<T, Abi>;
+  using V = Vc::Vector<T, Abi>;
 
   static inline void Assign(V &dst, M const &mask, V const &src) { dst(mask) = src; }
 
@@ -111,17 +111,17 @@ struct MaskingImplementation<Vc::Vector<T>> {
 
 namespace math {
 
-template <typename T>
+template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Vc::Vector<T> CopySign(const Vc::Vector<T> &x, const Vc::Vector<T> &y)
+Vc::Vector<T, Abi> CopySign(const Vc::Vector<T, Abi> &x, const Vc::Vector<T, Abi> &y)
 {
   return Vc::copysign(x, y);
 }
 
 #define VC_MATH_UNARY_FUNCTION(F, f)                \
-template <typename T>                               \
+template <typename T, class Abi>                    \
 VECCORE_FORCE_INLINE                                \
-Vc::Vector<T> F(const Vc::Vector<T> &x)             \
+Vc::Vector<T, Abi> F(const Vc::Vector<T, Abi> &x)   \
 { return Vc::f(x); }                                \
 
 VC_MATH_UNARY_FUNCTION(Abs, abs)
@@ -142,18 +142,18 @@ VC_MATH_UNARY_FUNCTION(ASin, asin)
 
 #undef VC_MATH_UNARY_FUNCTION
 
-template <typename T>
+template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Vc::Vector<T> Tan(const Vc::Vector<T> &x)
+Vc::Vector<T, Abi> Tan(const Vc::Vector<T, Abi> &x)
 {
-  Vc::Vector<T> s, c;
+  Vc::Vector<T, Abi> s, c;
   Vc::sincos(x, &s, &c);
   return s / c;
 }
 
-template <typename T>
+template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Vc::Mask<T> IsInf(const Vc::Vector<T> &x)
+Vc::Mask<T, Abi> IsInf(const Vc::Vector<T, Abi> &x)
 {
   return Vc::isinf(x);
 }
