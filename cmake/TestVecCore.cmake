@@ -22,6 +22,11 @@ set(options
 ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 
 ctest_start(Continuous)
-ctest_configure(OPTIONS "${options}")
+
+ctest_configure(OPTIONS "${options}" RETURN_VALUE status)
+if(NOT ${status} EQUAL 0)
+  message(FATAL_ERROR "Failed to configure project")
+endif()
+
 ctest_build(FLAGS -j)
 ctest_test()
