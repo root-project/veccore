@@ -79,6 +79,40 @@ struct LoadStoreImplementation<UME::SIMD::SIMDVec_f<T, N>> {
   }
 };
 
+template <typename T, uint32_t N>
+struct LoadStoreImplementation<UME::SIMD::SIMDVec_i<T, N>> {
+  using V = UME::SIMD::SIMDVec_i<T, N>;
+
+  template <typename S = Scalar<V>>
+  static inline void Load(V &v, S const *ptr)
+  {
+    v.load(ptr);
+  }
+
+  template <typename S = Scalar<V>>
+  static inline void Store(V const &v, S *ptr)
+  {
+    v.store(ptr);
+  }
+};
+
+template <typename T, uint32_t N>
+struct LoadStoreImplementation<UME::SIMD::SIMDVec_u<T, N>> {
+  using V = UME::SIMD::SIMDVec_u<T, N>;
+
+  template <typename S = Scalar<V>>
+  static inline void Load(V &v, S const *ptr)
+  {
+    v.load(ptr);
+  }
+
+  template <typename S = Scalar<V>>
+  static inline void Store(V const &v, S *ptr)
+  {
+    v.store(ptr);
+  }
+};
+
 template <uint32_t N>
 struct LoadStoreImplementation<UME::SIMD::SIMDVecMask<N>> {
   using M = UME::SIMD::SIMDVecMask<N>;
