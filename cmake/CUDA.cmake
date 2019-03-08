@@ -4,11 +4,11 @@ find_package(CUDA REQUIRED)
 
 add_definitions(-DVECCORE_ENABLE_CUDA)
 
-if(CMAKE_CXX_STANDARD STREQUAL 11)
-  list(APPEND CUDA_NVCC_FLAGS -std=c++11)
-else()
+if(CMAKE_CXX_STANDARD VERSION_LESS 11)
   message(FATAL_ERROR "CUDA compilation supports only ISO C++ 2011 standard")
 endif()
+
+list(APPEND CUDA_NVCC_FLAGS -std=c++${CMAKE_CXX_STANDARD})
 
 set(CUDA_NVCC_FLAGS_DEBUG          "-O2 -g -G")
 set(CUDA_NVCC_FLAGS_RELEASE        "-O3 -use_fast_math")
