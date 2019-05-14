@@ -8,7 +8,4 @@ set(FLAGS_AVX    "-march=corei7-avx")
 set(FLAGS_AVX2   "-march=core-avx2")
 set(FLAGS_AVX512 "-march=skylake-avx512")
 set(FLAGS_NATIVE "-march=native")
-
-if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
-  set(FLAGS_KNL "-march=knl")
-endif()
+set(FLAGS_KNL    "-march=knl")
