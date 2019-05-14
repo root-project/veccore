@@ -54,7 +54,7 @@ TYPED_TEST_P(AlignmentTest, Stack)
 
   Vector_t v;
 
-  EXPECT_TRUE(is_aligned(&v, VECCORE_SIMD_ALIGN));
+  EXPECT_TRUE(is_aligned(&v, alignof(Vector_t)));
 }
 
 TYPED_TEST_P(AlignmentTest, Heap)
@@ -63,7 +63,7 @@ TYPED_TEST_P(AlignmentTest, Heap)
 
   Vector_t *v = new Vector_t();
 
-  EXPECT_TRUE(is_aligned(v, VECCORE_SIMD_ALIGN));
+  EXPECT_TRUE(is_aligned(v, alignof(Vector_t)));
 }
 
 TYPED_TEST_P(AlignmentTest, StdArray)
@@ -72,7 +72,7 @@ TYPED_TEST_P(AlignmentTest, StdArray)
 
   std::array<Vector_t, 8> v;
 
-  EXPECT_TRUE(is_aligned(std::addressof(v), VECCORE_SIMD_ALIGN));
+  EXPECT_TRUE(is_aligned(std::addressof(v), alignof(Vector_t)));
 }
 
 #if 0
@@ -82,7 +82,7 @@ TYPED_TEST_P(AlignmentTest, StdVector)
 
   std::vector<Vector_t> v(8);
 
-  EXPECT_TRUE(is_aligned(std::addressof(v), VECCORE_SIMD_ALIGN));
+  EXPECT_TRUE(is_aligned(std::addressof(v), alignof(Vector_t)));
 }
 
 TYPED_TEST_P(AlignmentTest, Collection)
@@ -91,7 +91,7 @@ TYPED_TEST_P(AlignmentTest, Collection)
 
   std::vector<std::array<Vector_t, 8>> v(8);
 
-  EXPECT_TRUE(is_aligned(std::addressof(v), VECCORE_SIMD_ALIGN));
+  EXPECT_TRUE(is_aligned(std::addressof(v), alignof(Vector_t)));
 }
 
 REGISTER_TYPED_TEST_CASE_P(AlignmentTest, Stack, Heap, StdArray, StdVector, Collection);
@@ -109,7 +109,12 @@ REGISTER_TYPED_TEST_CASE_P(AlignmentTest, Stack, Heap, StdArray);
 
 #if defined(VECCORE_ENABLE_VC)
 TEST_BACKEND_P(VcVector, VcTypes, VcVector);
-TEST_BACKEND_P(VcSimdArray, VcTypes, VcSimdArray<16>);
+#ifdef __SSE__
+TEST_BACKEND_P(VcSimdArraySSE, VcTypes, VcSimdArray<2>);
+#endif
+#ifdef __AVX__
+TEST_BACKEND_P(VcSimdArrayAVX, VcTypes, VcSimdArray<4>);
+#endif
 #endif
 
 /* To be turned on when UME::SIMD has aligned types */
