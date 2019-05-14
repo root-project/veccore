@@ -23,7 +23,7 @@ library, you need a compiler with support for C++11. We recommend using at least
 the following compiler versions:
 
  - GCC 5.3.0
- - Clang 3.8.0
+ - Clang 4.0
  - AppleClang 7.3.0
  - Intel® C/C++ Compiler 16.0.2
 
