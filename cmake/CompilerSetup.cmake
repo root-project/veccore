@@ -1,12 +1,3 @@
-# default compilation flags for all compilers
-# can be overwritten by compiler module if needed
-
-add_compile_options(-Wall -Wextra)
-
-set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
-
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple|)Clang|GNU|Intel")
   include(${CMAKE_CXX_COMPILER_ID})
 else()
