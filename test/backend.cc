@@ -318,10 +318,11 @@ TYPED_TEST_P(VectorInterfaceTest, LoadStore)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
-  auto N   = 2 * kVS;
-  Scalar_t input[N]  __attribute__((aligned(64)));
-  Scalar_t output[N] __attribute__((aligned(64)));
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto N   = 2 * kVS;
+
+  alignas(64) Scalar_t input[N];
+  alignas(64) Scalar_t output[N];
 
   // init input; output
   for (vecCore::UInt_s i = 0; i < N; ++i) {
@@ -347,8 +348,9 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
-  auto N   = 2 * kVS;
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto N   = 2 * kVS;
+
   Scalar_t input[N];
   Scalar_t output[N];
 
@@ -375,8 +377,9 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
   using Scalar_t = typename TestFixture::Scalar_t;
   using Mask_t   = typename vecCore::Mask_v<Vector_t>;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
-  auto N   = 2 * kVS;
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto N   = 2 * kVS;
+
   Scalar_t input[N];
   bool output[N];
 
@@ -401,7 +404,8 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+
   Scalar_t input[kVS];
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i) {
@@ -419,7 +423,8 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+
   Scalar_t input[kVS];
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i) {
@@ -442,7 +447,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
 
   vecCore::Mask_v<Vector_t> fmask(false), tmask(true), mmask;
 
-  size_t kVS = vecCore::VectorSize<Vector_t>();
+  constexpr size_t kVS = vecCore::VectorSize<Vector_t>();
 
   Vector_t input;
 
@@ -464,7 +469,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
 
   vecCore::Mask_v<Vector_t> mask(false);
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
 
   // check for all false
 
@@ -539,7 +544,7 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
   using Index_v  = typename vecCore::Index_v<Vector_t>;
   using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
 
-  size_t N = vecCore::VectorSize<Vector_t>();
+  constexpr size_t N = vecCore::VectorSize<Vector_t>();
 
   Scalar_t input[N * N];
   for (vecCore::UInt_s i = 0; i < N * N; ++i) {
@@ -567,7 +572,7 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
   using Index_v  = typename vecCore::Index_v<Vector_t>;
   using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
 
-  size_t N = vecCore::VectorSize<Vector_t>();
+  constexpr size_t N = vecCore::VectorSize<Vector_t>();
 
   Index_t index[N];
   Scalar_t input[N], output[N];
@@ -659,7 +664,8 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  auto kVS = vecCore::VectorSize<Vector_t>();
+  constexpr auto kVS = vecCore::VectorSize<Vector_t>();
+
   Scalar_t input[kVS];
   Scalar_t output[kVS];
 
