@@ -21,8 +21,11 @@ target_link_libraries(mathbench-fast benchmark benchmark_main VecCore)
 add_executable(quadratic quadratic.cc)
 target_link_libraries(quadratic VecCore)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GD IMPORTED_TARGET gdlib)
+find_package(PkgConfig)
+
+if(PKG_CONFIG_FOUND)
+  pkg_check_modules(GD IMPORTED_TARGET gdlib)
+endif()
 
 add_library(png STATIC png.cc)
 
