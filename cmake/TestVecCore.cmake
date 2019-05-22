@@ -1,32 +1,32 @@
 set(CTEST_PROJECT_NAME "VecCore")
 
-set(CTEST_SOURCE_DIRECTORY "$ENV{PWD}")
-set(CTEST_BINARY_DIRECTORY "$ENV{PWD}/build")
+set(CTEST_SOURCE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/..")
+set(CTEST_BINARY_DIRECTORY "${CTEST_SOURCE_DIRECTORY}/build")
 
-set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 
-if(DEFINED ENV{TARGET_ISA})
-  set(TARGET_ISA $ENV{TARGET_ISA})
+if(DEFINED ENV{CMAKE_GENERATOR})
+  set(CTEST_CMAKE_GENERATOR $ENV{CMAKE_GENERATOR})
 else()
-  set(TARGET_ISA SSE4.2)
+  execute_process(COMMAND ${CMAKE_COMMAND} --system-information
+    OUTPUT_VARIABLE CMAKE_SYSTEM_INFORMATION ERROR_VARIABLE ERROR)
+  if(ERROR)
+    message(FATAL_ERROR "Could not detect default CMake generator")
+  endif()
+  string(REGEX REPLACE ".+CMAKE_GENERATOR \"([-0-9A-Za-z ]+)\".*$" "\\1"
+    CTEST_CMAKE_GENERATOR "${CMAKE_SYSTEM_INFORMATION}")
 endif()
 
-set(options
+set(CMAKE_ARGS
   -DBUILD_BENCHMARKS=ON
   -DBUILD_TESTING=ON
-  -DBUILD_UMESIMD=ON
-  -DBUILD_VC=ON
-  -DTARGET_ISA=${TARGET_ISA}
+  -DBUILD_UMESIMD=${UNIX}
+  -DBUILD_VC=${UNIX}
+  $ENV{CMAKE_ARGS}
+  ${CMAKE_ARGS}
 )
 
-ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
-
 ctest_start(Continuous)
-
-ctest_configure(OPTIONS "${options}" RETURN_VALUE status)
-if(NOT ${status} EQUAL 0)
-  message(FATAL_ERROR "Failed to configure project")
-endif()
-
-ctest_build(FLAGS -j)
+ctest_configure(OPTIONS "${CMAKE_ARGS}")
+ctest_build()
 ctest_test()
