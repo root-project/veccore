@@ -2,7 +2,11 @@
 #define VECCORE_SIMD_H
 
 #if defined(__i386__) || defined(__x86_64__)
-#include <x86intrin.h>
+#  ifdef _MSC_VER
+#    include <intrin.h>
+#  else
+#    include <x86intrin.h>
+#  endif
 #endif
 
 #if defined(__AVX512F__) || defined(__MIC__)
