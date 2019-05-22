@@ -4,6 +4,10 @@
 #include "CUDA.h"
 #include "SIMD.h"
 
+#ifdef _MSC_VER
+#define __restrict__ __restrict
+#endif
+
 #ifndef VECCORE_NO_FORCED_INLINING
 #ifdef _MSC_VER
 #define VECCORE_FORCE_NOINLINE __declspec(noinline)
