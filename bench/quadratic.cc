@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <limits>
+#include <random>
 
 #include "timer.h"
 #include <VecCore/VecCore>
@@ -151,8 +152,8 @@ VECCORE_FORCE_NOINLINE
 void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                    float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<milliseconds> timer;
-  double t[kNruns], mean = 0.0, sigma = 0.0;
+  Timer<cycles> timer;
+  unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
     for (size_t i = 0; i < kN; i ++)
@@ -163,28 +164,23 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / kNruns;
-
-  for (size_t n = 0; n < kNruns; n++)
-    sigma += std::pow(t[n] - mean, 2.0);
-
-  sigma = std::sqrt(sigma);
+  mean = mean / (kN * kNruns);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((kN - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * rand()/RAND_MAX);
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("%20s %8.1lf %7.1lf\n", "Scalar", mean, sigma);
+  printf("%20s %6llu\n", "Scalar", mean);
 }
 
 VECCORE_FORCE_NOINLINE
 void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                             float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<milliseconds> timer;
-  double t[kNruns], mean = 0.0, sigma = 0.0;
+  Timer<cycles> timer;
+  unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
     for (size_t i = 0; i < kN; i ++)
@@ -195,20 +191,15 @@ void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict
   for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / kNruns;
-
-  for (size_t n = 0; n < kNruns; n++)
-    sigma += std::pow(t[n] - mean, 2.0);
-
-  sigma = std::sqrt(sigma);
+  mean = mean / (kN * kNruns);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((kN - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * rand()/RAND_MAX);
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("%20s %8.1lf %7.1lf\n", "Optimized Scalar", mean, sigma);
+  printf("%20s %6llu\n", "Optimized Scalar", mean);
 }
 
 #ifdef __AVX2__
@@ -216,8 +207,8 @@ VECCORE_FORCE_NOINLINE
 void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                        float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<milliseconds> timer;
-  double t[kNruns], mean = 0.0, sigma = 0.0;
+  Timer<cycles> timer;
+  unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
     for (size_t i = 0; i < kN; i += 8)
@@ -228,20 +219,15 @@ void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b,
   for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / kNruns;
-
-  for (size_t n = 0; n < kNruns; n++)
-    sigma += std::pow(t[n] - mean, 2.0);
-
-  sigma = std::sqrt(sigma);
+  mean = mean / (kN * kNruns);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((kN - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * rand()/RAND_MAX);
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("%20s %8.1lf %7.1lf\n", "AVX2 Intrinsics", mean, sigma);
+  printf("%20s %6llu\n", "AVX2 Intrinsics", mean);
 }
 #endif
 
@@ -253,8 +239,8 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   using Float_v = typename Backend::Float_v;
   using Int32_v = typename Backend::Int32_v;
 
-  Timer<milliseconds> timer;
-  double t[kNruns], mean = 0.0, sigma = 0.0;
+  Timer<cycles> timer;
+  unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
     for (size_t i = 0; i < kN; i += VectorSize<Float_v>())
@@ -266,20 +252,15 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   for (size_t n = 0; n < kNruns; n++)
     mean += t[n];
 
-  mean = mean / kNruns;
-
-  for (size_t n = 0; n < kNruns; n++)
-    sigma += std::pow(t[n] - mean, 2.0);
-
-  sigma = std::sqrt(sigma);
+  mean = mean / (kN * kNruns);
 
 #ifdef VERBOSE
-  size_t index = (size_t)((kN - 100) * drand48());
+  size_t index = (size_t)((kN - 100) * rand()/RAND_MAX);
   for (size_t i = index; i < index + 10; i++)
     printf("%d: a = % 8.3f, b = % 8.3f, c = % 8.3f, roots = %d, x1 = % 8.3f, x2 = % 8.3f\n", i, a[i], b[i], c[i],
            roots[i], roots[i] > 0 ? x1[i] : 0, roots[i] > 1 ? x2[i] : 0);
 #endif
-  printf("%20s %8.1lf %7.1lf\n", name, mean, sigma);
+  printf("%20s %6llu\n", name, mean);
 }
 
 int main()
@@ -294,19 +275,24 @@ int main()
   x2    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
   roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(int));
 
-  srand48(time(NULL));
+  srand((unsigned)time(NULL));
+
+  std::random_device rng;
+  std::default_random_engine g(rng());
+  std::uniform_real_distribution<float> dist(-10.0f, 10.0f);
 
   for (size_t i = 0; i < kN; i++) {
-    a[i]     = 10.0 * (drand48() - 0.5);
-    b[i]     = 10.0 * (drand48() - 0.5);
-    c[i]     = 50.0 * (drand48() - 0.5);
-    x1[i]    = 0.0;
-    x2[i]    = 0.0;
+    a[i]     = dist(g);
+    b[i]     = dist(g);
+    c[i]     = 5.0f * dist(g);
+    x1[i]    = 0.0f;
+    x2[i]    = 0.0f;
     roots[i] = 0;
   }
 
-  printf("             Backend     Mean / Sigma (ms)\n");
-  printf("------------------------------------------\n");
+  printf("------------------------------------\n");
+  printf("             Backend / Mean (cycles)\n");
+  printf("------------------------------------\n");
 
   TestQuadSolve(a, b, c, x1, x2, roots, kN);
   TestQuadSolveOptimized(a, b, c, x1, x2, roots, kN);
@@ -332,7 +318,7 @@ int main()
   TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<16>");
   TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<32>");
 #endif
-  printf("------------------------------------------\n");
+  printf("------------------------------------\n\n");
 
   AlignedFree(a);
   AlignedFree(b);
