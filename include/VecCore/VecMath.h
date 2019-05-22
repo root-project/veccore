@@ -1,6 +1,11 @@
 #ifndef VECCORE_MATH_H
 #define VECCORE_MATH_H
 
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
 #include <cmath>
 
 #if defined(__APPLE__) && !defined(NVCC)
