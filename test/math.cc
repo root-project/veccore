@@ -1,5 +1,6 @@
 #include <VecCore/VecCore>
 
+#include <random>
 #include <type_traits>
 #include <gtest/gtest.h>
 
@@ -25,24 +26,24 @@ class MathFunctions : public VectorTypeTest<T> {
 
 TYPED_TEST_CASE_P(MathFunctions);
 
-double uniform_random(double a, double b)
-{
-  return a + (b - a) * drand48();
-}
-
 #define TEST_MATH_FUNCTION_RANGE(func, stdfunc, a, b)                 \
   TYPED_TEST_P(MathFunctions, func)                                   \
   {                                                                   \
     using Scalar_t = typename TestFixture::Scalar_t;                  \
     using Vector_t = typename TestFixture::Vector_t;                  \
                                                                       \
-    auto kVS = vecCore::VectorSize<Vector_t>();                       \
-    size_t N = 16384;                                                 \
-    Scalar_t input[N]  __attribute__((aligned(VECCORE_SIMD_ALIGN)));  \
-    Scalar_t output[N] __attribute__((aligned(VECCORE_SIMD_ALIGN)));  \
+    constexpr size_t N = 16384;                                       \
+    constexpr auto kVS = vecCore::VectorSize<Vector_t>();             \
+                                                                      \
+    alignas(64) Scalar_t input[N] ;                                   \
+    alignas(64) Scalar_t output[N];                                   \
+                                                                      \
+    std::random_device rng;                                           \
+    std::default_random_engine g(rng());                              \
+    std::uniform_real_distribution<Scalar_t> dist(a, b);              \
                                                                       \
     for (size_t i = 0; i < N; ++i)                                    \
-      input[i] = static_cast<Scalar_t>(uniform_random(a, b));         \
+      input[i] = dist(g);                                             \
                                                                       \
     for (size_t j = 0; j < N; j += kVS) {                             \
       Vector_t x;                                                     \
@@ -61,15 +62,21 @@ double uniform_random(double a, double b)
     using Scalar_t = typename TestFixture::Scalar_t;                  \
     using Vector_t = typename TestFixture::Vector_t;                  \
                                                                       \
-    auto kVS = vecCore::VectorSize<Vector_t>();                       \
-    size_t N = 16384;                                                 \
-    Scalar_t input1[N] __attribute__((aligned(VECCORE_SIMD_ALIGN)));  \
-    Scalar_t input2[N] __attribute__((aligned(VECCORE_SIMD_ALIGN)));  \
-    Scalar_t output[N] __attribute__((aligned(VECCORE_SIMD_ALIGN)));  \
+    constexpr size_t N = 16384;                                       \
+    constexpr auto kVS = vecCore::VectorSize<Vector_t>();             \
+                                                                      \
+    alignas(64) Scalar_t input1[N];                                   \
+    alignas(64) Scalar_t input2[N];                                   \
+    alignas(64) Scalar_t output[N];                                   \
+                                                                      \
+    std::random_device rng;                                           \
+    std::default_random_engine g(rng());                              \
+    std::uniform_real_distribution<Scalar_t> dist_ab(a, b);           \
+    std::uniform_real_distribution<Scalar_t> dist_cd(c, d);           \
                                                                       \
     for (size_t i = 0; i < N; ++i) {                                  \
-      input1[i] = static_cast<Scalar_t>(uniform_random(a, b));        \
-      input2[i] = static_cast<Scalar_t>(uniform_random(c, d));        \
+      input1[i] = dist_ab(g);                                         \
+      input2[i] = dist_cd(g);                                         \
     }                                                                 \
                                                                       \
     for (size_t j = 0; j < N; j += kVS) {                             \

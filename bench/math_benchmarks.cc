@@ -3,13 +3,9 @@
 
 #include <iomanip>
 #include <iostream>
+#include <random>
 
 using namespace vecCore;
-
-double uniform_random(double a, double b)
-{
-  return a + (b - a) * drand48();
-}
 
 #define BENCHMARK_MATH_FUNCTION_RANGE(mathfunc, impl, a, b)                    \
   void mathfunc##_##impl(benchmark::State &state)                              \
@@ -18,12 +14,17 @@ double uniform_random(double a, double b)
     using Scalar_t = Scalar<Vector_t>;                                         \
                                                                                \
     constexpr size_t N = 1024;                                                 \
+                                                                               \
     Scalar_t *input     = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *reference = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *output    = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
                                                                                \
+    std::random_device rng;                                                    \
+    std::default_random_engine g(rng());                                       \
+    std::uniform_real_distribution<Scalar_t> dist(a, b);                       \
+                                                                               \
     for(size_t i = 0; i < N; i++) {                                            \
-      input[i] = static_cast<Scalar_t>(uniform_random(a, b));                  \
+      input[i] = dist(g);                                                      \
       reference[i] = math::mathfunc(input[i]);                                 \
     }                                                                          \
                                                                                \
@@ -114,9 +115,14 @@ BENCHMARK_MATH_FUNCTION(Cbrt, 0, 1000);
     Scalar_t *reference = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *output    = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
                                                                                \
+    std::random_device rng;                                                    \
+    std::default_random_engine g(rng());                                       \
+    std::uniform_real_distribution<Scalar_t> dist_ab(a, b);                    \
+    std::uniform_real_distribution<Scalar_t> dist_cd(c, d);                    \
+                                                                               \
     for(size_t i = 0; i < N; i++) {                                            \
-      input1[i] = static_cast<Scalar_t>(uniform_random(a, b));                 \
-      input2[i] = static_cast<Scalar_t>(uniform_random(c, d));                 \
+      input1[i] = dist_ab(g);                                                  \
+      input2[i] = dist_cd(g);                                                  \
       reference[i] = math::mathfunc(input1[i], input2[i]);                     \
     }                                                                          \
                                                                                \
