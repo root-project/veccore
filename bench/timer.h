@@ -3,6 +3,12 @@
 
 #include <chrono>
 
+#ifdef _MSC_VER
+#  include <intrin.h>
+#else
+#  include <x86intrin.h>
+#endif
+
 using namespace std::chrono;
 
 template <class unit = nanoseconds>
@@ -45,13 +51,9 @@ public:
 private:
   unsigned long long int fStart;
 
-  inline __attribute__((always_inline)) unsigned long long int GetCycleCount()
+  inline unsigned long long int GetCycleCount()
   {
-    unsigned int hi, lo;
-    asm volatile("cpuid\n\t"
-                 "rdtsc"
-                 : "=a"(lo), "=d"(hi));
-    return ((unsigned long long)lo) | (((unsigned long long)hi) << 32);
+     return __rdtsc();
   }
 };
 #endif
