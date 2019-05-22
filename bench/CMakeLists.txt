@@ -3,7 +3,9 @@
 add_subdirectory(gbench EXCLUDE_FROM_ALL)
 
 # Avoid deprecation warning from Vc
-add_compile_options(-Wno-deprecated-declarations)
+if(NOT MSVC)
+  add_compile_options(-Wno-deprecated-declarations)
+endif()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   # prevent ICC from issuing streaming stores,
