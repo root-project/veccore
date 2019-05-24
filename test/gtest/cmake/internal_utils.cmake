@@ -35,9 +35,8 @@ macro(fix_default_compiler_settings_)
         string(REPLACE "/MD" "-MT" ${flag_var} "${${flag_var}}")
       endif()
 
-      # We prefer more strict warning checking for building Google Test.
-      # Replaces /W3 with /W4 in defaults.
-      string(REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
+      # disable all warnings or Windows build fails
+      string(REPLACE "/W3" "/w" ${flag_var} "${${flag_var}}")
     endforeach()
   endif()
 endmacro()
