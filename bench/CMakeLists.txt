@@ -42,7 +42,7 @@ foreach(target julia mandelbrot newton)
 endforeach()
 
 if(BUILD_TESTING)
-  foreach(target julia mandelbrot mathbench newton quadratic)
+  foreach(target julia mandelbrot newton quadratic)
     add_test(NAME bench-${target} COMMAND ${target})
   endforeach()
 endif()
