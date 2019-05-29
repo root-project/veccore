@@ -10,7 +10,7 @@
 using namespace vecCore;
 
 static constexpr size_t kNruns = 10;
-static constexpr size_t kN = (32 * 1024 * 1024);
+static constexpr size_t kN = (1024 * 1024);
 
 // solve ax2 + bx + c = 0
 
