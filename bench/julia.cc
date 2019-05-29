@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     double ymin = -2, ymax = 2;
 
     size_t nx = 1024, ny = 1024, max_iter = 500;
-    double cr = 0.285, ci = 0.01;
+    double cr = -0.5, ci = 0.55;
     unsigned char *image = new unsigned char[nx*ny];
 
     if (argc > 1) {
