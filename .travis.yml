@@ -15,4 +15,4 @@ compiler:
   - clang
 
 script:
-  - ctest -VV -S cmake/TestVecCore.cmake
+  - ctest -V -S cmake/TestVecCore.cmake

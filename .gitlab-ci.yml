@@ -5,7 +5,7 @@ stages:
 
 .build_job: &build_def
   script:
-    - ctest -VV -S cmake/TestVecCore.cmake
+    - ctest -V -S cmake/TestVecCore.cmake
 
 gcc:
   stage: build
