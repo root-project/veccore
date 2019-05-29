@@ -198,7 +198,7 @@ int main()
     double xmin = -2, xmax = 2;
     double ymin = -2, ymax = 2;
 
-    size_t nx = 2400, ny = 2025, max_iter = 1000;
+    size_t nx = 1024, ny = 1024, max_iter = 1000;
     Color *image = new Color[nx * ny];
 
     /* single precision */
