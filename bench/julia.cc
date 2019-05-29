@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     double xmin = -2, xmax = 2;
     double ymin = -2, ymax = 2;
 
-    size_t nx = 2400, ny = 2025, max_iter = 200;
+    size_t nx = 1024, ny = 1024, max_iter = 500;
     double cr = 0.285, ci = 0.01;
     unsigned char *image = new unsigned char[nx*ny];
 
