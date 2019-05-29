@@ -27,7 +27,7 @@ the following compiler versions:
  - AppleClang 7.3.0
  - Intel® C/C++ Compiler 16.0.2
 
-Additionally, you will need CMake 3.6 or later, and you may want to install
+Additionally, you will need CMake 3.9 or later, and you may want to install
 a SIMD library such as
 
  - [Vc](https://github.com/VcDevel/Vc) (version 1.3.3 or later)

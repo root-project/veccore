@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.9)
 
 include(cmake/RecordCmdLine.cmake)
 
