@@ -7,13 +7,13 @@
 
 using namespace vecCore;
 
+constexpr size_t N = 128;
+
 #define BENCHMARK_MATH_FUNCTION_RANGE(mathfunc, impl, a, b)                    \
   void mathfunc##_##impl(benchmark::State &state)                              \
   {                                                                            \
     using Vector_t = backend::impl::Double_v;                                  \
     using Scalar_t = Scalar<Vector_t>;                                         \
-                                                                               \
-    constexpr size_t N = 1024;                                                 \
                                                                                \
     Scalar_t *input     = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *reference = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
@@ -28,7 +28,7 @@ using namespace vecCore;
       reference[i] = math::mathfunc(input[i]);                                 \
     }                                                                          \
                                                                                \
-    while (state.KeepRunning()) {                                              \
+    for(auto _ : state) {                                                      \
       for (size_t i = 0; i < N; i += VectorSize<Vector_t>()) {                 \
         Vector_t x;                                                            \
         Load(x, &input[i]);                                                    \
@@ -109,7 +109,6 @@ BENCHMARK_MATH_FUNCTION(Cbrt, 0, 1000);
     using Vector_t = backend::impl::Float_v;                                   \
     using Scalar_t = Scalar<Vector_t>;                                         \
                                                                                \
-    constexpr size_t N = 1024;                                                 \
     Scalar_t *input1    = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *input2    = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
     Scalar_t *reference = (Scalar_t *)AlignedAlloc(64, N * sizeof(Scalar_t));  \
@@ -126,7 +125,7 @@ BENCHMARK_MATH_FUNCTION(Cbrt, 0, 1000);
       reference[i] = math::mathfunc(input1[i], input2[i]);                     \
     }                                                                          \
                                                                                \
-    while (state.KeepRunning()) {                                              \
+    for(auto _ : state) {                                                      \
       for (size_t i = 0; i < N; i += VectorSize<Vector_t>()) {                 \
         Vector_t x, y;                                                         \
         Load(x, &input1[i]);                                                   \
