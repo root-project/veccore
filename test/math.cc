@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <gtest/gtest.h>
 
+constexpr size_t N = 1024;
+
 using namespace testing;
 
 template <class Backend>
@@ -32,7 +34,6 @@ TYPED_TEST_CASE_P(MathFunctions);
     using Scalar_t = typename TestFixture::Scalar_t;                  \
     using Vector_t = typename TestFixture::Vector_t;                  \
                                                                       \
-    constexpr size_t N = 16384;                                       \
     constexpr auto kVS = vecCore::VectorSize<Vector_t>();             \
                                                                       \
     alignas(64) Scalar_t input[N] ;                                   \
@@ -62,7 +63,6 @@ TYPED_TEST_CASE_P(MathFunctions);
     using Scalar_t = typename TestFixture::Scalar_t;                  \
     using Vector_t = typename TestFixture::Vector_t;                  \
                                                                       \
-    constexpr size_t N = 16384;                                       \
     constexpr auto kVS = vecCore::VectorSize<Vector_t>();             \
                                                                       \
     alignas(64) Scalar_t input1[N];                                   \
