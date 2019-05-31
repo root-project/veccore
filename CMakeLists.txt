@@ -54,6 +54,12 @@ if (UMESIMD)
   target_link_libraries(VecCore INTERFACE UMESIMD::UMESIMD)
 endif()
 
+if (CUDA)
+  target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_CUDA)
+  target_include_directories(VecCore INTERFACE ${CUDA_INCLUDE_DIRS})
+  target_link_libraries(VecCore INTERFACE ${CUDA_LIBRARIES})
+endif()
+
 target_include_directories(VecCore INTERFACE
   $<BUILD_INTERFACE:include ${PROJECT_BINARY_DIR}/include>)
 
