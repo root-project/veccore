@@ -9,11 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Select build type" FORCE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo)
-endif()
-
 option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
