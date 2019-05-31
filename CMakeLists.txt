@@ -35,7 +35,7 @@ add_library(VecCore INTERFACE)
 include(Builtins)
 
 if (VC)
-  find_package(Vc 1.2.0 REQUIRED)
+  find_package(Vc 1.3.3 REQUIRED)
 
   # Vc does not come with an imported target, add our own
   if(NOT TARGET Vc::Vc)
