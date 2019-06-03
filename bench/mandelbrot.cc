@@ -99,7 +99,7 @@ int main()
     double xmin = -2.1, xmax = 1.1;
     double ymin = -1.35, ymax = 1.35;
 
-    size_t nx = 800, ny = 675, max_iter = 500;
+    size_t nx = 1024, ny = 864, max_iter = 500;
     unsigned char *image = new unsigned char[nx*ny];
 
     /* single precision */
