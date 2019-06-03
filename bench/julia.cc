@@ -49,12 +49,12 @@ void julia_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
 
     for (size_t i = 0; i < nx; ++i) {
         for (size_t j = 0; j < ny; j += VectorSize<T>()) {
-            Scalar<Index<T>> k{0};
+            Scalar<Index<T>> k(0);
             T x = xmin + T(i) * dx,       cr = real, zr = x;
             T y = ymin + T(j) * dy + dyv, ci = im, zi = y;
 
-            Index<T> kv{0};
-            Mask<T> m{true};
+            Index<T> kv(0);
+            Mask<T> m(true);
 
             do {
                 x = zr*zr - zi*zi + cr;

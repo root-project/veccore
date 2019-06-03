@@ -139,10 +139,10 @@ void newton_v(T xmin, T xmax, size_t nx,
             T re = xmin + T(i) * dx,       x = re;
             T im = ymin + T(j) * dy + dyv, y = im;
 
-            Index<T> kv{0};
-            Index<T> color_index{0};
-            Index<T> alphas{0};
-            Mask<T> m{false};
+            Index<T> kv(0);
+            Index<T> color_index(0);
+            Index<T> alphas(0);
+            Mask<T> m(false);
 
             for (size_t k = 0; !MaskFull(m) && (k < max_iter); ) {
                 T re2 = re * re, re3 = re2 * re, re4 = re3 * re, re5 = re4 * re, re6 = re5 * re, re7 = re6 * re;
