@@ -12,6 +12,14 @@ using namespace vecCore;
 static constexpr size_t kNruns = 10;
 static constexpr size_t kN = (1024 * 1024);
 
+#ifdef VECCORE_TIMER_CYCLES
+using time_unit = cycles;
+static const char *time_unit_name = "cycles";
+#else
+using time_unit = nanoseconds;
+static const char *time_unit_name = "ns";
+#endif
+
 // solve ax2 + bx + c = 0
 
 // naive scalar code
@@ -152,7 +160,7 @@ VECCORE_FORCE_NOINLINE
 void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                    float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<cycles> timer;
+  Timer<time_unit> timer;
   unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
@@ -179,7 +187,7 @@ VECCORE_FORCE_NOINLINE
 void TestQuadSolveOptimized(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                             float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<cycles> timer;
+  Timer<time_unit> timer;
   unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
@@ -207,7 +215,7 @@ VECCORE_FORCE_NOINLINE
 void TestQuadSolveAVX2(const float *__restrict__ a, const float *__restrict__ b, const float *__restrict__ c,
                        float *__restrict__ x1, float *__restrict__ x2, int *__restrict__ roots, size_t kN)
 {
-  Timer<cycles> timer;
+  Timer<time_unit> timer;
   unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
@@ -239,7 +247,7 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   using Float_v = typename Backend::Float_v;
   using Int32_v = typename Backend::Int32_v;
 
-  Timer<cycles> timer;
+  Timer<time_unit> timer;
   unsigned long long t[kNruns], mean = 0;
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
@@ -290,9 +298,7 @@ int main()
     roots[i] = 0;
   }
 
-  printf("------------------------------------\n");
-  printf("             Backend / Mean (cycles)\n");
-  printf("------------------------------------\n");
+  printf("             Backend / Mean (%s)\n", time_unit_name);
 
   TestQuadSolve(a, b, c, x1, x2, roots, kN);
   TestQuadSolveOptimized(a, b, c, x1, x2, roots, kN);
@@ -318,7 +324,6 @@ int main()
   TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<16>");
   TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<32>");
 #endif
-  printf("------------------------------------\n\n");
 
   AlignedFree(a);
   AlignedFree(b);
