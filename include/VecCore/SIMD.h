@@ -1,7 +1,7 @@
 #ifndef VECCORE_SIMD_H
 #define VECCORE_SIMD_H
 
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(VECCORE_X64) || defined(VECCORE_X86)
 #  ifdef _MSC_VER
 #    include <intrin.h>
 #  else
