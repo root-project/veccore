@@ -3,12 +3,6 @@
 
 #include <chrono>
 
-#ifdef _MSC_VER
-#  include <intrin.h>
-#else
-#  include <x86intrin.h>
-#endif
-
 using namespace std::chrono;
 
 template <class unit = nanoseconds>
@@ -32,7 +26,17 @@ private:
   high_resolution_clock::time_point fStart, fStop;
 };
 
-#if !defined(VECCORE_CUDA_DEVICE_COMPILATION)
+#if !defined(__CUDA_ARCH__) \
+ && (defined(__x86_64__) || defined(_M_X64) \
+    || defined(__i386__) || defined(_M_IX86))
+
+#define VECCORE_TIMER_CYCLES
+
+#ifdef _MSC_VER
+#  include <intrin.h>
+#else
+#  include <x86intrin.h>
+#endif
 
 class cycles {
 };
