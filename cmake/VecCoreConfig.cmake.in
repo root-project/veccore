@@ -1,5 +1,7 @@
 @PACKAGE_INIT@
 
+set(VecCore_FOUND TRUE)
+
 set(VecCore_VERSION @VecCore_VERSION@)
 set(VecCore_VERSION_MAJOR @VecCore_VERSION_MAJOR@)
 set(VecCore_VERSION_MINOR @VecCore_VERSION_MINOR@)
@@ -8,27 +10,15 @@ set(VecCore_VERSION_PATCH @VecCore_VERSION_PATCH@)
 set_and_check(VecCore_INCLUDE_DIR "@PACKAGE_VecCore_INSTALL_INCLUDEDIR@")
 set_and_check(VecCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-set(VecCore_FOUND True)
 set(VecCore_INCLUDE_DIRS "${VecCore_INCLUDE_DIR}")
+
 list(APPEND CMAKE_MODULE_PATH "${VecCore_CMAKE_DIR}")
 
-set(_VecCore_FIND_QUIET)
-if (VecCore_FIND_QUIETLY)
-  set(_VecCore_FIND_QUIET QUIET)
-endif()
-
-set(_VecCore_NOT_FOUND_MESSAGE)
+include(CMakeFindDependencyMacro)
 
 if (VecCore_FIND_COMPONENTS MATCHES "CUDA")
-  find_package(CUDA 7.5 ${_VecCore_FIND_QUIET})
-  if(NOT CUDA_FOUND)
-    if(VecCore_FIND_REQUIRED_CUDA)
-      set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
-        "Failed to find VecCore component \"CUDA\"\n")
-    elseif(NOT VecCore_FIND_QUIETLY)
-      message(WARNING "Failed to find VecCore component \"CUDA\"")
-    endif()
-  else()
+  find_dependency(CUDA 7.5)
+  if(CUDA_FOUND)
     set(VecCore_CUDA_FOUND True)
     set(VecCore_CUDA_DEFINITIONS -DVECCORE_ENABLE_CUDA)
     set(VecCore_CUDA_INCLUDE_DIR ${CUDA_INCLUDE_DIRS})
@@ -36,15 +26,8 @@ if (VecCore_FIND_COMPONENTS MATCHES "CUDA")
 endif()
 
 if (VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
-  find_package(UMESIMD 0.8.1 ${_VecCore_FIND_QUIET})
-  if(NOT UMESIMD_FOUND)
-    if(VecCore_FIND_REQUIRED_UMESIMD)
-      set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
-        "Failed to find VecCore component \"UMESIMD\"\n")
-    elseif(NOT VecCore_FIND_QUIETLY)
-      message(WARNING "Failed to find VecCore component \"UMESIMD\"")
-    endif()
-  else()
+  find_dependency(UMESIMD 0.8.1)
+  if(UMESIMD_FOUND)
     set(VecCore_UMESIMD_FOUND True)
     set(VecCore_UMESIMD_DEFINITIONS -DVECCORE_ENABLE_UMESIMD)
     set(VecCore_UMESIMD_INCLUDE_DIR ${UMESIMD_INCLUDE_DIRS})
@@ -52,15 +35,8 @@ if (VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
 endif()
 
 if (VecCore_FIND_COMPONENTS MATCHES "Vc")
-  find_package(Vc 1.2.0 ${_VecCore_FIND_QUIET})
-  if (NOT Vc_FOUND)
-    if(VecCore_FIND_REQUIRED_Vc)
-      set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
-        "Failed to find VecCore component \"Vc\"\n")
-    elseif(NOT VecCore_FIND_QUIETLY)
-      message(WARNING "Failed to find VecCore component \"Vc\"")
-    endif()
-  else()
+  find_dependency(Vc 1.3.3 CONFIG)
+  if (Vc_FOUND)
     set(VecCore_Vc_FOUND True)
     set(VecCore_Vc_DEFINITIONS -DVECCORE_ENABLE_VC)
     set(VecCore_Vc_INCLUDE_DIR ${Vc_INCLUDE_DIR})
@@ -68,26 +44,22 @@ if (VecCore_FIND_COMPONENTS MATCHES "Vc")
   endif()
 endif()
 
+check_required_components(VecCore)
+
 foreach(component ${VecCore_FIND_COMPONENTS})
-  if(NOT "${component}" MATCHES "CUDA|UMESIMD|Vc")
-    set(_VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE}
-      "Unknown VecCore component: ${component} (known components are CUDA, UMESIMD, and Vc)\n")
-  else()
+  if("${component}" MATCHES "CUDA|UMESIMD|Vc")
     set(VecCore_DEFINITIONS ${VecCore_DEFINITIONS} ${VecCore_${component}_DEFINITIONS})
     set(VecCore_INCLUDE_DIRS ${VecCore_INCLUDE_DIRS} ${VecCore_${component}_INCLUDE_DIR})
     set(VecCore_LIBRARIES ${VecCore_LIBRARIES} ${VecCore_${component}_LIBRARIES})
+  else()
+    set(VecCore_FOUND False)
+    set(_VecCore_NOT_FOUND_MESSAGE
+      "Unknown component: ${component} (known components: CUDA, UMESIMD, Vc)")
+    return()
   endif()
 endforeach()
 
-if (_VecCore_NOT_FOUND_MESSAGE)
-  set(VecCore_FOUND False)
-  set(VecCore_NOT_FOUND_MESSAGE ${_VecCore_NOT_FOUND_MESSAGE})
-  return()
-endif()
-
 list(REMOVE_DUPLICATES VecCore_INCLUDE_DIRS)
-
-check_required_components(VecCore)
 
 if (VecCore_FOUND AND NOT TARGET VecCore::VecCore)
   add_library(VecCore::VecCore INTERFACE IMPORTED)
