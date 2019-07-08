@@ -55,27 +55,26 @@ if (CUDA)
   target_link_libraries(VecCore INTERFACE ${CUDA_LIBRARIES})
 endif()
 
-target_include_directories(VecCore INTERFACE
-  $<BUILD_INTERFACE:include ${PROJECT_BINARY_DIR}/include>)
+include_directories(include)
 
-configure_file(include/Config.in include/Config.h)
-
-set(VecCore_INSTALL_INCLUDEDIR "include")
-set(VecCore_INSTALL_CMAKEDIR "share/${PROJECT_NAME}/cmake")
-
+include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/VecCoreConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/cmake/VecCoreConfig.cmake
-  INSTALL_DESTINATION "${VecCore_INSTALL_CMAKEDIR}"
-  PATH_VARS VecCore_INSTALL_INCLUDEDIR
-  )
-configure_file(cmake/VecCoreConfigVersion.cmake.in cmake/VecCoreConfigVersion.cmake @ONLY)
 
-install(FILES "${PROJECT_BINARY_DIR}/include/Config.h" DESTINATION ${VecCore_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${VecCore_INSTALL_INCLUDEDIR})
-install(FILES cmake/FindUMESIMD.cmake DESTINATION ${VecCore_INSTALL_CMAKEDIR})
+write_basic_package_version_file(cmake/VecCoreConfigVersion.cmake
+  VERSION ${VecCore_VERSION} COMPATIBILITY SameMajorVersion)
+
+configure_package_config_file(cmake/VecCoreConfig.cmake.in cmake/VecCoreConfig.cmake
+  INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+)
+
+install(DIRECTORY include/${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES cmake/FindUMESIMD.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 install(DIRECTORY ${PROJECT_BINARY_DIR}/cmake/
-  DESTINATION ${VecCore_INSTALL_CMAKEDIR} FILES_MATCHING PATTERN *.cmake)
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 enable_testing()
 
