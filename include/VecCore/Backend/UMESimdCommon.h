@@ -179,8 +179,8 @@ F(const UME::SIMD::SIMDVec_f<T, N> &x)    \
 
 // UMESIMD_MATH_UNARY_FUNCTION(Abs, abs)  // Generic implementation is faster
 
-UMESIMD_MATH_UNARY_FUNCTION(Sin, sin)
-UMESIMD_MATH_UNARY_FUNCTION(Cos, cos)
+// UMESIMD_MATH_UNARY_FUNCTION(Sin, sin) // broken
+// UMESIMD_MATH_UNARY_FUNCTION(Cos, cos) // broken
 UMESIMD_MATH_UNARY_FUNCTION(Tan, tan)
 UMESIMD_MATH_UNARY_FUNCTION(ATan, atan)
 
