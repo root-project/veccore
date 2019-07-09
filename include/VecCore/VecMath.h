@@ -219,6 +219,17 @@ T Modf(const T &x, T *intpart)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
+T Rsqrt(const T &x)
+{
+  T ret(1.0 / x);
+  for(size_t i = 0; i < VectorSize<T>(); ++i)
+    Set(ret, i, std::sqrt(Get(ret,i)));
+  return ret;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 T Scalbn(const T &x, int n)
 {
   T ret;
