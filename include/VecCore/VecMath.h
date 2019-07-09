@@ -269,6 +269,14 @@ Mask<T> IsInf(const T &x)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
+Mask<T> IsNegative(const T &x)
+{
+  return x < T(0);
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 constexpr T Deg(const T &x)
 {
   return (x * T(180.0 / M_PI));
