@@ -35,6 +35,50 @@ void mandelbrot(T xmin, T xmax, size_t nx,
     }
 }
 
+#ifdef __AVX2__
+void mandelbrot_avx2(float xmin, float xmax, size_t nx,
+                     float ymin, float ymax, size_t ny,
+                     size_t max_iter, unsigned char *image)
+{
+    __m256 dx  = _mm256_set1_ps((xmax - xmin) / float(nx));
+    __m256 dy  = _mm256_set1_ps((ymax - ymin) / float(ny));
+    __m256 dyv = _mm256_mul_ps(dy, _mm256_set_ps(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f, 0.0f));
+
+    for (size_t i = 0; i < nx; ++i) {
+        for (size_t j = 0; j < ny; j += 8) {
+            int k = 0;
+#ifndef __FMA__
+            __m256 x = _mm256_fmadd_ps(_mm256_set1_ps(i), dx, _mm256_set1_ps(xmin));
+            __m256 y = _mm256_fmadd_ps(_mm256_set1_ps(j), dy, _mm256_add_ps(_mm256_set1_ps(ymin), dyv));
+#else
+            __m256 x = _mm256_add_ps(_mm256_mul_ps(_mm256_set1_ps(i), dx), _mm256_set1_ps(xmin));
+            __m256 y = _mm256_add_ps(_mm256_mul_ps(_mm256_set1_ps(j), dy), _mm256_add_ps(_mm256_set1_ps(ymin), dyv));
+#endif
+            __m256 cr = x, zr = x, ci = y, zi = y;
+
+            __m256i kv = _mm256_setzero_si256();
+            __m256 mask = _mm256_andnot_ps(_mm256_setzero_ps(), _mm256_setzero_ps());
+
+            do {
+                __m256 zr2 = _mm256_mul_ps(zr, zr);
+                __m256 zi2 = _mm256_mul_ps(zi, zi);
+                x = _mm256_add_ps(_mm256_sub_ps(zr2,zi2), cr);
+                __m256 zri = _mm256_mul_ps(zr, zi);
+                y = _mm256_fmadd_ps(_mm256_set1_ps(2.0f), zri, ci);
+                zr = _mm256_blendv_ps(zr, x, mask);
+                zi = _mm256_blendv_ps(zi, y, mask);
+                kv = _mm256_blendv_epi8(kv, _mm256_set1_epi32(++k), _mm256_castps_si256(mask));
+                mask = _mm256_cmp_ps(_mm256_add_ps(_mm256_mul_ps(zr, zr), _mm256_mul_ps(zi, zi)),
+                  _mm256_set1_ps(4.0f), _CMP_NGE_UQ);
+            } while (k < max_iter && !_mm256_testz_ps(mask, mask));
+
+            for (k = 0; k < 8; ++k)
+                image[ny*i + j + k] = (unsigned char) *((int*)(&kv)+k);
+        }
+    }
+}
+#endif
+
 template<typename T>
 void mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
                   Scalar<T> ymin, Scalar<T> ymax, size_t ny,
@@ -82,6 +126,20 @@ void bench_mandelbrot(T xmin, T xmax, size_t nx, T ymin, T ymax, size_t ny,
     write_png(filename.c_str(), image, nx, ny);
 }
 
+#ifdef __AVX2__
+void bench_mandelbrot_avx2(float xmin, float xmax, size_t nx,
+                           float ymin, float ymax, size_t ny,
+                           int max_iter, unsigned char *image,
+                           const char *backend)
+{
+    std::string filename = "mandelbrot_" + std::string(backend) + ".png";
+    Timer<milliseconds> timer;
+    mandelbrot_avx2(xmin, xmax, nx, ymin, ymax, ny, max_iter, image);
+    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    write_png(filename.c_str(), image, nx, ny);
+}
+#endif
+
 template<typename T>
 void bench_mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
                         Scalar<T> ymin, Scalar<T> ymax, size_t ny,
@@ -109,6 +167,10 @@ int main()
 
     bench_mandelbrot_v<float>(xmin, xmax, nx, ymin, ymax, ny,
                               max_iter, image, "float_v");
+
+#ifdef __AVX2__
+    bench_mandelbrot_avx2(xmin, xmax, nx, ymin, ymax, ny, max_iter, image, "float_avx2");
+#endif
 
 #ifdef VECCORE_ENABLE_VC
     bench_mandelbrot_v<backend::VcVector::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
