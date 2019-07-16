@@ -76,9 +76,9 @@ void bench_julia(T xmin, T xmax, size_t nx, T ymin, T ymax, size_t ny,
                  int max_iter, unsigned char *image, const char *backend, T cr, T ci)
 {
     std::string filename = "julia_" + std::string(backend) + ".png";
-    Timer<milliseconds> timer;
+    Timer<microseconds> timer;
     julia<T>(xmin, xmax, nx, ymin, ymax, ny, max_iter, image, cr, ci);
-    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed()/1000.0);
     write_png(filename.c_str(), image, nx, ny);
 }
 
@@ -88,9 +88,9 @@ void bench_julia_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
                    int max_iter, unsigned char *image, const char *backend, Scalar<T> cr, Scalar<T> ci)
 {
     std::string filename = "julia_" + std::string(backend) + ".png";
-    Timer<milliseconds> timer;
+    Timer<microseconds> timer;
     julia_v<T>(xmin, xmax, nx, ymin, ymax, ny, max_iter, image, cr, ci);
-    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed()/1000.0);
     write_png(filename.c_str(), image, nx, ny);
 }
 
