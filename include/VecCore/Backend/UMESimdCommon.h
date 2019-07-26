@@ -160,7 +160,7 @@ struct MaskingImplementation<UME::SIMD::SIMDVec_u<T, N>> {
   static inline void Blend(V &dst, M const &mask, V const &src1, V const &src2) { dst = src2.blend(mask, src1); }
 };
 
-namespace math {
+inline namespace math {
 
 template <typename T, uint32_t N>
 VECCORE_FORCE_INLINE

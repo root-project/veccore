@@ -76,7 +76,7 @@ struct MaskingImplementation<Vc::Scalar::Vector<T>> {
   }
 };
 
-namespace math {
+inline namespace math {
 
 template <typename T>
 VECCORE_FORCE_INLINE

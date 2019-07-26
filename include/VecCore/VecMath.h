@@ -37,7 +37,7 @@ void sincos(const double &x, double *s, double *c)
 #endif
 
 namespace vecCore {
-namespace math {
+inline namespace math {
 
 #define VECCORE_MATH_UNARY_FUNCTION(F, f)     \
 template <typename T>                         \

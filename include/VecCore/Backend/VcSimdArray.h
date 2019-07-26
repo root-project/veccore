@@ -108,7 +108,7 @@ struct MaskingImplementation<Vc::SimdArray<T, N>> {
   }
 };
 
-namespace math {
+inline namespace math {
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE

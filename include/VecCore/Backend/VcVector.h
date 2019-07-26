@@ -109,7 +109,7 @@ struct MaskingImplementation<Vc::Vector<T, Abi>> {
   }
 };
 
-namespace math {
+inline namespace math {
 
 template <typename T, class Abi>
 VECCORE_FORCE_INLINE
