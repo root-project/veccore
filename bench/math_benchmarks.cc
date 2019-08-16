@@ -25,14 +25,14 @@ constexpr size_t N = 128;
                                                                                \
     for(size_t i = 0; i < N; i++) {                                            \
       input[i] = dist(g);                                                      \
-      reference[i] = math::mathfunc(input[i]);                                 \
+      reference[i] = mathfunc(input[i]);                                       \
     }                                                                          \
                                                                                \
     for(auto _ : state) {                                                      \
       for (size_t i = 0; i < N; i += VectorSize<Vector_t>()) {                 \
         Vector_t x;                                                            \
         Load(x, &input[i]);                                                    \
-        Store(math::mathfunc(x), &output[i]);                                  \
+        Store(mathfunc(x), &output[i]);                                        \
       }                                                                        \
     }                                                                          \
                                                                                \
@@ -123,7 +123,7 @@ BENCHMARK_MATH_FUNCTION(Rsqrt, 1, 1000);
     for(size_t i = 0; i < N; i++) {                                            \
       input1[i] = dist_ab(g);                                                  \
       input2[i] = dist_cd(g);                                                  \
-      reference[i] = math::mathfunc(input1[i], input2[i]);                     \
+      reference[i] = mathfunc(input1[i], input2[i]);                           \
     }                                                                          \
                                                                                \
     for(auto _ : state) {                                                      \
@@ -131,7 +131,7 @@ BENCHMARK_MATH_FUNCTION(Rsqrt, 1, 1000);
         Vector_t x, y;                                                         \
         Load(x, &input1[i]);                                                   \
         Load(y, &input2[i]);                                                   \
-        Store(math::mathfunc(x, y), &output[i]);                               \
+        Store(mathfunc(x, y), &output[i]);                                     \
       }                                                                        \
     }                                                                          \
                                                                                \

@@ -49,7 +49,7 @@ TYPED_TEST_CASE_P(MathFunctions);
     for (size_t j = 0; j < N; j += kVS) {                             \
       Vector_t x;                                                     \
       vecCore::Load(x, &input[j]);                                    \
-      vecCore::Store<Vector_t>(vecCore::math::func(x), &output[j]);   \
+      vecCore::Store<Vector_t>(vecCore::func(x), &output[j]);         \
     }                                                                 \
                                                                       \
     for (size_t i = 0; i < N; ++i) {                                  \
@@ -83,7 +83,7 @@ TYPED_TEST_CASE_P(MathFunctions);
       Vector_t x, y;                                                  \
       vecCore::Load(x, &input1[j]);                                   \
       vecCore::Load(y, &input2[j]);                                   \
-      vecCore::Store<Vector_t>(vecCore::math::func(x,y), &output[j]); \
+      vecCore::Store<Vector_t>(vecCore::func(x,y), &output[j]);       \
     }                                                                 \
                                                                       \
     for (size_t i = 0; i < N; ++i) {                                  \

@@ -37,10 +37,10 @@ int QuadSolve(T a, T b, T c, T &x1, T &x2)
   }
 
   if (b >= 0.0) {
-    x1 = -0.5 * (b + math::Sqrt(delta)) / a;
+    x1 = -0.5 * (b + Sqrt(delta)) / a;
     x2 = c / (a * x1);
   } else {
-    x2 = -0.5 * (b - math::Sqrt(delta)) / a;
+    x2 = -0.5 * (b - Sqrt(delta)) / a;
     x1 = c / (a * x2);
   }
 
@@ -60,7 +60,7 @@ void QuadSolveOptimized(const T &a, const T &b, const T &c, T &x1, T &x2, int &r
 
   switch (roots) {
   case 2:
-    x1 = T(-0.5) * (b + s * math::Sqrt(delta));
+    x1 = T(-0.5) * (b + s * Sqrt(delta));
     x2 = c / x1;
     x1 *= a_inv;
     return;
@@ -138,7 +138,7 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
   FMask mask0(delta < Float_v(0.0f));
   FMask mask2(delta >= NumericLimits<Float_v>::Epsilon());
 
-  Float_v root1 = Float_v(-0.5f) * (b + sign * math::Sqrt(delta));
+  Float_v root1 = Float_v(-0.5f) * (b + sign * Sqrt(delta));
   Float_v root2 = c / root1;
   root1         = root1 * a_inv;
 
