@@ -313,7 +313,8 @@ Scalar<T> ReduceMin(const T& v)
 {
    Scalar<T> result(NumericLimits<Scalar<T>>::Max());
    for (size_t i = 0; i < VectorSize<T>(); ++i)
-      result = std::min(result, Get(v, i));
+      if (Get(v, i) < result)
+         result = Get(v, i);
    return result;
 }
 
@@ -324,7 +325,8 @@ Scalar<T> ReduceMax(const T& v)
 {
    Scalar<T> result(NumericLimits<Scalar<T>>::Lowest());
    for (size_t i = 0; i < VectorSize<T>(); ++i)
-      result = std::max(result, Get(v, i));
+      if (Get(v, i) > result)
+         result = Get(v, i);
    return result;
 }
 
