@@ -96,11 +96,12 @@ void bench_julia_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
 
 int main(int argc, char *argv[])
 {
-    double xmin = -2, xmax = 2;
-    double ymin = -2, ymax = 2;
+    double xmin = -1.6, xmax = 1.6;
+    double ymin = -1.6, ymax = 1.6;
 
     size_t nx = 1024, ny = 1024, max_iter = 500;
-    double cr = -0.5, ci = 0.55;
+    double cr = -0.123, ci = 0.754;
+
     unsigned char *image = new unsigned char[nx*ny];
 
     if (argc > 1) {
