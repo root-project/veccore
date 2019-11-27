@@ -1,0 +1,59 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    name: Linux
+    container:
+      image: ubuntu:bionic
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler: [ gcc, clang ]
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 1
+
+    - name: Install dependencies
+      run: |
+        set -e
+        apt-get update -y
+        apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
+
+    - name: CTest Build
+      run: ctest -V -C Release -S cmake/TestVecCore.cmake
+
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 1
+
+    - name: Install dependencies
+      run: |
+        set -e
+        export HOMEBREW_NO_AUTO_UPDATE=1
+        brew install cmake
+
+    - name: CTest Build
+      run: ctest -V -C Release -S cmake/TestVecCore.cmake
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetchDepth: 1
+
+    - name: CTest Build
+      run: ctest -V -C Release -S cmake/TestVecCore.cmake
