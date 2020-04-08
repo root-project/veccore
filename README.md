@@ -1,6 +1,6 @@
-|**GitLab CI**|**Travis CI**|**Jenkins CI**|**AppVeyor**|
-|-------------|-------------|--------------|------------|
-|[![GitLab CI](https://gitlab.cern.ch/VecGeom/VecCore/badges/master/build.svg)](https://gitlab.cern.ch/VecGeom/VecCore/commits/master)|[![Travis CI](https://travis-ci.com/root-project/veccore.svg?branch=master)](https://travis-ci.com/root-project/veccore)|[![Jenkins CI](https://epsft-jenkins.cern.ch/buildStatus/icon?job=VecCore)](https://epsft-jenkins.cern.ch/view/VecCore/job/VecCore/)|[![AppVeyor](https://ci.appveyor.com/api/projects/status/v27i656aj6jf6lrp/branch/master?svg=true)](https://ci.appveyor.com/project/amadio/veccore/branch/master)|
+|**GitHub Actions**|**Travis CI**|**AppVeyor**|
+|------------------|-------------|------------|
+|[![GitHub Actions](https://github.com/root-project/veccore/workflows/build/badge.svg)](https://github.com/root-project/veccore/actions)|[![Travis CI](https://travis-ci.com/root-project/veccore.svg?branch=master)](https://travis-ci.com/root-project/veccore)|[![AppVeyor](https://ci.appveyor.com/api/projects/status/v27i656aj6jf6lrp/branch/master?svg=true)](https://ci.appveyor.com/project/amadio/veccore/branch/master)|
 
 # VecCore - C++ Library for Portable SIMD Vectorization
 
