@@ -199,5 +199,6 @@ int main()
     bench_mandelbrot_v<backend::UMESimd::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
                                                    max_iter, image, "double_umesimd");
 #endif
+    delete[] image;
     return 0;
 }

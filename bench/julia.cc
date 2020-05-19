@@ -151,5 +151,6 @@ int main(int argc, char *argv[])
     bench_julia_v<backend::UMESimd::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
                                                    max_iter, image, "double_umesimd", cr, ci);
 #endif
+    delete[] image;
     return 0;
 }
