@@ -64,6 +64,8 @@ TYPED_TEST_P(AlignmentTest, Heap)
   Vector_t *v = new Vector_t();
 
   EXPECT_TRUE(is_aligned(v, alignof(Vector_t)));
+
+  delete v;
 }
 
 TYPED_TEST_P(AlignmentTest, StdArray)
