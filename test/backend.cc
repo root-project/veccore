@@ -457,9 +457,9 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
   mmask = input > Vector_t(Scalar_t(0));
 
   for (size_t i = 0; i < kVS; ++i) {
-    EXPECT_EQ(vecCore::MaskLaneAt(tmask, i), true);
-    EXPECT_EQ(vecCore::MaskLaneAt(fmask, i), false);
-    EXPECT_EQ(vecCore::MaskLaneAt(mmask, i), i % 2 == 0);
+    EXPECT_EQ(vecCore::Get(tmask, i), true);
+    EXPECT_EQ(vecCore::Get(fmask, i), false);
+    EXPECT_EQ(vecCore::Get(mmask, i), i % 2 == 0);
   }
 }
 
@@ -474,7 +474,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
   // check for all false
 
   for (size_t i = 0; i < kVS; ++i)
-    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), false);
+    EXPECT_EQ(vecCore::Get(mask, i), false);
 
   // check for all true
 
@@ -482,7 +482,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
     vecCore::AssignMaskLane(mask, i, true);
 
   for (size_t i = 0; i < kVS; ++i)
-    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), true);
+    EXPECT_EQ(vecCore::Get(mask, i), true);
 
   // check for interleaving true/false
 
@@ -490,7 +490,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
     vecCore::AssignMaskLane(mask, i, i % 2 == 0);
 
   for (size_t i = 0; i < kVS; ++i)
-    EXPECT_EQ(vecCore::MaskLaneAt(mask, i), i % 2 == 0);
+    EXPECT_EQ(vecCore::Get(mask, i), i % 2 == 0);
 }
 
 TYPED_TEST_P(VectorInterfaceTest, ReduceAdd)
