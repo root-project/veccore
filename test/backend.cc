@@ -434,7 +434,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
   Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
-    vecCore::AssignLane(tmp, i, Scalar_t(10));
+    vecCore::Set(tmp, i, Scalar_t(10));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
     EXPECT_EQ(Scalar_t(10), vecCore::Get<Vector_t>(tmp, i));
@@ -452,7 +452,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
   Vector_t input;
 
   for (size_t i = 0; i < kVS; ++i)
-    vecCore::AssignLane(input, i, (i % 2 == 0) ? Scalar_t(1) : Scalar_t(0));
+    vecCore::Set(input, i, (i % 2 == 0) ? Scalar_t(1) : Scalar_t(0));
 
   mmask = input > Vector_t(Scalar_t(0));
 
@@ -553,7 +553,7 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
 
   Index_v idx;
   for (vecCore::UInt_s i = 0; i < N; ++i)
-    vecCore::AssignLane(idx, i, Index_t(i));
+    vecCore::Set(idx, i, Index_t(i));
 
   for (vecCore::UInt_s i = 1; i <= N; ++i) {
     Index_v iidx = Index_v(i) * idx;
