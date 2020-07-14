@@ -150,6 +150,16 @@ void Load(T &v, Scalar<T> const *ptr)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
+T Load(Scalar<T> const *ptr)
+{
+  T v;
+  LoadStoreImplementation<T>::template Load(v, ptr);
+  return v;
+}
+
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
 void Store(T const &v, Scalar<T> *ptr)
 {
   LoadStoreImplementation<T>::template Store(v, ptr);
