@@ -392,7 +392,7 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
   for (vecCore::UInt_s i = 0; i < 2; ++i) {
     Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i * kVS]));
     Mask_t m = tmp > Vector_t(1);
-    vecCore::StoreMask(m, &output[i * kVS]);
+    vecCore::Store(m, &output[i * kVS]);
   }
 
   for (vecCore::UInt_s i = 0; i < N; ++i)
