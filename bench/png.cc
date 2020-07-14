@@ -60,22 +60,25 @@ void colormap(int c, int& cr, int& cg, int& cb)
 
 void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 {
-    FILE *output;
-    gdImagePtr image;
-    int colors[256];
+    FILE *output = fopen(filename, "wb");
 
-    if (!(output = fopen(filename, "wb"))) {
+    if (!output) {
         fprintf(stderr, "Error: cannot open file %s\n", filename);
         return;
     }
 
-    if (!(image = gdImageCreate(nx, ny))) {
+    gdImagePtr image = gdImageCreate(nx, ny);
+
+    if (!image) {
         fprintf(stderr, "Error: cannot create image\n");
+        fclose(output);
         return;
     }
 
+    int colors[256];
+
     for (size_t i = 0; i < 256; ++i) {
-        int r, g, b;
+        int r = 0, g = 0, b = 0;
         colormap(i, r, g, b);
         colors[i] = gdImageColorAllocate(image, r, g, b);
     }
@@ -91,16 +94,18 @@ void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 
 void write_png(const char *filename, Color *data, size_t nx, size_t ny)
 {
-    FILE *output;
-    gdImagePtr image;
+    FILE *output = fopen(filename, "wb");
 
-    if (!(output = fopen(filename, "wb"))) {
+    if (!output) {
         fprintf(stderr, "Error: cannot open file %s\n", filename);
         return;
     }
 
-    if (!(image = gdImageCreateTrueColor(nx, ny))) {
+    gdImagePtr image = gdImageCreate(nx, ny);
+
+    if (!image) {
         fprintf(stderr, "Error: cannot create image\n");
+        fclose(output);
         return;
     }
 

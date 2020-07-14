@@ -273,15 +273,12 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
 
 int main()
 {
-  float *a, *b, *c, *x1, *x2;
-  int *roots;
-
-  a     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
-  b     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
-  c     = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
-  x1    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
-  x2    = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
-  roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(int));
+  float *a   = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  float *b   = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  float *c   = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  float *x1  = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  float *x2  = (float *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(float));
+  int *roots = (int *)AlignedAlloc(VECCORE_SIMD_ALIGN, kN * sizeof(int));
 
   srand((unsigned)time(NULL));
 

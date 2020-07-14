@@ -93,7 +93,7 @@ public:
   void store(Bool_s *dest) const { *dest = fBool; }
 
 private:
-  Bool_s fBool;
+  Bool_s fBool{};
 };
 
 template <class T>
