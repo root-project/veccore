@@ -415,7 +415,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead)
   Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
-    EXPECT_EQ(input[i], vecCore::LaneAt<Vector_t>(tmp, i));
+    EXPECT_EQ(input[i], vecCore::Get<Vector_t>(tmp, i));
 }
 
 TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
@@ -437,7 +437,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
     vecCore::AssignLane(tmp, i, Scalar_t(10));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
-    EXPECT_EQ(Scalar_t(10), vecCore::LaneAt<Vector_t>(tmp, i));
+    EXPECT_EQ(Scalar_t(10), vecCore::Get<Vector_t>(tmp, i));
 }
 
 TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
@@ -561,7 +561,7 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
     Vector_t x = vecCore::Gather<Vector_t>(input, iidx);
 
     for (vecCore::UInt_s j = 0; j < N; ++j)
-      EXPECT_TRUE(vecCore::LaneAt(x, j) == input[i * j]);
+      EXPECT_TRUE(vecCore::Get(x, j) == input[i * j]);
   }
 }
 
@@ -678,7 +678,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
   vecCore::MaskedAssign(dest, c > Vector_t(Scalar_t(0)), c);
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
-    EXPECT_EQ(vecCore::LaneAt<Vector_t>(dest, i), output[i]);
+    EXPECT_EQ(vecCore::Get<Vector_t>(dest, i), output[i]);
 }
 
 TYPED_TEST_P(VectorMaskTest, Blend)
