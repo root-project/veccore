@@ -24,7 +24,7 @@ using VectorTypes = Types<typename Backend::Float_v, typename Backend::Double_v,
 template <class T>
 class VectorTypeTest : public Test {
 public:
-  using Scalar_t = typename vecCore::ScalarType<T>::Type;
+  using Scalar_t = typename vecCore::Scalar<T>;
   using Vector_t = T;
 };
 
@@ -375,7 +375,7 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
 {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
-  using Mask_t   = typename vecCore::Mask_v<Vector_t>;
+  using Mask_t   = typename vecCore::Mask<Vector_t>;
 
   constexpr auto kVS = vecCore::VectorSize<Vector_t>();
   constexpr auto N   = 2 * kVS;
@@ -445,7 +445,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneRead)
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
 
-  vecCore::Mask_v<Vector_t> fmask(false), tmask(true), mmask;
+  vecCore::Mask<Vector_t> fmask(false), tmask(true), mmask;
 
   constexpr size_t kVS = vecCore::VectorSize<Vector_t>();
 
@@ -467,7 +467,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
-  vecCore::Mask_v<Vector_t> mask(false);
+  vecCore::Mask<Vector_t> mask(false);
 
   constexpr auto kVS = vecCore::VectorSize<Vector_t>();
 
@@ -521,8 +521,8 @@ TYPED_TEST_P(VectorInterfaceTest, Convert)
 {
   using Scalar_t = typename TestFixture::Scalar_t;
   using Vector_t = typename TestFixture::Vector_t;
-  using Index_v  = typename vecCore::Index_v<Vector_t>;
-  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
+  using Index_v  = typename vecCore::Index<Vector_t>;
+  using Index_t  = typename vecCore::Scalar<Index_v>;
 
   Index_v idx;
   Vector_t v;
@@ -541,8 +541,8 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
 {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
-  using Index_v  = typename vecCore::Index_v<Vector_t>;
-  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
+  using Index_v  = typename vecCore::Index<Vector_t>;
+  using Index_t  = typename vecCore::Scalar<Index_v>;
 
   constexpr size_t N = vecCore::VectorSize<Vector_t>();
 
@@ -569,8 +569,8 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
 {
   using Vector_t = typename TestFixture::Vector_t;
   using Scalar_t = typename TestFixture::Scalar_t;
-  using Index_v  = typename vecCore::Index_v<Vector_t>;
-  using Index_t  = typename vecCore::ScalarType<Index_v>::Type;
+  using Index_v  = typename vecCore::Index<Vector_t>;
+  using Index_t  = typename vecCore::Scalar<Index_v>;
 
   constexpr size_t N = vecCore::VectorSize<Vector_t>();
 
@@ -614,16 +614,16 @@ TYPED_TEST_P(VectorMaskTest, Constructor)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
-  EXPECT_TRUE(std::is_constructible<vecCore::Mask_v<Vector_t>>::value);
-  EXPECT_TRUE(std::is_copy_constructible<vecCore::Mask_v<Vector_t>>::value);
-  EXPECT_TRUE(std::is_move_constructible<vecCore::Mask_v<Vector_t>>::value);
+  EXPECT_TRUE(std::is_constructible<vecCore::Mask<Vector_t>>::value);
+  EXPECT_TRUE(std::is_copy_constructible<vecCore::Mask<Vector_t>>::value);
+  EXPECT_TRUE(std::is_move_constructible<vecCore::Mask<Vector_t>>::value);
 }
 
 TYPED_TEST_P(VectorMaskTest, MaskFull)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
-  vecCore::Mask_v<Vector_t> tmask(true), fmask(false);
+  vecCore::Mask<Vector_t> tmask(true), fmask(false);
 
   EXPECT_TRUE(vecCore::MaskFull(tmask));
   EXPECT_TRUE(vecCore::MaskFull(!fmask));
@@ -633,7 +633,7 @@ TYPED_TEST_P(VectorMaskTest, MaskEmpty)
 {
   using Vector_t = typename TestFixture::Vector_t;
 
-  vecCore::Mask_v<Vector_t> tmask(true), fmask(false);
+  vecCore::Mask<Vector_t> tmask(true), fmask(false);
 
   EXPECT_TRUE(vecCore::MaskEmpty(fmask));
   EXPECT_TRUE(vecCore::MaskEmpty(!tmask));

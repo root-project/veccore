@@ -16,7 +16,7 @@ using FloatTypes = Types<typename Backend::Float_v, typename Backend::Double_v>;
 template <class T>
 class VectorTypeTest : public Test {
 public:
-  using Scalar_t = typename vecCore::ScalarType<T>::Type;
+  using Scalar_t = typename vecCore::Scalar<T>;
   using Vector_t = T;
 };
 

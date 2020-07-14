@@ -26,8 +26,9 @@ template <class Backend>
 void Test(const char *name)
 {
   using Real_v = typename Backend::Real_v;
+  using Real_t = typename vecCore::Scalar<Real_v>;
 
-  static_assert(std::is_same<typename ScalarType<Real_v>::Type, Real_s>::value,
+  static_assert(std::is_same<Real_t, Real_s>::value,
                 "conversion of vector type to scalar type failed");
 
   printf("Backend: %s\n\n", name);
