@@ -479,7 +479,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
   // check for all true
 
   for (size_t i = 0; i < kVS; ++i)
-    vecCore::AssignMaskLane(mask, i, true);
+    vecCore::Set(mask, i, true);
 
   for (size_t i = 0; i < kVS; ++i)
     EXPECT_EQ(vecCore::Get(mask, i), true);
@@ -487,7 +487,7 @@ TYPED_TEST_P(VectorInterfaceTest, MaskLaneWrite)
   // check for interleaving true/false
 
   for (size_t i = 0; i < kVS; ++i)
-    vecCore::AssignMaskLane(mask, i, i % 2 == 0);
+    vecCore::Set(mask, i, i % 2 == 0);
 
   for (size_t i = 0; i < kVS; ++i)
     EXPECT_EQ(vecCore::Get(mask, i), i % 2 == 0);
