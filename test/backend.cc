@@ -85,7 +85,7 @@ TYPED_TEST_P(ConstructorTest, FromPtrToScalar)
     tmp[i] = static_cast<Scalar_t>(i);
   }
 
-  Vector_t x = vecCore::FromPtr<Vector_t>(addr);
+  Vector_t x = vecCore::Load<Vector_t>(addr);
 
   for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
     EXPECT_TRUE(!vecCore::MaskEmpty(x == Vector_t(Scalar_t(i))));
@@ -362,7 +362,7 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
 
   // transfer to output via FromPtr; Store sequence
   for (vecCore::UInt_s i = 0; i < 2; ++i) {
-    Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i * kVS]));
+    Vector_t tmp(vecCore::Load<Vector_t>(&input[i * kVS]));
     vecCore::Store<Vector_t>(tmp, &output[i * kVS]);
   }
 
@@ -390,7 +390,7 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
   }
 
   for (vecCore::UInt_s i = 0; i < 2; ++i) {
-    Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[i * kVS]));
+    Vector_t tmp(vecCore::Load<Vector_t>(&input[i * kVS]));
     Mask_t m = tmp > Vector_t(1);
     vecCore::Store(m, &output[i * kVS]);
   }
@@ -412,7 +412,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead)
     input[i] = i;
   }
 
-  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+  Vector_t tmp(vecCore::Load<Vector_t>(&input[0]));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
     EXPECT_EQ(input[i], vecCore::Get<Vector_t>(tmp, i));
@@ -431,7 +431,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
     input[i] = i;
   }
 
-  Vector_t tmp(vecCore::FromPtr<Vector_t>(&input[0]));
+  Vector_t tmp(vecCore::Load<Vector_t>(&input[0]));
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
     vecCore::Set(tmp, i, Scalar_t(10));
@@ -582,13 +582,13 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
     index[i] = i;
   }
 
-  Index_v idx(vecCore::FromPtr<Index_v>(&index[0]));
+  Index_v idx(vecCore::Load<Index_v>(&index[0]));
 
-  Vector_t x = vecCore::FromPtr<Vector_t>(&input[0]);
+  Vector_t x = vecCore::Load<Vector_t>(&input[0]);
 
   vecCore::Scatter<Vector_t>(x, &output[0], idx);
 
-  Vector_t y = vecCore::FromPtr<Vector_t>(&output[0]);
+  Vector_t y = vecCore::Load<Vector_t>(&output[0]);
 
   EXPECT_TRUE(vecCore::MaskFull(x == y));
 }
@@ -674,7 +674,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
     output[i] = (input[i] > 0) ? input[i] : 0;
   }
 
-  Vector_t c(vecCore::FromPtr<Vector_t>(&input[0])), dest(Scalar_t(0));
+  Vector_t c(vecCore::Load<Vector_t>(&input[0])), dest(Scalar_t(0));
   vecCore::MaskedAssign(dest, c > Vector_t(Scalar_t(0)), c);
 
   for (vecCore::UInt_s i = 0; i < kVS; ++i)
