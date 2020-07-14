@@ -23,18 +23,6 @@ struct ScalarType {
   using Type = typename TypeTraits<T>::ScalarType;
 };
 
-// The template below should be deprecated in favor
-// of using the expression: VectorSize<decltype(x)>();
-// when you have a variable x of a backend type.
-
-template <typename T>
-VECCORE_FORCE_INLINE
-VECCORE_ATT_HOST_DEVICE
-constexpr Size_s VectorSize(const T &)
-{
-  return VectorSize<T>();
-}
-
 // Get/Set
 
 template <typename T>

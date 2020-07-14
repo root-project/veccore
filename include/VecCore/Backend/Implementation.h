@@ -18,6 +18,15 @@ constexpr Size_s VectorSize()
   return sizeof(V) / sizeof(Scalar<V>);
 }
 
+template <typename T>
+VECCORE_FORCE_INLINE
+VECCORE_ATT_HOST_DEVICE
+constexpr Size_s VectorSize(const T &)
+{
+  return VectorSize<T>();
+}
+
+
 // Iterators
 
 template <typename T>

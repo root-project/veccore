@@ -128,8 +128,8 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
 {
   using Float_v = typename Backend::Float_v;
   using Int32_v = typename Backend::Int32_v;
-  using FMask   = Mask_v<Float_v>;
-  using IMask   = Mask_v<Int32_v>;
+  using FMask   = Mask<Float_v>;
+  using IMask   = Mask<Int32_v>;
 
   Float_v a_inv = Float_v(1.0f) / a;
   Float_v delta = b * b - Float_v(4.0f) * a * c;
