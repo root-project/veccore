@@ -47,7 +47,7 @@ void mandelbrot_avx2(float xmin, float xmax, size_t nx,
     for (size_t i = 0; i < nx; ++i) {
         for (size_t j = 0; j < ny; j += 8) {
             int k = 0;
-#ifndef __FMA__
+#ifdef __FMA__
             __m256 x = _mm256_fmadd_ps(_mm256_set1_ps(i), dx, _mm256_set1_ps(xmin));
             __m256 y = _mm256_fmadd_ps(_mm256_set1_ps(j), dy, _mm256_add_ps(_mm256_set1_ps(ymin), dyv));
 #else
