@@ -1,7 +1,7 @@
 # VecCore
 
 **VecCore** is a simple abstraction layer on top of other vectorization
-libraries. It provides an architecture-independent [API](doc/API.md) for
+libraries. It provides an architecture-independent [API](doc/api.md) for
 expressing vector operations on data. Code written with this API can then
 be dispatched to one of several *backends* like [Vc](https://github.com/VcDevel/Vc),
 [UME::SIMD](https://github.com/edanor/umesimd), or a scalar implementation.

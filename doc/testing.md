@@ -6,7 +6,7 @@ current and new backend implementations.
 ## Backend Conformance Test
 
 The [backend conformance test](test/backend.cc) covers calls to the
-[VecCore API](doc/API.md). If a backend passes this conformance test, it is
+[VecCore API](doc/api.md). If a backend passes this conformance test, it is
 deemed compatible with VecCore. Any code breakage then implies a failure of
 either the backend itself or the backend test, and should be fixed by
 updating the test or the failing backend classes.

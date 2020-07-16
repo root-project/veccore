@@ -1,4 +1,4 @@
-# VecCore API Reference
+## Basic API
 
 VecCore defines *backend* structures in order to group similar
 [SIMD](https://en.wikipedia.org/wiki/SIMD) vector types together to allow their
@@ -6,7 +6,7 @@ use in hardware independent implementations of vectorized algorithms. The
 backend types are also used to define a uniform interface for operations such as
 masking, loading and storing data, etc.
 
-## Backend Types
+### Backend Types
 
 VecCore defines the following scalar types:
 
@@ -70,7 +70,9 @@ scalar type of `T`. These dependent types are needed to define the interfaces
 for gather/scatter in terms of pointers to scalars and vector indices, for
 example, but are also useful in various other situations.
 
-## VecCore API
+### SIMD Operations
+
+![VecCore API](api.svg)
 
 For each backend type `T`, and associated mask type `M`, VecCore defines the
 following API functions:
@@ -108,7 +110,7 @@ namespace vecCore {
 }
 ```
 
-## Arithmetics, Comparisons, and Logical Operations
+### Arithmetics, Comparisons, and Logical Operations
 
 VecCore backend types support usual arithmetic operations, such as addition,
 multiplication, etc, except for the modulus operation, which is not supported by
