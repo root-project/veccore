@@ -14,6 +14,7 @@ option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
 
+option(BUILD_DOCS       "Build doxygen documentation")
 option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
 option(BUILD_TESTING    "Build test binaries and create test target")
 
@@ -76,6 +77,10 @@ install(FILES cmake/FindUMESIMD.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 install(DIRECTORY ${PROJECT_BINARY_DIR}/cmake/
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+if (BUILD_DOCS)
+  add_subdirectory(doc)
+endif()
 
 enable_testing()
 
