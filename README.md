@@ -1,8 +1,4 @@
-|**GitHub Actions**|**Travis CI**|**AppVeyor**|
-|------------------|-------------|------------|
-|[![GitHub Actions](https://github.com/root-project/veccore/workflows/build/badge.svg)](https://github.com/root-project/veccore/actions)|[![Travis CI](https://travis-ci.com/root-project/veccore.svg?branch=master)](https://travis-ci.com/root-project/veccore)|[![AppVeyor](https://ci.appveyor.com/api/projects/status/v27i656aj6jf6lrp/branch/master?svg=true)](https://ci.appveyor.com/project/amadio/veccore/branch/master)|
-
-# VecCore - C++ Library for Portable SIMD Vectorization
+# VecCore
 
 **VecCore** is a simple abstraction layer on top of other vectorization
 libraries. It provides an architecture-independent [API](doc/API.md) for
