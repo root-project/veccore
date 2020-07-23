@@ -1,0 +1,14 @@
+language: cpp
+
+os:
+  - linux
+  - osx
+
+dist: xenial
+
+compiler:
+  - gcc
+  - clang
+
+script:
+  - ctest -V -S cmake/TestVecCore.cmake
