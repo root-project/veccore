@@ -56,22 +56,22 @@ T FromPtr(Scalar<T> const *ptr)
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-void StoreMask(M const &mask, Bool_s *ptr)
+void StoreMask(M const &mask, bool *ptr)
 {
-  LoadStoreImplementation<M>::template Store<Bool_s>(mask, ptr);
+  LoadStoreImplementation<M>::template Store<bool>(mask, ptr);
 }
 
 // Masking
 
 template <typename M>
-Bool_s MaskFull(const M &mask);
+bool MaskFull(const M &mask);
 template <typename M>
-Bool_s MaskEmpty(const M &mask);
+bool MaskEmpty(const M &mask);
 
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-Bool_s MaskLaneAt(const M &mask, size_t i)
+bool MaskLaneAt(const M &mask, size_t i)
 {
   return Get(mask, i);
 }
@@ -79,7 +79,7 @@ Bool_s MaskLaneAt(const M &mask, size_t i)
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-void AssignMaskLane(T &mask, size_t i, Bool_s val)
+void AssignMaskLane(T &mask, size_t i, bool val)
 {
   Set(mask, i, val);
 }

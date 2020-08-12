@@ -9,8 +9,8 @@ namespace vecCore {
 template <typename T>
 struct TypeTraits {
   using ScalarType = T;
-  using MaskType   = Bool_s;
-  using IndexType  = Size_s;
+  using MaskType   = bool;
+  using IndexType  = size_t;
 };
 
 namespace backend {
@@ -19,18 +19,18 @@ template <typename T = Real_s>
 class ScalarT {
 public:
   using Real_v   = T;
-  using Float_v  = Float_s;
-  using Double_v = Double_s;
+  using Float_v  = float;
+  using Double_v = double;
 
-  using Int_v   = Int_s;
-  using Int16_v = Int16_s;
-  using Int32_v = Int32_s;
-  using Int64_v = Int64_s;
+  using Int_v   = int;
+  using Int16_v = int16_t;
+  using Int32_v = int32_t;
+  using Int64_v = int64_t;
 
-  using UInt_v   = UInt_s;
-  using UInt16_v = UInt16_s;
-  using UInt32_v = UInt32_s;
-  using UInt64_v = UInt64_s;
+  using UInt_v   = unsigned int;
+  using UInt16_v = uint16_t;
+  using UInt32_v = uint32_t;
+  using UInt64_v = uint64_t;
 };
 
 using Scalar = ScalarT<>;
@@ -40,7 +40,7 @@ using Scalar = ScalarT<>;
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-Bool_s MaskEmpty<Bool_s>(const Bool_s &mask)
+bool MaskEmpty<bool>(const bool &mask)
 {
   return !mask;
 }
@@ -48,7 +48,7 @@ Bool_s MaskEmpty<Bool_s>(const Bool_s &mask)
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-Bool_s MaskFull<Bool_s>(const Bool_s &mask)
+bool MaskFull<bool>(const bool &mask)
 {
   return mask;
 }

@@ -14,18 +14,18 @@ template <int N = 16>
 class UMESimdArray {
 public:
   using Real_v   = UME::SIMD::SIMDVec<Real_s, N>;
-  using Float_v  = UME::SIMD::SIMDVec<Float_s, N>;
-  using Double_v = UME::SIMD::SIMDVec<Double_s, N>;
+  using Float_v  = UME::SIMD::SIMDVec<float, N>;
+  using Double_v = UME::SIMD::SIMDVec<double, N>;
 
-  using Int_v   = UME::SIMD::SIMDVec<Int_s, N>;
-  using Int16_v = UME::SIMD::SIMDVec<Int16_s, N>;
-  using Int32_v = UME::SIMD::SIMDVec<Int32_s, N>;
-  using Int64_v = UME::SIMD::SIMDVec<Int64_s, N>;
+  using Int_v   = UME::SIMD::SIMDVec<int, N>;
+  using Int16_v = UME::SIMD::SIMDVec<int16_t, N>;
+  using Int32_v = UME::SIMD::SIMDVec<int32_t, N>;
+  using Int64_v = UME::SIMD::SIMDVec<int64_t, N>;
 
-  using UInt_v   = UME::SIMD::SIMDVec<UInt_s, N>;
-  using UInt16_v = UME::SIMD::SIMDVec<UInt16_s, N>;
-  using UInt32_v = UME::SIMD::SIMDVec<UInt32_s, N>;
-  using UInt64_v = UME::SIMD::SIMDVec<UInt64_s, N>;
+  using UInt_v   = UME::SIMD::SIMDVec<unsigned int, N>;
+  using UInt16_v = UME::SIMD::SIMDVec<uint16_t, N>;
+  using UInt32_v = UME::SIMD::SIMDVec<uint32_t, N>;
+  using UInt64_v = UME::SIMD::SIMDVec<uint64_t, N>;
 };
 
 } // namespace backend

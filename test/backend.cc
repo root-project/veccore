@@ -81,13 +81,13 @@ TYPED_TEST_P(ConstructorTest, FromPtrToScalar)
   Scalar_t tmp[vecCore::VectorSize<Vector_t>()];
   Scalar_t *addr = &tmp[0];
 
-  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++) {
+  for (size_t i = 0; i < vecCore::VectorSize<Vector_t>(); i++) {
     tmp[i] = static_cast<Scalar_t>(i);
   }
 
   Vector_t x = vecCore::Load<Vector_t>(addr);
 
-  for (vecCore::UInt_s i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
+  for (size_t i = 0; i < vecCore::VectorSize<Vector_t>(); i++)
     EXPECT_TRUE(!vecCore::MaskEmpty(x == Vector_t(Scalar_t(i))));
 }
 
@@ -325,13 +325,13 @@ TYPED_TEST_P(VectorInterfaceTest, LoadStore)
   alignas(64) Scalar_t output[N];
 
   // init input; output
-  for (vecCore::UInt_s i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     input[i]  = i;
     output[i] = 0;
   }
 
   // transfer to output via Load/Store sequence
-  for (vecCore::UInt_s i = 0; i < 2; ++i) {
+  for (size_t i = 0; i < 2; ++i) {
     Vector_t tmp;
     vecCore::Load<Vector_t>(tmp, &input[i * kVS]);
     tmp = Scalar_t(2) * tmp;
@@ -339,7 +339,7 @@ TYPED_TEST_P(VectorInterfaceTest, LoadStore)
   }
 
   // assert input == output
-  for (vecCore::UInt_s i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
     EXPECT_EQ(2 * input[i], output[i]);
 }
 
@@ -355,19 +355,19 @@ TYPED_TEST_P(VectorInterfaceTest, StoreToPtr)
   Scalar_t output[N];
 
   // init input; output
-  for (vecCore::UInt_s i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     input[i]  = 2 * i;
     output[i] = 0;
   }
 
   // transfer to output via FromPtr; Store sequence
-  for (vecCore::UInt_s i = 0; i < 2; ++i) {
+  for (size_t i = 0; i < 2; ++i) {
     Vector_t tmp(vecCore::Load<Vector_t>(&input[i * kVS]));
     vecCore::Store<Vector_t>(tmp, &output[i * kVS]);
   }
 
   // assert input == output
-  for (vecCore::UInt_s i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
     EXPECT_EQ(input[i], output[i]);
 }
 
@@ -384,18 +384,18 @@ TYPED_TEST_P(VectorInterfaceTest, StoreMaskToPtr)
   bool output[N];
 
   // init input; output
-  for (vecCore::UInt_s i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     input[i]  = 2 * i;
     output[i] = false;
   }
 
-  for (vecCore::UInt_s i = 0; i < 2; ++i) {
+  for (size_t i = 0; i < 2; ++i) {
     Vector_t tmp(vecCore::Load<Vector_t>(&input[i * kVS]));
     Mask_t m = tmp > Vector_t(1);
     vecCore::Store(m, &output[i * kVS]);
   }
 
-  for (vecCore::UInt_s i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
     EXPECT_EQ(output[i], input[i] > Scalar_t(1));
 }
 
@@ -408,13 +408,13 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneRead)
 
   Scalar_t input[kVS];
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
+  for (size_t i = 0; i < kVS; ++i) {
     input[i] = i;
   }
 
   Vector_t tmp(vecCore::Load<Vector_t>(&input[0]));
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+  for (size_t i = 0; i < kVS; ++i)
     EXPECT_EQ(input[i], vecCore::Get<Vector_t>(tmp, i));
 }
 
@@ -427,16 +427,16 @@ TYPED_TEST_P(VectorInterfaceTest, VectorLaneWrite)
 
   Scalar_t input[kVS];
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
+  for (size_t i = 0; i < kVS; ++i) {
     input[i] = i;
   }
 
   Vector_t tmp(vecCore::Load<Vector_t>(&input[0]));
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+  for (size_t i = 0; i < kVS; ++i)
     vecCore::Set(tmp, i, Scalar_t(10));
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+  for (size_t i = 0; i < kVS; ++i)
     EXPECT_EQ(Scalar_t(10), vecCore::Get<Vector_t>(tmp, i));
 }
 
@@ -547,20 +547,20 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
   constexpr size_t N = vecCore::VectorSize<Vector_t>();
 
   Scalar_t input[N * N];
-  for (vecCore::UInt_s i = 0; i < N * N; ++i) {
+  for (size_t i = 0; i < N * N; ++i) {
     input[i] = i;
   }
 
   Index_v idx;
-  for (vecCore::UInt_s i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
     vecCore::Set(idx, i, Index_t(i));
 
-  for (vecCore::UInt_s i = 1; i <= N; ++i) {
+  for (size_t i = 1; i <= N; ++i) {
     Index_v iidx = Index_v(i) * idx;
 
     Vector_t x = vecCore::Gather<Vector_t>(input, iidx);
 
-    for (vecCore::UInt_s j = 0; j < N; ++j)
+    for (size_t j = 0; j < N; ++j)
       EXPECT_TRUE(vecCore::Get(x, j) == input[i * j]);
   }
 }
@@ -577,7 +577,7 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
   Index_t index[N];
   Scalar_t input[N], output[N];
 
-  for (vecCore::UInt_s i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     input[i] = i;
     index[i] = i;
   }
@@ -669,7 +669,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
   Scalar_t input[kVS];
   Scalar_t output[kVS];
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i) {
+  for (size_t i = 0; i < kVS; ++i) {
     input[i]  = (i % 2 == 0) ? i : -i;
     output[i] = (input[i] > 0) ? input[i] : 0;
   }
@@ -677,7 +677,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
   Vector_t c(vecCore::Load<Vector_t>(&input[0])), dest(Scalar_t(0));
   vecCore::MaskedAssign(dest, c > Vector_t(Scalar_t(0)), c);
 
-  for (vecCore::UInt_s i = 0; i < kVS; ++i)
+  for (size_t i = 0; i < kVS; ++i)
     EXPECT_EQ(vecCore::Get<Vector_t>(dest, i), output[i]);
 }
 

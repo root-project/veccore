@@ -13,18 +13,18 @@ namespace backend {
 class UMESimd {
 public:
   using Real_v   = UME::SIMD::SIMDVec<Real_s, SIMDWidth<Real_s>()>;
-  using Float_v  = UME::SIMD::SIMDVec<Float_s, SIMDWidth<Float_s>()>;
-  using Double_v = UME::SIMD::SIMDVec<Double_s, SIMDWidth<Double_s>()>;
+  using Float_v  = UME::SIMD::SIMDVec<float, SIMDWidth<float>()>;
+  using Double_v = UME::SIMD::SIMDVec<double, SIMDWidth<double>()>;
 
-  using Int_v   = UME::SIMD::SIMDVec<Int_s, SIMDWidth<Int_s>()>;
-  using Int16_v = UME::SIMD::SIMDVec<Int16_s, SIMDWidth<Int16_s>()>;
-  using Int32_v = UME::SIMD::SIMDVec<Int32_s, SIMDWidth<Int32_s>()>;
-  using Int64_v = UME::SIMD::SIMDVec<Int64_s, SIMDWidth<Int64_s>()>;
+  using Int_v   = UME::SIMD::SIMDVec<int, SIMDWidth<int>()>;
+  using Int16_v = UME::SIMD::SIMDVec<int16_t, SIMDWidth<int16_t>()>;
+  using Int32_v = UME::SIMD::SIMDVec<int32_t, SIMDWidth<int32_t>()>;
+  using Int64_v = UME::SIMD::SIMDVec<int64_t, SIMDWidth<int64_t>()>;
 
-  using UInt_v   = UME::SIMD::SIMDVec<UInt_s, SIMDWidth<UInt_s>()>;
-  using UInt16_v = UME::SIMD::SIMDVec<UInt16_s, SIMDWidth<UInt16_s>()>;
-  using UInt32_v = UME::SIMD::SIMDVec<UInt32_s, SIMDWidth<UInt32_s>()>;
-  using UInt64_v = UME::SIMD::SIMDVec<UInt64_s, SIMDWidth<UInt64_s>()>;
+  using UInt_v   = UME::SIMD::SIMDVec<unsigned int, SIMDWidth<unsigned int>()>;
+  using UInt16_v = UME::SIMD::SIMDVec<uint16_t, SIMDWidth<uint16_t>()>;
+  using UInt32_v = UME::SIMD::SIMDVec<uint32_t, SIMDWidth<uint32_t>()>;
+  using UInt64_v = UME::SIMD::SIMDVec<uint64_t, SIMDWidth<uint64_t>()>;
 };
 
 } // namespace backend

@@ -6,7 +6,7 @@ namespace vecCore {
 template <typename T, class Abi>
 struct TypeTraits<Vc::Mask<T, Abi>> {
   using IndexType  = size_t;
-  using ScalarType = Bool_s;
+  using ScalarType = bool;
 };
 
 template <typename T, class Abi>
@@ -22,18 +22,18 @@ template <typename T = Real_s, class Abi = Vc::VectorAbi::Best<T>>
 class VcVectorT {
 public:
   using Real_v   = Vc::Vector<T, Abi>;
-  using Float_v  = Vc::Vector<Float_s, Abi>;
-  using Double_v = Vc::Vector<Double_s, Abi>;
+  using Float_v  = Vc::Vector<float, Abi>;
+  using Double_v = Vc::Vector<double, Abi>;
 
-  using Int_v   = Vc::Vector<Int_s, Abi>;
-  using Int16_v = Vc::Vector<Int16_s, Abi>;
-  using Int32_v = Vc::Vector<Int32_s, Abi>;
-  using Int64_v = Vc::Vector<Int64_s, Abi>;
+  using Int_v   = Vc::Vector<int, Abi>;
+  using Int16_v = Vc::Vector<int16_t, Abi>;
+  using Int32_v = Vc::Vector<int32_t, Abi>;
+  using Int64_v = Vc::Vector<int64_t, Abi>;
 
-  using UInt_v   = Vc::Vector<UInt_s, Abi>;
-  using UInt16_v = Vc::Vector<UInt16_s, Abi>;
-  using UInt32_v = Vc::Vector<UInt32_s, Abi>;
-  using UInt64_v = Vc::Vector<UInt64_s, Abi>;
+  using UInt_v   = Vc::Vector<unsigned int, Abi>;
+  using UInt16_v = Vc::Vector<uint16_t, Abi>;
+  using UInt32_v = Vc::Vector<uint32_t, Abi>;
+  using UInt64_v = Vc::Vector<uint64_t, Abi>;
 };
 
 using VcVector = VcVectorT<>;
@@ -42,14 +42,14 @@ using VcVector = VcVectorT<>;
 
 template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::Mask<T, Abi> &mask)
+bool MaskEmpty(const Vc::Mask<T, Abi> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T, class Abi>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::Mask<T, Abi> &mask)
+bool MaskFull(const Vc::Mask<T, Abi> &mask)
 {
   return mask.isFull();
 }
@@ -57,9 +57,9 @@ Bool_s MaskFull(const Vc::Mask<T, Abi> &mask)
 template <typename T, class Abi>
 struct IndexingImplementation<Vc::Mask<T, Abi>> {
   using M = Vc::Mask<T, Abi>;
-  static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
+  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
+  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
 };
 
 template <typename T, class Abi>
@@ -83,7 +83,7 @@ struct LoadStoreImplementation<Vc::Mask<T, Abi>> {
   using M = Vc::Mask<T, Abi>;
 
   template <typename S = Scalar<T>>
-  static inline void Load(M &mask, Bool_s const *ptr)
+  static inline void Load(M &mask, bool const *ptr)
   {
     mask.load(ptr);
   }

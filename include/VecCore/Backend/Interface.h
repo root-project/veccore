@@ -42,7 +42,7 @@ Scalar<T> const *End(T const &v);
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-constexpr Size_s VectorSize();
+constexpr size_t VectorSize();
 
 // Get/Set
 
@@ -85,12 +85,12 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx);
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-Bool_s MaskFull(M const &mask);
+bool MaskFull(M const &mask);
 
 template <typename M>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-Bool_s MaskEmpty(M const &mask);
+bool MaskEmpty(M const &mask);
 
 template <typename T>
 VECCORE_FORCE_INLINE
@@ -104,12 +104,12 @@ T Blend(const Mask<T> &mask, const T &src1, const T &src2);
 
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-constexpr Bool_s EarlyReturnAllowed();
+constexpr bool EarlyReturnAllowed();
 
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-constexpr Bool_s EarlyReturnMaxLength(T &, size_t);
+constexpr bool EarlyReturnMaxLength(T &, size_t);
 
 // Reduction
 

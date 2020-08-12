@@ -12,13 +12,13 @@ using namespace vecCore;
   static_assert(std::is_same<TypeTraits<x::vector>::ScalarType, scalar>::value, "Type trait assertion failed");
 
 #define TEST_TRAIT(x)                      \
-  TEST_SCALAR_TRAIT(x, Real_v, Real_s)     \
-  TEST_SCALAR_TRAIT(x, Float_v, Float_s)   \
-  TEST_SCALAR_TRAIT(x, Double_v, Double_s) \
-  TEST_SCALAR_TRAIT(x, Int32_v, Int32_s)   \
-  TEST_SCALAR_TRAIT(x, UInt32_v, UInt32_s) \
-  TEST_SCALAR_TRAIT(x, Int16_v, Int16_s)   \
-  TEST_SCALAR_TRAIT(x, UInt16_v, UInt16_s)
+  TEST_SCALAR_TRAIT(x, Real_v,   Real_s)   \
+  TEST_SCALAR_TRAIT(x, Float_v,  float)    \
+  TEST_SCALAR_TRAIT(x, Double_v, double)   \
+  TEST_SCALAR_TRAIT(x, Int32_v,  int32_t)  \
+  TEST_SCALAR_TRAIT(x, UInt32_v, uint32_t) \
+  TEST_SCALAR_TRAIT(x, Int16_v,  int16_t)  \
+  TEST_SCALAR_TRAIT(x, UInt16_v, uint16_t)
 
 TEST_TRAIT(backend::Scalar);
 TEST_TRAIT(backend::ScalarWrapper);

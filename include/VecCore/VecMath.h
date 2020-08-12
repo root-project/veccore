@@ -145,7 +145,7 @@ void SinCos(const T &x, T *s, T *c)
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-void SinCos(const Float_s &x, Float_s *s, Float_s *c)
+void SinCos(const float &x, float *s, float *c)
 {
   ::sincosf(x, s, c);
 }
@@ -153,7 +153,7 @@ void SinCos(const Float_s &x, Float_s *s, Float_s *c)
 template <>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-void SinCos(const Double_s &x, Double_s *s, Double_s *c)
+void SinCos(const double &x, double *s, double *c)
 {
   ::sincos(x, s, c);
 }

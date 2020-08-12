@@ -6,7 +6,7 @@ namespace vecCore {
 template <typename T>
 struct TypeTraits<Vc::Scalar::Mask<T>> {
   using IndexType  = size_t;
-  using ScalarType = Bool_s;
+  using ScalarType = bool;
 };
 
 template <typename T>
@@ -22,18 +22,18 @@ template <typename T = Real_s>
 class VcScalarT {
 public:
   using Real_v   = Vc::Scalar::Vector<T>;
-  using Float_v  = Vc::Scalar::Vector<Float_s>;
-  using Double_v = Vc::Scalar::Vector<Double_s>;
+  using Float_v  = Vc::Scalar::Vector<float>;
+  using Double_v = Vc::Scalar::Vector<double>;
 
-  using Int_v   = Vc::Scalar::Vector<Int_s>;
-  using Int16_v = Vc::Scalar::Vector<Int16_s>;
-  using Int32_v = Vc::Scalar::Vector<Int32_s>;
-  using Int64_v = Vc::Scalar::Vector<Int64_s>;
+  using Int_v   = Vc::Scalar::Vector<int>;
+  using Int16_v = Vc::Scalar::Vector<int16_t>;
+  using Int32_v = Vc::Scalar::Vector<int32_t>;
+  using Int64_v = Vc::Scalar::Vector<int64_t>;
 
-  using UInt_v   = Vc::Scalar::Vector<UInt_s>;
-  using UInt16_v = Vc::Scalar::Vector<UInt16_s>;
-  using UInt32_v = Vc::Scalar::Vector<UInt32_s>;
-  using UInt64_v = Vc::Scalar::Vector<UInt64_s>;
+  using UInt_v   = Vc::Scalar::Vector<unsigned int>;
+  using UInt16_v = Vc::Scalar::Vector<uint16_t>;
+  using UInt32_v = Vc::Scalar::Vector<uint32_t>;
+  using UInt64_v = Vc::Scalar::Vector<uint64_t>;
 };
 
 using VcScalar = VcScalarT<>;
@@ -42,14 +42,14 @@ using VcScalar = VcScalarT<>;
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::Scalar::Mask<T> &mask)
+bool MaskEmpty(const Vc::Scalar::Mask<T> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::Scalar::Mask<T> &mask)
+bool MaskFull(const Vc::Scalar::Mask<T> &mask)
 {
   return mask.isFull();
 }
@@ -57,9 +57,9 @@ Bool_s MaskFull(const Vc::Scalar::Mask<T> &mask)
 template <typename T>
 struct IndexingImplementation<Vc::Scalar::Mask<T>> {
   using M = Vc::Scalar::Mask<T>;
-  static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
+  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
+  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
 };
 
 template <typename T>

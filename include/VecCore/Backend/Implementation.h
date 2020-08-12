@@ -12,7 +12,7 @@ namespace vecCore {
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-constexpr Size_s VectorSize()
+constexpr size_t VectorSize()
 {
   using V = typename std::decay<T>::type;
   return sizeof(V) / sizeof(Scalar<V>);
@@ -21,7 +21,7 @@ constexpr Size_s VectorSize()
 template <typename T>
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
-constexpr Size_s VectorSize(const T &)
+constexpr size_t VectorSize(const T &)
 {
   return VectorSize<T>();
 }
@@ -209,7 +209,7 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx)
 // Masking
 
 template <typename M>
-Bool_s MaskFull(const M &mask)
+bool MaskFull(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
     if (Get(mask, i) == false) return false;
@@ -217,7 +217,7 @@ Bool_s MaskFull(const M &mask)
 }
 
 template <typename M>
-Bool_s MaskEmpty(const M &mask)
+bool MaskEmpty(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
     if (Get(mask, i) == true) return false;
@@ -226,7 +226,7 @@ Bool_s MaskEmpty(const M &mask)
 
 // Split generic scalar/vector implementations to avoid performance loss
 
-template <typename T, Bool_s>
+template <typename T, bool>
 struct GenericMaskingImplementation {
   VECCORE_FORCE_INLINE
   VECCORE_ATT_HOST_DEVICE
@@ -296,7 +296,7 @@ T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 
 // Miscellaneous
 
-VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed()
+VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr bool EarlyReturnAllowed()
 {
 #ifdef VECCORE_CUDA_DEVICE_COMPILATION
   return false;
@@ -307,7 +307,7 @@ VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE constexpr Bool_s EarlyReturnAllowed
 
 template <typename T>
 VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE
-constexpr Bool_s EarlyReturnMaxLength(T &, size_t n)
+constexpr bool EarlyReturnMaxLength(T &, size_t n)
 {
    return EarlyReturnAllowed() && VectorSize<T>() <= n;
 }

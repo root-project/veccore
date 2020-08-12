@@ -51,16 +51,16 @@
 
 #define VECCORE_CUDA_BASIC_TYPES                                               \
 template <typename T> struct CudaTypeTraits;                                   \
-template <> struct CudaTypeTraits<Float_s>  { using Type = Float_s;  };        \
-template <> struct CudaTypeTraits<Double_s> { using Type = Double_s; };        \
-template <> struct CudaTypeTraits<Int8_t>   { using Type = Int8_t;   };        \
-template <> struct CudaTypeTraits<Int16_s>  { using Type = Int16_s;  };        \
-template <> struct CudaTypeTraits<Int32_s>  { using Type = Int32_s;  };        \
-template <> struct CudaTypeTraits<Int64_s>  { using Type = Int64_s;  };        \
-template <> struct CudaTypeTraits<Uint8_t>  { using Type = Uint8_t;  };        \
-template <> struct CudaTypeTraits<Uint16_t> { using Type = Uint16_t; };        \
-template <> struct CudaTypeTraits<Uint32_t> { using Type = Uint32_t; };        \
-template <> struct CudaTypeTraits<Uint64_t> { using Type = Uint64_t; };        \
+template <> struct CudaTypeTraits<float>    { using Type = float;    };        \
+template <> struct CudaTypeTraits<double>   { using Type = double;   };        \
+template <> struct CudaTypeTraits<int8_t>   { using Type = int8_t;   };        \
+template <> struct CudaTypeTraits<int16_t>  { using Type = int16_t;  };        \
+template <> struct CudaTypeTraits<int32_t>  { using Type = int32_t;  };        \
+template <> struct CudaTypeTraits<int64_t>  { using Type = int64_t;  };        \
+template <> struct CudaTypeTraits<uint8_t>  { using Type = uint8_t;  };        \
+template <> struct CudaTypeTraits<uint16_t> { using Type = uint16_t; };        \
+template <> struct CudaTypeTraits<uint32_t> { using Type = uint32_t; };        \
+template <> struct CudaTypeTraits<uint64_t> { using Type = uint64_t; };        \
 template <typename T> using CudaType = typename CudaTypeTraits<T>::Type;
 
 #define VECCORE_DECLARE_CUDA(T) T; namespace cuda { T; }

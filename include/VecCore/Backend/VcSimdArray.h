@@ -5,7 +5,7 @@ namespace vecCore {
 
 template <typename T, size_t N>
 struct TypeTraits<Vc::SimdMaskArray<T, N>> {
-  using ScalarType = Bool_s;
+  using ScalarType = bool;
   using IndexType  = size_t;
 };
 
@@ -22,32 +22,32 @@ template <size_t N = 16>
 class VcSimdArray {
 public:
   using Real_v   = Vc::SimdArray<Real_s, N>;
-  using Float_v  = Vc::SimdArray<Float_s, N>;
-  using Double_v = Vc::SimdArray<Double_s, N>;
+  using Float_v  = Vc::SimdArray<float, N>;
+  using Double_v = Vc::SimdArray<double, N>;
 
-  using Int_v   = Vc::SimdArray<Int_s, N>;
-  using Int16_v = Vc::SimdArray<Int16_s, N>;
-  using Int32_v = Vc::SimdArray<Int32_s, N>;
-  using Int64_v = Vc::SimdArray<Int64_s, N>;
+  using Int_v   = Vc::SimdArray<int, N>;
+  using Int16_v = Vc::SimdArray<int16_t, N>;
+  using Int32_v = Vc::SimdArray<int32_t, N>;
+  using Int64_v = Vc::SimdArray<int64_t, N>;
 
-  using UInt_v   = Vc::SimdArray<UInt_s, N>;
-  using UInt16_v = Vc::SimdArray<UInt16_s, N>;
-  using UInt32_v = Vc::SimdArray<UInt32_s, N>;
-  using UInt64_v = Vc::SimdArray<UInt64_s, N>;
+  using UInt_v   = Vc::SimdArray<unsigned int, N>;
+  using UInt16_v = Vc::SimdArray<uint16_t, N>;
+  using UInt32_v = Vc::SimdArray<uint32_t, N>;
+  using UInt64_v = Vc::SimdArray<uint64_t, N>;
 };
 
 } // namespace backend
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const Vc::SimdMaskArray<T, N> &mask)
+bool MaskEmpty(const Vc::SimdMaskArray<T, N> &mask)
 {
   return mask.isEmpty();
 }
 
 template <typename T, size_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const Vc::SimdMaskArray<T, N> &mask)
+bool MaskFull(const Vc::SimdMaskArray<T, N> &mask)
 {
   return mask.isFull();
 }
@@ -55,9 +55,9 @@ Bool_s MaskFull(const Vc::SimdMaskArray<T, N> &mask)
 template <typename T, size_t N>
 struct IndexingImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
-  static inline Bool_s Get(const M &mask, size_t i) { return mask[i]; }
+  static inline bool Get(const M &mask, size_t i) { return mask[i]; }
 
-  static inline void Set(M &mask, size_t i, const Bool_s val) { mask[i] = val; }
+  static inline void Set(M &mask, size_t i, const bool val) { mask[i] = val; }
 };
 
 template <typename T, size_t N>
@@ -82,7 +82,7 @@ struct LoadStoreImplementation<Vc::SimdMaskArray<T, N>> {
   using M = Vc::SimdMaskArray<T, N>;
 
   template <typename S = Scalar<T>>
-  static inline void Load(M &mask, Bool_s const *ptr)
+  static inline void Load(M &mask, bool const *ptr)
   {
     mask.load(ptr);
   }

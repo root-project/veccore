@@ -10,7 +10,7 @@ template <uint32_t N>
 struct TypeTraits<UME::SIMD::SIMDVecMask<N>> {
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = int;
-  using ScalarType = Bool_s;
+  using ScalarType = bool;
 };
 
 template <typename T, uint32_t N>
@@ -38,14 +38,14 @@ struct TypeTraits<UME::SIMD::SIMDVec_u<T, N>> {
 
 template <uint32_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskFull(const UME::SIMD::SIMDVecMask<N> &cond)
+bool MaskFull(const UME::SIMD::SIMDVecMask<N> &cond)
 {
   return cond.hland();
 }
 
 template <uint32_t N>
 VECCORE_FORCE_INLINE
-Bool_s MaskEmpty(const UME::SIMD::SIMDVecMask<N> &cond)
+bool MaskEmpty(const UME::SIMD::SIMDVecMask<N> &cond)
 {
   return !cond.hlor();
 }
@@ -54,9 +54,9 @@ template <uint32_t N>
 struct IndexingImplementation<UME::SIMD::SIMDVecMask<N>> {
   using M = UME::SIMD::SIMDVecMask<N>;
 
-  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Bool_s Get(const M &mask, int i) { return mask[i]; }
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static bool Get(const M &mask, int i) { return mask[i]; }
 
-  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const Bool_s val)
+  VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static void Set(M &mask, int i, const bool val)
   {
     mask.insert(i, val);
   }

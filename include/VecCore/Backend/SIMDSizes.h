@@ -13,17 +13,17 @@ constexpr size_t SIMDWidth()
 }
 #ifdef __AVX512__
 template <>
-constexpr size_t SIMDWidth<Double_s>()
+constexpr size_t SIMDWidth<double>()
 {
   return 8;
 }
 template <>
-constexpr size_t SIMDWidth<Float_s>()
+constexpr size_t SIMDWidth<float>()
 {
   return 16;
 }
 template <>
-constexpr size_t SIMDWidth<UInt32_s>()
+constexpr size_t SIMDWidth<uint32_t>()
 {
   return 16;
 }
@@ -33,7 +33,7 @@ constexpr size_t SIMDWidth<Int32_s>()
   return 16;
 }
 template <>
-constexpr size_t SIMDWidth<UInt16_s>()
+constexpr size_t SIMDWidth<uint16_t>()
 {
   return 32;
 }
@@ -44,17 +44,17 @@ constexpr size_t SIMDWidth<Int16_s>()
 }
 #elif __AVX2__
 template <>
-constexpr size_t SIMDWidth<Double_s>()
+constexpr size_t SIMDWidth<double>()
 {
   return 4;
 }
 template <>
-constexpr size_t SIMDWidth<Float_s>()
+constexpr size_t SIMDWidth<float>()
 {
   return 8;
 }
 template <>
-constexpr size_t SIMDWidth<UInt32_s>()
+constexpr size_t SIMDWidth<uint32_t>()
 {
   return 8;
 }
@@ -64,7 +64,7 @@ constexpr size_t SIMDWidth<Int32_s>()
   return 8;
 }
 template <>
-constexpr size_t SIMDWidth<UInt16_s>()
+constexpr size_t SIMDWidth<uint16_t>()
 {
   return 16;
 }
@@ -75,17 +75,17 @@ constexpr size_t SIMDWidth<Int16_s>()
 }
 #elif __AVX__
 template <>
-constexpr size_t SIMDWidth<Double_s>()
+constexpr size_t SIMDWidth<double>()
 {
   return 4;
 }
 template <>
-constexpr size_t SIMDWidth<Float_s>()
+constexpr size_t SIMDWidth<float>()
 {
   return 8;
 }
 template <>
-constexpr size_t SIMDWidth<UInt32_s>()
+constexpr size_t SIMDWidth<uint32_t>()
 {
   return 4;
 }
@@ -95,7 +95,7 @@ constexpr size_t SIMDWidth<Int32_s>()
   return 4;
 }
 template <>
-constexpr size_t SIMDWidth<UInt16_s>()
+constexpr size_t SIMDWidth<uint16_t>()
 {
   return 16;
 }
@@ -106,17 +106,17 @@ constexpr size_t SIMDWidth<Int16_s>()
 }
 #elif __SSE__
 template <>
-constexpr size_t SIMDWidth<Double_s>()
+constexpr size_t SIMDWidth<double>()
 {
   return 2;
 }
 template <>
-constexpr size_t SIMDWidth<Float_s>()
+constexpr size_t SIMDWidth<float>()
 {
   return 4;
 }
 template <>
-constexpr size_t SIMDWidth<UInt32_s>()
+constexpr size_t SIMDWidth<uint32_t>()
 {
   return 4;
 }
@@ -126,7 +126,7 @@ constexpr size_t SIMDWidth<Int32_s>()
   return 4;
 }
 template <>
-constexpr size_t SIMDWidth<UInt16_s>()
+constexpr size_t SIMDWidth<uint16_t>()
 {
   return 8;
 }
