@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.12)
 
 include(cmake/RecordCmdLine.cmake)
 
@@ -22,12 +22,26 @@ option(BUILD_UMESIMD  "Build UME::SIMD library from source")
 option(BUILD_VC       "Build Vc library from source")
 
 include(CompilerSetup)
+include(GNUInstallDirs)
 
 if (CUDA)
   include(CUDA)
 endif()
 
 add_library(VecCore INTERFACE)
+target_include_directories(VecCore INTERFACE
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+# This supports projects using VecCore either as builtin or via find_package
+# A direct ALIAS target is not used because we *do not* want to export
+# the VecCore target. If we do this when it links to a backend, that dependency
+# is exported, and that is artificial. VecCore had no direct dependencies, with
+# configure/compile time choice by the client choosing this. We therefore construct
+# the imported target the same way here as is done in VecCoreConfig.cmake.
+# It is GLOBAL as it will always be created in a subdirectory of any including project
+add_library(VecCore::VecCore IMPORTED INTERFACE GLOBAL)
+target_include_directories(VecCore::VecCore INTERFACE ${PROJECT_SOURCE_DIR}/include)
 
 include(Builtins)
 
@@ -43,23 +57,30 @@ if (VC)
 
   target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_VC)
   target_link_libraries(VecCore INTERFACE Vc::Vc)
+
+  target_compile_definitions(VecCore::VecCore INTERFACE VECCORE_ENABLE_VC)
+  target_link_libraries(VecCore::VecCore INTERFACE Vc::Vc)
 endif()
 
 if (UMESIMD)
   find_package(UMESIMD 0.8.1 REQUIRED)
   target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_UMESIMD)
   target_link_libraries(VecCore INTERFACE UMESIMD::UMESIMD)
+
+  target_compile_definitions(VecCore::VecCore INTERFACE VECCORE_ENABLE_UMESIMD)
+  target_link_libraries(VecCore::VecCore INTERFACE UMESIMD::UMESIMD)
 endif()
 
 if (CUDA)
   target_compile_definitions(VecCore INTERFACE VECCORE_ENABLE_CUDA)
   target_include_directories(VecCore INTERFACE ${CUDA_INCLUDE_DIRS})
   target_link_libraries(VecCore INTERFACE ${CUDA_LIBRARIES})
+
+  target_compile_definitions(VecCore::VecCore INTERFACE VECCORE_ENABLE_CUDA)
+  target_include_directories(VecCore::VecCore INTERFACE ${CUDA_INCLUDE_DIRS})
+  target_link_libraries(VecCore::VecCore INTERFACE ${CUDA_LIBRARIES})
 endif()
 
-include_directories(include)
-
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(cmake/VecCoreConfigVersion.cmake
