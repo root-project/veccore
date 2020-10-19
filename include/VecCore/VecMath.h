@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-#if defined(__APPLE__) && !defined(NVCC)
+#if defined(__APPLE__) && !defined(__NVCC__)
 VECCORE_FORCE_INLINE
 void sincosf(const float &x, float *s, float *c)
 {
