@@ -85,7 +85,7 @@ void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
 
     for (size_t i = 0; i < nx; ++i)
         for (size_t j = 0; j < ny; ++j)
-            gdImageSetPixel(image, i, j, colors[data[ny*(nx - i) + j]]);
+            gdImageSetPixel(image, i, j, colors[data[ny*(nx - i - 1) + j]]);
 
     gdImagePng(image, output);
     gdImageDestroy(image);
