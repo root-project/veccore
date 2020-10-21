@@ -33,7 +33,7 @@ add_library(png STATIC png.cc)
 
 if (GD_FOUND)
   target_compile_definitions(png PUBLIC HAVE_GD)
-  target_link_libraries(png INTERFACE PkgConfig::GD)
+  target_link_libraries(png PUBLIC PkgConfig::GD)
 endif()
 
 foreach(target julia mandelbrot newton)
