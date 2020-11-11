@@ -23,6 +23,9 @@ target_link_libraries(mathbench-fast benchmark benchmark_main VecCore)
 add_executable(quadratic quadratic.cc)
 target_link_libraries(quadratic VecCore)
 
+add_executable(nbody nbody.cc)
+target_link_libraries(nbody VecCore)
+
 find_package(PkgConfig)
 
 if(PKG_CONFIG_FOUND)
@@ -42,7 +45,7 @@ foreach(target julia mandelbrot newton)
 endforeach()
 
 if(BUILD_TESTING)
-  foreach(target julia mandelbrot newton quadratic)
+  foreach(target julia mandelbrot newton quadratic nbody)
     add_test(NAME bench-${target} COMMAND ${target})
   endforeach()
 endif()
