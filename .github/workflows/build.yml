@@ -32,7 +32,7 @@ jobs:
         apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
 
     - name: CTest Build
-      run: ctest -V -C Release -S cmake/TestVecCore.cmake
+      run: ctest -VV -C Release -S cmake/TestVecCore.cmake
 
   macos:
     name: MacOS
@@ -62,4 +62,4 @@ jobs:
         fetch-depth: 1
 
     - name: CTest Build
-      run: ctest -V -C Release -S cmake/TestVecCore.cmake
+      run: ctest -VV -C Release -S cmake/TestVecCore.cmake
