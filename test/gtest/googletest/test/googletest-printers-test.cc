@@ -360,7 +360,7 @@ TEST(PrintBuiltInTypeTest, Integer) {
 }
 
 // Size types.
-TEST(PrintBuiltInTypeTest, Size_t) {
+TEST(PrintBuiltInTypeTest, Size_s) {
   EXPECT_EQ("1", Print(sizeof('a')));  // size_t.
 #if !GTEST_OS_WINDOWS
   // Windows has no ssize_t type.
