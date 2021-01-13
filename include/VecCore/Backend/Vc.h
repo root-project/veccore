@@ -13,15 +13,7 @@
 #pragma GCC diagnostic pop
 
 #include "VcScalar.h"
-
-#ifndef Vc_IMPL_Scalar
 #include "VcVector.h"
-#else
-template <typename T>
-using VcVectorT = VcScalarT<T>;
-using VcVector  = VcScalar;
-#endif
-
 #include "VcSimdArray.h"
 
 #endif // VECCORE_ENABLE_VC
