@@ -17,9 +17,13 @@
 #ifndef Vc_IMPL_Scalar
 #include "VcVector.h"
 #else
+namespace vecCore {
+namespace backend {
 template <typename T>
 using VcVectorT = VcScalarT<T>;
 using VcVector  = VcScalar;
+} // namespace backend
+} // namespace vecCore
 #endif
 
 #include "VcSimdArray.h"
