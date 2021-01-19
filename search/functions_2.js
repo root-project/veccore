@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['convert_313',['Convert',['../namespacevecCore.html#a98d52c47c802cf3d9d7f5f177b39f062',1,'vecCore']]],
-  ['copysign_314',['CopySign',['../namespacevecCore_1_1math.html#a1ea57bff57d5d8b147c885b6c84893b3',1,'vecCore::CopySign()'],['../namespacevecCore_1_1math.html#a1ea57bff57d5d8b147c885b6c84893b3',1,'vecCore::math::CopySign()'],['../namespacevecCore_1_1math.html#a1a00fd9e7d68c23c40193e88e116eece',1,'vecCore::CopySign()'],['../namespacevecCore_1_1math.html#a1a00fd9e7d68c23c40193e88e116eece',1,'vecCore::math::CopySign()']]]
+  ['convert_319',['Convert',['../namespacevecCore.html#a98d52c47c802cf3d9d7f5f177b39f062',1,'vecCore']]],
+  ['copysign_320',['CopySign',['../namespacevecCore_1_1math.html#a1ea57bff57d5d8b147c885b6c84893b3',1,'vecCore::CopySign()'],['../namespacevecCore_1_1math.html#a1ea57bff57d5d8b147c885b6c84893b3',1,'vecCore::math::CopySign()'],['../namespacevecCore_1_1math.html#a1a00fd9e7d68c23c40193e88e116eece',1,'vecCore::CopySign()'],['../namespacevecCore_1_1math.html#a1a00fd9e7d68c23c40193e88e116eece',1,'vecCore::math::CopySign()']]]
 ];

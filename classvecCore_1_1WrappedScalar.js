@@ -12,7 +12,7 @@ var classvecCore_1_1WrappedScalar =
     [ "operator T&", "classvecCore_1_1WrappedScalar.html#a255f9c2cb4baca69930b00b9e480df9d", null ],
     [ "operator()", "classvecCore_1_1WrappedScalar.html#a47c86393416dabc7f0a5dd0568f7cff5", null ],
     [ "operator[]", "classvecCore_1_1WrappedScalar.html#a7ce365fa886bf5846aadca02028cf35e", null ],
-    [ "operator[]", "classvecCore_1_1WrappedScalar.html#a07410956c4e0c479db68e839186bd6b1", null ],
+    [ "operator[]", "classvecCore_1_1WrappedScalar.html#ae3eef12c0bd02c9cf787ea9e7cfd7d85", null ],
     [ "store", "classvecCore_1_1WrappedScalar.html#ae67b88b15fcc94fbd2cec4c06fb9c91d", null ],
     [ "store", "classvecCore_1_1WrappedScalar.html#a86217c2c8464ce09210f071582e80645", null ]
 ];

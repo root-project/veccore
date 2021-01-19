@@ -19,7 +19,7 @@ var VecMath_8h =
     [ "Scalbln", "VecMath_8h.html#aa70516c832781cce9b3c4e7f731b4109", null ],
     [ "Scalbn", "VecMath_8h.html#aa5562e1ba0d2918347591294473de6c4", null ],
     [ "Sign", "VecMath_8h.html#a1f4cf5560b52b305686022c7b81f7ff4", null ],
-    [ "SinCos", "VecMath_8h.html#abd68b39eb91a24e7c957b0987da16406", null ],
-    [ "SinCos", "VecMath_8h.html#ae3c5cfc82408499b04b4f28d846ed5b7", null ],
+    [ "SinCos", "VecMath_8h.html#a5c09785b55773503e01c8a45b70c7e4b", null ],
+    [ "SinCos", "VecMath_8h.html#abc345e7255979a9dd3c2e711818bf5b4", null ],
     [ "SinCos", "VecMath_8h.html#adf7884f9388e43adf13825c10c422556", null ]
 ];

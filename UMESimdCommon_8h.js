@@ -3,7 +3,7 @@ var UMESimdCommon_8h =
     [ "TypeTraits< UME::SIMD::SIMDVecMask< N > >", "namespacevecCore.html#structvecCore_1_1TypeTraits_3_01UME_1_1SIMD_1_1SIMDVecMask_3_01N_01_4_01_4", [
       [ "IndexType", "namespacevecCore.html#adf9fb822dcbf5ad34c61f54ee38b20e5", null ],
       [ "MaskType", "namespacevecCore.html#ae7622d66570bb2a5efb8abc820b3e9fb", null ],
-      [ "ScalarType", "namespacevecCore.html#a056eca75d85410d5735de059c87821c8", null ]
+      [ "ScalarType", "namespacevecCore.html#a4f47b0e22838b6a61545767c54fb0909", null ]
     ] ],
     [ "TypeTraits< UME::SIMD::SIMDVec_f< T, N > >", "namespacevecCore.html#structvecCore_1_1TypeTraits_3_01UME_1_1SIMD_1_1SIMDVec__f_3_01T_00_01N_01_4_01_4", [
       [ "IndexType", "namespacevecCore.html#a4df26682d8a6e105972a9fade12f9a71", null ],
@@ -30,7 +30,7 @@ var UMESimdCommon_8h =
     [ "MaskingImplementation< UME::SIMD::SIMDVec_u< T, N > >", "structvecCore_1_1MaskingImplementation_3_01UME_1_1SIMD_1_1SIMDVec__u_3_01T_00_01N_01_4_01_4.html", "structvecCore_1_1MaskingImplementation_3_01UME_1_1SIMD_1_1SIMDVec__u_3_01T_00_01N_01_4_01_4" ],
     [ "UMESIMD_MATH_UNARY_FUNCTION", "UMESimdCommon_8h.html#aaa1b804d418e99cfecc2b7d471ef77c0", null ],
     [ "IsInf", "UMESimdCommon_8h.html#a1eca0ced9140c945ec1e7fbce93eb39f", null ],
-    [ "MaskEmpty", "UMESimdCommon_8h.html#ad3eedf3f200e0d8c97d909b7c39ce46b", null ],
-    [ "MaskFull", "UMESimdCommon_8h.html#a810f8f4ad9e1b3953cb98ca52a15f2db", null ],
+    [ "MaskEmpty", "UMESimdCommon_8h.html#a6dc95760b33cb65836453e8cae0e9a19", null ],
+    [ "MaskFull", "UMESimdCommon_8h.html#a1e69209ec57e19e1f5ea5d58745b9087", null ],
     [ "SinCos", "UMESimdCommon_8h.html#a7f425a090bc0ef0c3d5e925570f13c57", null ]
 ];
