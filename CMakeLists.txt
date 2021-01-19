@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 
 include(cmake/RecordCmdLine.cmake)
 
-project(VecCore LANGUAGES C CXX VERSION 0.6.0
+project(VecCore LANGUAGES C CXX VERSION 0.7.0
     DESCRIPTION "C++ Library for Portable SIMD Vectorization")
 
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
