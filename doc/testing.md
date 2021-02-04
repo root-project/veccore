@@ -20,7 +20,7 @@ $ cd VecCore
 $ mkdir build && cd build
 $ cmake .. -DBUILD_TESTING=ON
 $ make
-$ test/Backend
+$ ./test/backend 
 ```
 
 Make sure the backend you intend to test is enabled in your
