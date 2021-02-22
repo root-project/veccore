@@ -14,9 +14,10 @@ option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
 
-option(BUILD_DOCS       "Build doxygen documentation")
-option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
-option(BUILD_TESTING    "Build test binaries and create test target")
+option(BUILD_DOCS         "Build doxygen documentation")
+option(BUILD_BENCHMARKS   "Build binaries for performance benchmarking")
+option(BUILD_TESTING      "Build test binaries and create test target")
+option(USE_EXTERNAL_GTEST "Use external gtest")
 
 option(BUILD_UMESIMD  "Build UME::SIMD library from source")
 option(BUILD_VC       "Build Vc library from source")
