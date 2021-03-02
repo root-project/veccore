@@ -103,9 +103,10 @@ REGISTER_TYPED_TEST_SUITE_P(AlignmentTest, Stack, Heap, StdArray);
 #define TEST_BACKEND_P(name, types, x) \
   INSTANTIATE_TYPED_TEST_SUITE_P(name, AlignmentTest, types<vecCore::backend::x>)
 
+TEST_BACKEND_P(Scalar, VcTypes, Scalar);
+
 /*
  * Notes:
- *  - Scalar backends do not require strict alignment
  *  - UME::SIMD does not promise its types are aligned
  */
 
