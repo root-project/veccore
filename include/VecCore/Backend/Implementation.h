@@ -212,7 +212,7 @@ template <typename M>
 bool MaskFull(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
-    if (Get(mask, i) == false) return false;
+    if (!Get(mask, i)) return false;
   return true;
 }
 
@@ -220,7 +220,7 @@ template <typename M>
 bool MaskEmpty(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
-    if (Get(mask, i) == true) return false;
+    if (Get(mask, i)) return false;
   return true;
 }
 
