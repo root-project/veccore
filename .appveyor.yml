@@ -21,7 +21,7 @@ matrix:
   fast_finish: true
 
 build_script:
-  - ctest -V -C %Configuration% -S cmake/TestVecCore.cmake
+  - ctest -VV -C %Configuration% -S cmake/TestVecCore.cmake
 
 notifications:
   - provider: Email
