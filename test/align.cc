@@ -40,7 +40,7 @@ public:
   using Vector_t = T;
 };
 
-TYPED_TEST_CASE_P(AlignmentTest);
+TYPED_TEST_SUITE_P(AlignmentTest);
 
 inline bool
 is_aligned(const void *ptr, size_t align)
@@ -96,12 +96,12 @@ TYPED_TEST_P(AlignmentTest, Collection)
   EXPECT_TRUE(is_aligned(std::addressof(v), alignof(Vector_t)));
 }
 
-REGISTER_TYPED_TEST_CASE_P(AlignmentTest, Stack, Heap, StdArray, StdVector, Collection);
+REGISTER_TYPED_TEST_SUITE_P(AlignmentTest, Stack, Heap, StdArray, StdVector, Collection);
 #endif
-REGISTER_TYPED_TEST_CASE_P(AlignmentTest, Stack, Heap, StdArray);
+REGISTER_TYPED_TEST_SUITE_P(AlignmentTest, Stack, Heap, StdArray);
 
 #define TEST_BACKEND_P(name, types, x) \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, AlignmentTest, types<vecCore::backend::x>)
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, AlignmentTest, types<vecCore::backend::x>)
 
 /*
  * Notes:

@@ -26,7 +26,7 @@ template <class T>
 class MathFunctions : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(MathFunctions);
+TYPED_TEST_SUITE_P(MathFunctions);
 
 #define TEST_MATH_FUNCTION_RANGE(func, stdfunc, a, b)                 \
   TYPED_TEST_P(MathFunctions, func)                                   \
@@ -130,14 +130,14 @@ TEST_MATH_FUNCTION_2(CopySign, copysign);
 
 TEST_MATH_FUNCTION_RANGE_2(Pow, pow, FLT_MIN, FLT_MAX, 1.0, 10.0);
 
-REGISTER_TYPED_TEST_CASE_P(MathFunctions,
+REGISTER_TYPED_TEST_SUITE_P(MathFunctions,
    Abs, CopySign, Floor, Ceil,
    Sin, Cos, Tan, ASin, ACos, ATan, ATan2,
    Sinh, Cosh, Tanh, ASinh, ACosh, ATanh,
    Exp, Log, TGamma, Sqrt, Cbrt, Pow, Trunc);
 
 #define TEST_BACKEND_P(name, x) \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, MathFunctions, FloatTypes<vecCore::backend::x>);
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, MathFunctions, FloatTypes<vecCore::backend::x>);
 
 #define TEST_BACKEND(x) TEST_BACKEND_P(x, x)
 

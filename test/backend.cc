@@ -34,7 +34,7 @@ template <class T>
 class ConstructorTest : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(ConstructorTest);
+TYPED_TEST_SUITE_P(ConstructorTest);
 
 TYPED_TEST_P(ConstructorTest, Default)
 {
@@ -91,7 +91,7 @@ TYPED_TEST_P(ConstructorTest, FromPtrToScalar)
     EXPECT_TRUE(!vecCore::MaskEmpty(x == Vector_t(Scalar_t(i))));
 }
 
-REGISTER_TYPED_TEST_CASE_P(ConstructorTest, Default, Copy, Move, FromScalar, FromRefToScalar, FromPtrToScalar);
+REGISTER_TYPED_TEST_SUITE_P(ConstructorTest, Default, Copy, Move, FromScalar, FromRefToScalar, FromPtrToScalar);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -99,7 +99,7 @@ template <class T>
 class ArithmeticsTest : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(ArithmeticsTest);
+TYPED_TEST_SUITE_P(ArithmeticsTest);
 
 TYPED_TEST_P(ArithmeticsTest, Addition)
 {
@@ -201,7 +201,7 @@ TYPED_TEST_P(ArithmeticsTest, DivisionAssign)
   EXPECT_TRUE(vecCore::MaskFull(res == lhs));
 }
 
-REGISTER_TYPED_TEST_CASE_P(ArithmeticsTest, Addition, Subtraction, Multiplication, Division, AdditionAssign,
+REGISTER_TYPED_TEST_SUITE_P(ArithmeticsTest, Addition, Subtraction, Multiplication, Division, AdditionAssign,
                            SubtractionAssign, MultiplicationAssign, DivisionAssign);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -210,7 +210,7 @@ template <class T>
 class MaskArithmeticsTest : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(MaskArithmeticsTest);
+TYPED_TEST_SUITE_P(MaskArithmeticsTest);
 
 TYPED_TEST_P(MaskArithmeticsTest, AND)
 {
@@ -266,7 +266,7 @@ TYPED_TEST_P(MaskArithmeticsTest, ORAssign)
   EXPECT_TRUE(vecCore::MaskFull(mask));
 }
 
-REGISTER_TYPED_TEST_CASE_P(MaskArithmeticsTest, AND, OR, NEG, ANDAssign, ORAssign);
+REGISTER_TYPED_TEST_SUITE_P(MaskArithmeticsTest, AND, OR, NEG, ANDAssign, ORAssign);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -274,7 +274,7 @@ template <class T>
 class VectorInterfaceTest : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(VectorInterfaceTest);
+TYPED_TEST_SUITE_P(VectorInterfaceTest);
 
 TYPED_TEST_P(VectorInterfaceTest, VectorSize)
 {
@@ -593,7 +593,7 @@ TYPED_TEST_P(VectorInterfaceTest, Scatter)
   EXPECT_TRUE(vecCore::MaskFull(x == y));
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorInterfaceTest,
+REGISTER_TYPED_TEST_SUITE_P(VectorInterfaceTest,
                            EarlyReturnMaxLength,
                            VectorSize, VectorSizeVariable,
                            VectorLaneRead, VectorLaneWrite,
@@ -608,7 +608,7 @@ template <class T>
 class VectorMaskTest : public VectorTypeTest<T> {
 };
 
-TYPED_TEST_CASE_P(VectorMaskTest);
+TYPED_TEST_SUITE_P(VectorMaskTest);
 
 TYPED_TEST_P(VectorMaskTest, Constructor)
 {
@@ -691,14 +691,14 @@ TYPED_TEST_P(VectorMaskTest, Blend)
   a = vecCore::Blend(a > b, a, b);
 }
 
-REGISTER_TYPED_TEST_CASE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, MaskAssign2, Blend);
+REGISTER_TYPED_TEST_SUITE_P(VectorMaskTest, Constructor, MaskFull, MaskEmpty, MaskAssign, MaskAssign2, Blend);
 
 #define TEST_BACKEND_P(name, x)                                                               \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, ConstructorTest, VectorTypes<vecCore::backend::x>);     \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, ArithmeticsTest, VectorTypes<vecCore::backend::x>);     \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, MaskArithmeticsTest, VectorTypes<vecCore::backend::x>); \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, VectorMaskTest, VectorTypes<vecCore::backend::x>);      \
-  INSTANTIATE_TYPED_TEST_CASE_P(name, VectorInterfaceTest, VectorTypes<vecCore::backend::x>)
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, ConstructorTest, VectorTypes<vecCore::backend::x>);     \
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, ArithmeticsTest, VectorTypes<vecCore::backend::x>);     \
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, MaskArithmeticsTest, VectorTypes<vecCore::backend::x>); \
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, VectorMaskTest, VectorTypes<vecCore::backend::x>);      \
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, VectorInterfaceTest, VectorTypes<vecCore::backend::x>)
 
 #define TEST_BACKEND(x) TEST_BACKEND_P(x, x)
 
