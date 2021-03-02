@@ -10,8 +10,8 @@
 
 using namespace vecCore;
 
-constexpr auto kNruns = 10;
-constexpr auto kN = 4 * 1024;
+constexpr auto kNruns = 1;
+constexpr auto kN = 1024;
 
 #ifdef VECCORE_TIMER_CYCLES
 using time_unit = cycles;
