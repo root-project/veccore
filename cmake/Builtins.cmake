@@ -15,6 +15,13 @@ macro(find_package)
   endif()
 endmacro()
 
+if(BUILD_GOOGLETEST)
+  list(APPEND BUILTINS GTest)
+  add_subdirectory(builtins/googletest EXCLUDE_FROM_ALL)
+else()
+  clear_pkg_vars(GTest)
+endif()
+
 if(BUILD_VC)
   list(APPEND BUILTINS Vc)
   add_subdirectory(builtins/Vc)

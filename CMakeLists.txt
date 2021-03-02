@@ -18,8 +18,9 @@ option(BUILD_DOCS       "Build doxygen documentation")
 option(BUILD_BENCHMARKS "Build binaries for performance benchmarking")
 option(BUILD_TESTING    "Build test binaries and create test target")
 
-option(BUILD_UMESIMD  "Build UME::SIMD library from source")
-option(BUILD_VC       "Build Vc library from source")
+option(BUILD_GOOGLETEST "Build GoogleTest from source")
+option(BUILD_UMESIMD    "Build UME::SIMD library from source")
+option(BUILD_VC         "Build Vc library from source")
 
 include(CompilerSetup)
 
