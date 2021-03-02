@@ -670,7 +670,7 @@ TYPED_TEST_P(VectorMaskTest, MaskAssign2)
   Scalar_t output[kVS];
 
   for (size_t i = 0; i < kVS; ++i) {
-    input[i]  = (i % 2 == 0) ? i : -i;
+    input[i]  = (i % 2 == 0) ? Scalar_t(1) : Scalar_t(0);
     output[i] = (input[i] > 0) ? input[i] : 0;
   }
 
