@@ -17,7 +17,8 @@ add_executable(mathbench math_benchmarks.cc)
 target_link_libraries(mathbench benchmark benchmark_main VecCore)
 
 add_executable(mathbench-fast math_benchmarks.cc)
-target_compile_options(mathbench-fast PRIVATE -ffast-math)
+target_compile_options(mathbench-fast PRIVATE
+  $<IF:$<BOOL:${MSVC}>,/fp:fast,-ffast-math>)
 target_link_libraries(mathbench-fast benchmark benchmark_main VecCore)
 
 add_executable(quadratic quadratic.cc)
