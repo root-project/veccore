@@ -22,6 +22,13 @@ else()
   clear_pkg_vars(GTest)
 endif()
 
+if(BUILD_GOOGLEBENCH)
+  list(APPEND BUILTINS benchmark)
+  add_subdirectory(builtins/benchmark EXCLUDE_FROM_ALL)
+else()
+  clear_pkg_vars(benchmark)
+endif()
+
 if(BUILD_VC)
   list(APPEND BUILTINS Vc)
   add_subdirectory(builtins/Vc)
