@@ -51,10 +51,20 @@ void TestNBody(float* __restrict__ posx, float* __restrict__ posy, float* __rest
     for (size_t n = 0; n < kNruns; n++) {
         timer.Start();
 
-        for (std::size_t i = 0; i < kN; i++)
+        for (std::size_t i = 0; i < kN; i++) {
+            const float piposx = posx[i];
+            const float piposy = posy[i];
+            const float piposz = posz[i];
+            float pivelx = velx[i];
+            float pively = vely[i];
+            float pivelz = velz[i];
             for (std::size_t j = 0; j < kN; j++)
-                pPInteraction(posx[j], posy[j], posz[j], velx[j], vely[j], velz[j],
-                    posx[i], posy[i], posz[i], mass[i]);
+                pPInteraction(piposx, piposy, piposz, pivelx, pively, pivelz,
+                    posx[j], posy[j], posz[j], mass[j]);
+            velx[i] = pivelx;
+            vely[i] = pively;
+            velz[i] = pivelz;
+        }
         for (std::size_t i = 0; i < kN; i++) {
             posx[i] += velx[i] * timeStep;
             posy[i] += vely[i] * timeStep;
@@ -99,6 +109,8 @@ inline void pPInteractionAVX2(
     p1velz = _mm256_fmadd_ps(zdistanceSqr, sts, p1velz);
 }
 
+constexpr auto AVX2FloatVectorSize = 8;
+
 VECCORE_FORCE_NOINLINE
 void TestNBodyAVX2(float* __restrict__ posx, float* __restrict__ posy, float* __restrict__ posz,
                    float* __restrict__ velx, float* __restrict__ vely, float* __restrict__ velz,
@@ -109,29 +121,32 @@ void TestNBodyAVX2(float* __restrict__ posx, float* __restrict__ posy, float* __
     for (size_t n = 0; n < kNruns; n++) {
         timer.Start();
 
-        for (std::size_t i = 0; i < kN; i++) {
-            for (std::size_t j = 0; j < kN; j += VectorSize<__m256>()) {
-                __m256 p1velx = _mm256_load_ps(&velx[j]);
-                __m256 p1vely = _mm256_load_ps(&vely[j]);
-                __m256 p1velz = _mm256_load_ps(&velz[j]);
+        for (std::size_t i = 0; i < kN; i += AVX2FloatVectorSize) {
+            const __m256 piposx = _mm256_load_ps(&posx[i]);
+            const __m256 piposy = _mm256_load_ps(&posy[i]);
+            const __m256 piposz = _mm256_load_ps(&posz[i]);
+            __m256 pivelx = _mm256_load_ps(&velx[i]);
+            __m256 pively = _mm256_load_ps(&vely[i]);
+            __m256 pivelz = _mm256_load_ps(&velz[i]);
+            for (std::size_t j = 0; j < kN; j++) {
                 pPInteractionAVX2(
-                    _mm256_load_ps(&posx[j]),
-                    _mm256_load_ps(&posy[j]),
-                    _mm256_load_ps(&posz[j]),
-                    p1velx,
-                    p1vely,
-                    p1velz,
-                    _mm256_broadcast_ss(&posx[i]),
-                    _mm256_broadcast_ss(&posy[i]),
-                    _mm256_broadcast_ss(&posz[i]),
-                    _mm256_broadcast_ss(&mass[i])
+                    piposx,
+                    piposy,
+                    piposz,
+                    pivelx,
+                    pively,
+                    pivelz,
+                    _mm256_broadcast_ss(&posx[j]),
+                    _mm256_broadcast_ss(&posy[j]),
+                    _mm256_broadcast_ss(&posz[j]),
+                    _mm256_broadcast_ss(&mass[j])
                 );
-                _mm256_store_ps(&velx[j], p1velx);
-                _mm256_store_ps(&vely[j], p1vely);
-                _mm256_store_ps(&velz[j], p1velz);
             }
+            _mm256_store_ps(&velx[i], pivelx);
+            _mm256_store_ps(&vely[i], pively);
+            _mm256_store_ps(&velz[i], pivelz);
         }
-        for (std::size_t i = 0; i < kN; i += VectorSize<__m256>()) {
+        for (std::size_t i = 0; i < kN; i += AVX2FloatVectorSize) {
             _mm256_store_ps(&posx[i], _mm256_fmadd_ps(_mm256_load_ps(&velx[i]), vTimestep, _mm256_load_ps(&posx[i])));
             _mm256_store_ps(&posy[i], _mm256_fmadd_ps(_mm256_load_ps(&vely[i]), vTimestep, _mm256_load_ps(&posy[i])));
             _mm256_store_ps(&posz[i], _mm256_fmadd_ps(_mm256_load_ps(&velz[i]), vTimestep, _mm256_load_ps(&posz[i])));
@@ -175,12 +190,20 @@ void TestNBodySIMD(float* __restrict__ posx, float* __restrict__ posy, float* __
     for (size_t n = 0; n < kNruns; n++) {
         timer.Start();
 
-        for (std::size_t i = 0; i < kN; i++) {
-            for (std::size_t j = 0; j < kN; j += VectorSize<Vec>()) {
-                pPInteractionSIMD((Vec&)(posx[j]), (Vec&)(posy[j]), (Vec&)(posz[j]),
-                                  (Vec&)(velx[j]), (Vec&)(vely[j]), (Vec&)(velz[j]),
-                                  Vec(posx[i]), Vec(posy[i]), Vec(posz[i]), Vec(mass[i]));
+        for (std::size_t i = 0; i < kN; i += VectorSize<Vec>()) {
+            const Vec piposx = (Vec&)(posx[i]);
+            const Vec piposy = (Vec&)(posy[i]);
+            const Vec piposz = (Vec&)(posz[i]);
+            Vec pivelx = (Vec&)(velx[i]);
+            Vec pively = (Vec&)(vely[i]);
+            Vec pivelz = (Vec&)(velz[i]);
+            for (std::size_t j = 0; j < kN; j++ ) {
+                pPInteractionSIMD(piposx, piposy, piposz, pivelx, pively, pivelz,
+                                  Vec(posx[j]), Vec(posy[j]), Vec(posz[j]), Vec(mass[j]));
             }
+            (Vec&)(velx[i]) = pivelx;
+            (Vec&)(vely[i]) = pively;
+            (Vec&)(velz[i]) = pivelz;
         }
         for (std::size_t i = 0; i < kN; i += VectorSize<Vec>()) {
              (Vec&)(posx[i]) += (const Vec&)(velx[i]) * timeStep;
