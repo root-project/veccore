@@ -74,8 +74,19 @@ constexpr size_t N = 128;
   #define BENCHMARK_MATH_FUNCTION_UMESIMD(f, a, b)
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+  #define BENCHMARK_MATH_FUNCTION_SIMD(f, a, b)                                \
+     BENCHMARK_MATH_FUNCTION_RANGE(f, SIMDScalar, a, b);                       \
+     BENCHMARK_MATH_FUNCTION_RANGE(f, SIMDNative, a, b);                       \
+     BENCHMARK(f##_SIMDScalar);                                                \
+     BENCHMARK(f##_SIMDNative);
+#else
+  #define BENCHMARK_MATH_FUNCTION_SIMD(f, a, b)
+#endif
+
 #define BENCHMARK_MATH_FUNCTION(f, a, b)                                       \
    BENCHMARK_MATH_FUNCTION_SCALAR(f, a, b);                                    \
+   BENCHMARK_MATH_FUNCTION_SIMD(f, a, b);                                      \
    BENCHMARK_MATH_FUNCTION_VC(f, a, b);                                        \
    BENCHMARK_MATH_FUNCTION_UMESIMD(f, a, b);                                   \
 
@@ -172,6 +183,16 @@ BENCHMARK_MATH_FUNCTION(Rsqrt, 1, 1000);
      BENCHMARK(f##_UMESimd);
 #else
   #define BENCHMARK_MATH_FUNCTION2_UMESIMD(f, a, b, c, d)
+#endif
+
+#ifdef VECCORE_ENABLE_STD_SIMD
+  #define BENCHMARK_MATH_FUNCTION2_SIMD(f, a, b, c, d)                         \
+     BENCHMARK_MATH_FUNCTION2_RANGE(f, SIMDScalar, a, b, c, d);                \
+     BENCHMARK_MATH_FUNCTION2_RANGE(f, SIMDNative, a, b, c, d);                \
+     BENCHMARK(f##_SIMDScalar);                                                \
+     BENCHMARK(f##_SIMDNative);
+#else
+  #define BENCHMARK_MATH_FUNCTION2_SIMD(f, a, b, c, d)
 #endif
 
 #define BENCHMARK_MATH_FUNCTION2(f, a, b, c, d)                                \
