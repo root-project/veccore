@@ -273,5 +273,12 @@ int main()
     TestNBodySIMD<backend::UMESimdArray<32>::Float_v>(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN, "UME::SIMD<32>");
     #endif
 
+    #ifdef VECCORE_ENABLE_STD_SIMD
+    TestNBodySIMD<backend::SIMDScalar::Float_v>(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN, "SIMDScalar");
+    TestNBodySIMD<backend::SIMDVector<4>::Float_v>(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN, "SIMDVector4");
+    TestNBodySIMD<backend::SIMDVector<8>::Float_v>(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN, "SIMDVector8");
+    TestNBodySIMD<backend::SIMDNative::Float_v>(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN, "SIMDNative");
+    #endif
+
     return 0;
 }
