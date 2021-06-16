@@ -157,6 +157,14 @@ TEST_BACKEND(VcVector);
 TEST_BACKEND_P(VcSimdArray, VcSimdArray<16>);
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+TEST_BACKEND_P(SIMDScalar, SIMDScalar);
+TEST_BACKEND_P(SIMDVector4, SIMDVector<4>);
+TEST_BACKEND_P(SIMDVector8, SIMDVector<8>);
+TEST_BACKEND_P(SIMDVector16, SIMDVector<16>);
+TEST_BACKEND_P(SIMDNative, SIMDNative);
+#endif
+
 int main(int argc, char *argv[])
 {
   ::testing::InitGoogleTest(&argc, argv);

@@ -69,5 +69,13 @@ int main()
   Test<backend::VcSimdArray<16>>("VcSimdArray");
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+  Test<backend::SIMDScalar>("SIMDScalar");
+  Test<backend::SIMDVector<4>>("SIMDVector4");
+  Test<backend::SIMDVector<8>>("SIMDVector8");
+  Test<backend::SIMDVector<16>>("SIMDVector16");
+  Test<backend::SIMDNative>("SIMDNative");
+#endif
+
   return 0;
 }

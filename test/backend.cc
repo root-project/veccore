@@ -718,6 +718,14 @@ TEST_BACKEND(UMESimd);
 TEST_BACKEND_P(UMESimdArray, UMESimdArray<16>);
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+TEST_BACKEND_P(SIMDScalar, SIMDScalar);
+TEST_BACKEND_P(SIMDVector4, SIMDVector<4>);
+TEST_BACKEND_P(SIMDVector8, SIMDVector<8>);
+TEST_BACKEND_P(SIMDVector16, SIMDVector<16>);
+TEST_BACKEND_P(SIMDNative, SIMDNative);
+#endif
+
 #else // if !GTEST_HAS_TYPED_TEST
 TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform)
 {

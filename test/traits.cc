@@ -34,6 +34,14 @@ TEST_TRAIT(backend::UMESimd)
 TEST_TRAIT(backend::UMESimdArray<16>)
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+TEST_TRAIT(backend::SIMDScalar)
+TEST_TRAIT(backend::SIMDVector<4>)
+TEST_TRAIT(backend::SIMDVector<8>)
+TEST_TRAIT(backend::SIMDVector<16>)
+TEST_TRAIT(backend::SIMDNative)
+#endif
+
 TEST(TraitTest, TraitTest)
 {
   // if this runs; it passes trivially

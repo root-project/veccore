@@ -128,6 +128,14 @@ TEST_BACKEND_P(UMESimd, UMESimdTypes, UMESimd);
 TEST_BACKEND_P(UMESimdArray, UMESimdTypes, UMESimdArray<16>);
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+TEST_BACKEND_P(SIMDScalar, UMESimdTypes, SIMDScalar);
+TEST_BACKEND_P(SIMDVector4, UMESimdTypes, SIMDVector<4>);
+TEST_BACKEND_P(SIMDVector8, UMESimdTypes, SIMDVector<8>);
+TEST_BACKEND_P(SIMDVector16, UMESimdTypes, SIMDVector<16>);
+TEST_BACKEND_P(SIMDNative, UMESimdTypes, SIMDNative);
+#endif
+
 int main(int argc, char *argv[])
 {
   ::testing::InitGoogleTest(&argc, argv);
