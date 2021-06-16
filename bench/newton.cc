@@ -25,7 +25,7 @@ Color COLORS[] = {
 template <typename T>
 bool is_equal(T re1, T im1, T re2, T im2)
 {
-    const T tol2 = 0.0001;
+    const T tol2 = T(Scalar<T>(0.0001));
     return ((re1 - re2) * (re1 - re2) + (im1 - im2) * (im1 - im2)) < tol2;
 }
 
@@ -96,7 +96,7 @@ void newton(T xmin, T xmax, size_t nx,
 template <typename T>
 Mask<T> is_equal_v(T re1, T im1, T re2, T im2)
 {
-    const T tol2 = 0.0001;
+    const T tol2 = T(Scalar<T>(0.0001));
     return ((re1 - re2) * (re1 - re2) + (im1 - im2) * (im1 - im2)) < tol2;
 }
 
@@ -131,13 +131,13 @@ void newton_v(T xmin, T xmax, size_t nx,
         Set<T>(iota, i, i);
     }
 
-    T dx = T(xmax - xmin) / T(nx);
-    T dy = T(ymax - ymin) / T(ny), dyv = iota * dy;
+    T dx = T(xmax - xmin) / T(Scalar<T>(nx));
+    T dy = T(ymax - ymin) / T(Scalar<T>(ny)), dyv = iota * dy;
     
     for (size_t i = 0; i < nx; ++i) {
         for (size_t j = 0; j < ny; j += VectorSize<T>()) {
-            T re = xmin + T(i) * dx,       x = re;
-            T im = ymin + T(j) * dy + dyv, y = im;
+            T re = xmin + T(Scalar<T>(i)) * dx,       x = re;
+            T im = ymin + T(Scalar<T>(j)) * dy + dyv, y = im;
 
             Index<T> kv(0);
             Index<T> color_index(0);
@@ -147,15 +147,17 @@ void newton_v(T xmin, T xmax, size_t nx,
             for (size_t k = 0; !MaskFull(m) && (k < max_iter); ) {
                 T re2 = re * re, re3 = re2 * re, re4 = re3 * re, re5 = re4 * re, re6 = re5 * re, re7 = re6 * re;
                 T im2 = im * im, im3 = im2 * im, im4 = im3 * im, im5 = im4 * im, im6 = im5 * im, im7 = im6 * im;
-                T coeff = T(0.25) / ((re2 + im2) * (re2 + im2) * (re2 + im2));
+                T coeff = T(Scalar<T>(0.25)) / ((re2 + im2) * (re2 + im2) * (re2 + im2));
 
-                x = T(3) * re * im2 + re * im6 + re7 + T(3) * re5 * im2 - re3 + T(3) * re3 * im4;
-                y = T(3) * re2 * im + im7 + T(3) * re2 * im5 - im3 + re6 * im + T(3) * re4 * im3;
+                T three = T(Scalar<T>(3));
+                x = three * re * im2 + re * im6 + re7 + three * re5 * im2 - re3 + three * re3 * im4;
+                y = three * re2 * im + im7 + three * re2 * im5 - im3 + re6 * im + three * re4 * im3;
 
                 re -= x * coeff;
                 im -= y * coeff;
                 m = converged_v(re, im, kv, color_index, alphas);
-                MaskedAssign<Index<T>>(kv, !m, ++k);
+                Mask<T> notm = !m;
+                MaskedAssign<Index<T>>(kv, (Mask<Index<T>>&)notm, Index<T>(Scalar<Index<T>>(++k)));
             }
 
             for (size_t k = 0; k < VectorSize<T>(); ++k) {
@@ -209,6 +211,11 @@ int main()
     bench_newton_v<float>(xmin, xmax, nx, ymin, ymax, ny,
                           max_iter, image, "float_v");
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+    bench_newton_v<backend::SIMDNative::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
+                          max_iter, image, "std_simd_float");
+#endif
+
 
 #ifdef VECCORE_ENABLE_VC
     bench_newton_v<backend::VcVector::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
@@ -236,6 +243,11 @@ int main()
 #ifdef VECCORE_ENABLE_UMESIMD
     bench_newton_v<backend::UMESimd::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
                                                max_iter, image, "double_umesimd");
+#endif
+
+#ifdef VECCORE_ENABLE_STD_SIMD
+    bench_newton_v<backend::SIMDNative::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
+                          max_iter, image, "std_simd_double");
 #endif
     delete[] image;
     return 0;
