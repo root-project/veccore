@@ -556,7 +556,7 @@ TYPED_TEST_P(VectorInterfaceTest, Gather)
     vecCore::Set(idx, i, Index_t(i));
 
   for (size_t i = 1; i <= N; ++i) {
-    Index_v iidx = Index_v(i) * idx;
+    Index_v iidx = Index_v((Index_t)i) * idx;
 
     Vector_t x = vecCore::Gather<Vector_t>(input, iidx);
 
