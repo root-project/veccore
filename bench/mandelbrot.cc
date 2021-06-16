@@ -88,25 +88,25 @@ void mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
     for (size_t i = 0; i < VectorSize<T>(); ++i)
         Set<T>(iota, i, i);
 
-    T dx = T(xmax - xmin) / T(nx);
-    T dy = T(ymax - ymin) / T(ny), dyv = iota * dy;
+    T dx = T(xmax - xmin) / T((Scalar<T>)nx);
+    T dy = T(ymax - ymin) / T((Scalar<T>)ny), dyv = iota * dy;
 
     for (size_t i = 0; i < nx; ++i) {
         for (size_t j = 0; j < ny; j += VectorSize<T>()) {
             Scalar<Index<T>> k(0);
-            T x = xmin + T(i) * dx,       cr = x, zr = x;
-            T y = ymin + T(j) * dy + dyv, ci = y, zi = y;
+            T x = xmin + T((Scalar<T>)i) * dx,       cr = x, zr = x;
+            T y = ymin + T((Scalar<T>)j) * dy + dyv, ci = y, zi = y;
 
             Index<T> kv(0);
             Mask<T> m(true);
 
             do {
                 x = zr*zr - zi*zi + cr;
-                y = T(2.0) * zr*zi + ci;
+                y = T((Scalar<T>)2.0) * zr*zi + ci;
                 MaskedAssign<T>(zr, m, x);
                 MaskedAssign<T>(zi, m, y);
                 MaskedAssign<Index<T>>(kv, m, ++k);
-                m = zr*zr + zi*zi < T(4.0);
+                m = zr*zr + zi*zi < T((Scalar<T>)4.0);
             } while (k < max_iter && !MaskEmpty(m));
 
             for (size_t k = 0; k < VectorSize<T>(); ++k)
@@ -122,7 +122,7 @@ void bench_mandelbrot(T xmin, T xmax, size_t nx, T ymin, T ymax, size_t ny,
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
     Timer<milliseconds> timer;
     mandelbrot<T>(xmin, xmax, nx, ymin, ymax, ny, max_iter, image);
-    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    printf("%25s: %7.2lf ms\n", backend, timer.Elapsed());
     write_png(filename.c_str(), image, nx, ny);
 }
 
@@ -135,7 +135,7 @@ void bench_mandelbrot_avx2(float xmin, float xmax, size_t nx,
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
     Timer<milliseconds> timer;
     mandelbrot_avx2(xmin, xmax, nx, ymin, ymax, ny, max_iter, image);
-    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    printf("%25s: %7.2lf ms\n", backend, timer.Elapsed());
     write_png(filename.c_str(), image, nx, ny);
 }
 #endif
@@ -148,7 +148,7 @@ void bench_mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
     Timer<milliseconds> timer;
     mandelbrot_v<T>(xmin, xmax, nx, ymin, ymax, ny, max_iter, image);
-    printf("%15s: %7.2lf ms\n", backend, timer.Elapsed());
+    printf("%25s: %7.2lf ms\n", backend, timer.Elapsed());
     write_png(filename.c_str(), image, nx, ny);
 }
 
@@ -182,6 +182,20 @@ int main()
                                                   max_iter, image, "float_umesimd");
 #endif
 
+#ifdef VECCORE_ENABLE_STD_SIMD
+    bench_mandelbrot_v<backend::SIMDScalar::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_scalar_float");
+
+    bench_mandelbrot_v<backend::SIMDNative::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_native_float");
+
+    bench_mandelbrot_v<backend::SIMDVector<4>::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_vector4_float");
+
+    bench_mandelbrot_v<backend::SIMDVector<8>::Float_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_vector8_float");
+#endif
+
     /* double precision */
 
     bench_mandelbrot<double>(xmin, xmax, nx, ymin, ymax, ny,
@@ -199,6 +213,21 @@ int main()
     bench_mandelbrot_v<backend::UMESimd::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
                                                    max_iter, image, "double_umesimd");
 #endif
+
+#ifdef VECCORE_ENABLE_STD_SIMD
+    bench_mandelbrot_v<backend::SIMDScalar::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_scalar_double");
+
+    bench_mandelbrot_v<backend::SIMDNative::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_native_double");
+
+    bench_mandelbrot_v<backend::SIMDVector<4>::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_vector4_double");
+
+    bench_mandelbrot_v<backend::SIMDVector<8>::Double_v>(xmin, xmax, nx, ymin, ymax, ny,
+                                                   max_iter, image, "std_simd_vector8_double");
+#endif
+
     delete[] image;
     return 0;
 }
