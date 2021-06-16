@@ -15,6 +15,7 @@ template <>
 struct TypeTraits<WrappedBool> {
   using ScalarType = bool;
   using IndexType  = WrappedScalar<size_t>;
+  static constexpr size_t Size = 1;
 };
 
 template <typename T>
@@ -22,6 +23,7 @@ struct TypeTraits<WrappedScalar<T>> {
   using ScalarType = T;
   using MaskType   = WrappedBool;
   using IndexType  = WrappedScalar<size_t>;
+  static constexpr size_t Size = 1;
 };
 
 namespace backend {

@@ -15,7 +15,7 @@ VECCORE_ATT_HOST_DEVICE
 constexpr size_t VectorSize()
 {
   using V = typename std::decay<T>::type;
-  return sizeof(V) / sizeof(Scalar<V>);
+  return TypeTraits<V>::Size;
 }
 
 template <typename T>

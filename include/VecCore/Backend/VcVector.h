@@ -7,6 +7,7 @@ template <typename T, class Abi>
 struct TypeTraits<Vc::Mask<T, Abi>> {
   using IndexType  = size_t;
   using ScalarType = bool;
+  static constexpr size_t Size = Vc::Mask<T, Abi>::Size;
 };
 
 template <typename T, class Abi>
@@ -14,6 +15,7 @@ struct TypeTraits<Vc::Vector<T, Abi>> {
   using ScalarType = T;
   using MaskType   = typename Vc::Vector<T, Abi>::MaskType;
   using IndexType  = typename Vc::Vector<T, Abi>::IndexType;
+  static constexpr size_t Size = Vc::Vector<T, Abi>::Size;
 };
 
 namespace backend {

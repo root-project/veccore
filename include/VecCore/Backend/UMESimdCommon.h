@@ -11,6 +11,7 @@ struct TypeTraits<UME::SIMD::SIMDVecMask<N>> {
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = int;
   using ScalarType = bool;
+  static constexpr size_t Size = N;
 };
 
 template <typename T, uint32_t N>
@@ -18,6 +19,7 @@ struct TypeTraits<UME::SIMD::SIMDVec_f<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
+  static constexpr size_t Size = N;
 };
 
 template <typename T, uint32_t N>
@@ -25,6 +27,7 @@ struct TypeTraits<UME::SIMD::SIMDVec_i<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
+  static constexpr size_t Size = N;
 };
 
 template <typename T, uint32_t N>
@@ -32,6 +35,7 @@ struct TypeTraits<UME::SIMD::SIMDVec_u<T, N>> {
   using ScalarType = T;
   using MaskType   = typename UME::SIMD::SIMDVecMask<N>;
   using IndexType  = typename UME::SIMD::SIMDVec_u<uint32_t, N>;
+  static constexpr size_t Size = N;
 };
 
 // backend functions for UME::SIMD

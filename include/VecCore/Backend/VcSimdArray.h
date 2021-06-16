@@ -7,6 +7,7 @@ template <typename T, size_t N>
 struct TypeTraits<Vc::SimdMaskArray<T, N>> {
   using ScalarType = bool;
   using IndexType  = size_t;
+  static constexpr size_t Size = N;
 };
 
 template <typename T, size_t N>
@@ -14,6 +15,7 @@ struct TypeTraits<Vc::SimdArray<T, N>> {
   using ScalarType = T;
   using MaskType   = typename Vc::SimdArray<T, N>::MaskType;
   using IndexType  = typename Vc::SimdArray<T, N>::IndexType;
+  static constexpr size_t Size = N;
 };
 
 namespace backend {

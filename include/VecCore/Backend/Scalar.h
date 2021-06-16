@@ -11,6 +11,7 @@ struct TypeTraits {
   using ScalarType = T;
   using MaskType   = bool;
   using IndexType  = size_t;
+  static constexpr size_t Size = 1;
 };
 
 namespace backend {
