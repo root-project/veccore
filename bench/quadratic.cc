@@ -146,12 +146,12 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
 
   MaskedAssign(x1, mask2, root1);
   MaskedAssign(x2, mask2, root2);
-  roots = Blend((IMask)mask2, Int32_v(2), Int32_v(0));
+  roots = Blend((IMask&)mask2, Int32_v(2), Int32_v(0));
 
   if (MaskEmpty(mask1)) return;
 
   root1 = Float_v(-0.5f) * b * a_inv;
-  MaskedAssign(roots, (IMask)mask1, Int32_v(1));
+  MaskedAssign(roots, (IMask&)mask1, Int32_v(1));
   MaskedAssign(x1, mask1, root1);
   MaskedAssign(x2, mask1, root1);
 }
@@ -320,6 +320,13 @@ int main()
   TestQuadSolve<backend::UMESimdArray<8>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<8>");
   TestQuadSolve<backend::UMESimdArray<16>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<16>");
   TestQuadSolve<backend::UMESimdArray<32>>(a, b, c, x1, x2, roots, kN, "UME::SIMD<32>");
+#endif
+
+#ifdef VECCORE_ENABLE_STD_SIMD
+  TestQuadSolve<backend::SIMDScalar>(a, b, c, x1, x2, roots, kN, "SIMDScalar");
+  TestQuadSolve<backend::SIMDNative>(a, b, c, x1, x2, roots, kN, "SIMDNative");
+  TestQuadSolve<backend::SIMDVector<4>>(a, b, c, x1, x2, roots, kN, "SIMDVector4");
+  TestQuadSolve<backend::SIMDVector<8>>(a, b, c, x1, x2, roots, kN, "SIMDVector8");
 #endif
 
   AlignedFree(a);
