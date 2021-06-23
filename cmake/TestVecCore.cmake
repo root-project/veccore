@@ -8,6 +8,14 @@ set(CTEST_BINARY_DIRECTORY "${CTEST_SOURCE_DIRECTORY}/build")
 
 ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 
+if(NOT DEFINED CTEST_SITE)
+  if(DEFINED ENV{BUILD_SITE})
+    set(CTEST_SITE $ENV{BUILD_SITE})
+  else()
+    site_name(CTEST_SITE)
+  endif()
+endif()
+
 if(NOT DEFINED CTEST_CONFIGURATION_TYPE)
   set(CTEST_CONFIGURATION_TYPE RelWithDebInfo)
 endif()
