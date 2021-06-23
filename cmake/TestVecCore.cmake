@@ -1,5 +1,10 @@
 set(CTEST_PROJECT_NAME "VecCore")
 
+set(CTEST_DROP_METHOD "http")
+set(CTEST_DROP_SITE "cdash.cern.ch")
+set(CTEST_DROP_LOCATION "/submit.php?project=VecCore")
+set(CTEST_DROP_SITE_CDASH TRUE)
+
 set(ENV{LANG} "C")
 set(ENV{LC_ALL} "C")
 
@@ -76,3 +81,4 @@ ctest_start(Continuous)
 ctest_configure(OPTIONS "${CMAKE_ARGS}")
 ctest_build()
 ctest_test()
+ctest_submit()
