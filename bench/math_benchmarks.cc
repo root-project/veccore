@@ -48,7 +48,10 @@ constexpr size_t N = 128;
        std::abort();                                                           \
       }                                                                        \
     }                                                                          \
-  }                                                                            \
+    AlignedFree(input);                                                        \
+    AlignedFree(reference);                                                    \
+    AlignedFree(output);                                                       \
+  }
 
 #define BENCHMARK_MATH_FUNCTION_SCALAR(f, a, b)                                \
    BENCHMARK_MATH_FUNCTION_RANGE(f, Scalar, a, b);                             \
@@ -159,7 +162,11 @@ BENCHMARK_MATH_FUNCTION(Rsqrt, 1, 1000);
        std::abort();                                                           \
       }                                                                        \
     }                                                                          \
-  }                                                                            \
+    AlignedFree(input1);                                                       \
+    AlignedFree(input2);                                                       \
+    AlignedFree(reference);                                                    \
+    AlignedFree(output);                                                       \
+  }
 
 #define BENCHMARK_MATH_FUNCTION2_SCALAR(f, a, b, c, d)                         \
    BENCHMARK_MATH_FUNCTION2_RANGE(f, Scalar, a, b, c, d);                      \
