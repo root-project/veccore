@@ -1,24 +1,20 @@
-name: build
+name: GitHub Actions
 
-on:
-  push:
-    branches-ignore:
-    - gh-pages
-  pull_request:
-    branches-ignore:
-    - gh-pages
+on: [push, pull_request]
+
+env:
+  BUILD_SITE: "GitHub Actions"
 
 jobs:
   linux:
     name: Linux
-    container:
-      image: ubuntu:bionic
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: true
       matrix:
         compiler: [ gcc, clang ]
+        target: [ sse4.2, avx2 ]
 
     steps:
     - uses: actions/checkout@master
@@ -28,38 +24,42 @@ jobs:
     - name: Install dependencies
       run: |
         set -e
-        apt-get update -y
-        apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
+        sudo apt-get update -y
+        sudo apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
 
     - name: CTest Build
-      run: ctest -VV -C Release -S cmake/TestVecCore.cmake
+      run: ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
 
   macos:
     name: MacOS
     runs-on: macos-latest
 
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [ sse2, sse4.2 ]
+
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 1
 
-    - name: Install dependencies
-      run: |
-        set -e
-        export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install cmake
-
     - name: CTest Build
-      run: ctest -VV -C Release -S cmake/TestVecCore.cmake
+      run: ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
 
   windows:
     name: Windows
     runs-on: windows-latest
 
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [ sse2, avx2 ]
+
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 1
 
     - name: CTest Build
-      run: ctest -VV -C Release -S cmake/TestVecCore.cmake
+      run: ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
