@@ -13,6 +13,10 @@ set(CTEST_BINARY_DIRECTORY "${CTEST_SOURCE_DIRECTORY}/build")
 
 ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
 
+if(MEMCHECK)
+  find_program(CTEST_MEMORYCHECK_COMMAND NAMES valgrind)
+endif()
+
 if(NOT DEFINED CTEST_SITE)
   if(DEFINED ENV{BUILD_SITE})
     set(CTEST_SITE $ENV{BUILD_SITE})
@@ -81,4 +85,5 @@ ctest_start(Continuous)
 ctest_configure(OPTIONS "${CMAKE_ARGS}")
 ctest_build()
 ctest_test()
+ctest_memcheck()
 ctest_submit()
