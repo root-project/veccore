@@ -1,81 +1,71 @@
-#undef NDEBUG
-#include <cstdio>
-#include <type_traits>
+#include "test.h"
 
-#include <VecCore/VecCore>
+template <class T> class NumericLimitsTest : public VectorTypeTest<T> {};
 
-using namespace vecCore;
+TYPED_TEST_SUITE_P(NumericLimitsTest);
 
-template <class Backend>
-void Print(const typename Backend::Real_v &x)
-{
-  const size_t N = VectorSize(x);
-  printf("[ ");
-  for (size_t i = 0; i < N - 1; i++)
-    printf("%g, ", x[i]);
-  printf("%g ]", x[N - 1]);
+TYPED_TEST_P(NumericLimitsTest, Limits) {
+  using Scalar_t = typename TestFixture::Scalar_t;
+  using Vector_t = typename TestFixture::Vector_t;
+
+  using vecCore::Get;
+  using vecCore::NumericLimits;
+  using vecCore::VectorSize;
+
+  size_t N = VectorSize<Vector_t>();
+
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Min() ==
+              Get(NumericLimits<Vector_t>::Min(), 0));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Max() ==
+              Get(NumericLimits<Vector_t>::Max(), 0));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Lowest() ==
+              Get(NumericLimits<Vector_t>::Lowest(), 0));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Highest() ==
+              Get(NumericLimits<Vector_t>::Highest(), 0));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Epsilon() ==
+              Get(NumericLimits<Vector_t>::Epsilon(), 0));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Infinity() ==
+              Get(NumericLimits<Vector_t>::Infinity(), 0));
+
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Min() ==
+              Get(NumericLimits<Vector_t>::Min(), N - 1));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Max() ==
+              Get(NumericLimits<Vector_t>::Max(), N - 1));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Lowest() ==
+              Get(NumericLimits<Vector_t>::Lowest(), N - 1));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Highest() ==
+              Get(NumericLimits<Vector_t>::Highest(), N - 1));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Epsilon() ==
+              Get(NumericLimits<Vector_t>::Epsilon(), N - 1));
+  EXPECT_TRUE(NumericLimits<Scalar_t>::Infinity() ==
+              Get(NumericLimits<Vector_t>::Infinity(), N - 1));
 }
 
-template <>
-void Print<backend::Scalar>(const Real_s &x)
-{
-  printf("[ %g ]", x);
-}
+REGISTER_TYPED_TEST_SUITE_P(NumericLimitsTest, Limits);
 
-template <class Backend>
-void Test(const char *name)
-{
-  using Real_v = typename Backend::Real_v;
-  using Real_t = typename vecCore::Scalar<Real_v>;
+#define TEST_BACKEND_P(name, x)                                                \
+  INSTANTIATE_TYPED_TEST_SUITE_P(name, NumericLimitsTest,                      \
+                                 FloatTypes<vecCore::backend::x>);
 
-  static_assert(std::is_same<Real_t, Real_s>::value,
-                "conversion of vector type to scalar type failed");
+#define TEST_BACKEND(x) TEST_BACKEND_P(x, x)
 
-  printf("Backend: %s\n\n", name);
-
-  printf("NumericLimits::Min()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Min());
-  Print<Backend>(NumericLimits<Real_v>::Min());
-  printf("\n\n");
-
-  printf("NumericLimits::Max()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Max());
-  Print<Backend>(NumericLimits<Real_v>::Max());
-  printf("\n\n");
-
-  printf("NumericLimits::Lowest()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Lowest());
-  Print<Backend>(NumericLimits<Real_v>::Lowest());
-  printf("\n\n");
-
-  printf("NumericLimits::Highest()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Highest());
-  Print<Backend>(NumericLimits<Real_v>::Highest());
-  printf("\n\n");
-
-  printf("NumericLimits::Epsilon()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Epsilon());
-  Print<Backend>(NumericLimits<Real_v>::Epsilon());
-  printf("\n\n");
-
-  printf("NumericLimits::Infinity()\n Real_s: [ %g ]\n Real_v: ", NumericLimits<Real_s>::Infinity());
-  Print<Backend>(NumericLimits<Real_v>::Infinity());
-  printf("\n\n");
-}
-
-int main()
-{
-  Test<backend::Scalar>("Scalar");
-  Test<backend::ScalarWrapper>("ScalarWrapper");
+TEST_BACKEND(Scalar);
+TEST_BACKEND(ScalarWrapper);
 
 #ifdef VECCORE_ENABLE_VC
-  Test<backend::VcScalar>("VcScalar");
-  Test<backend::VcVector>("VcVector");
-  Test<backend::VcSimdArray<16>>("VcSimdArray");
+TEST_BACKEND(VcScalar);
+TEST_BACKEND(VcVector);
+TEST_BACKEND_P(VcSimdArray, VcSimdArray<4>);
+#endif
+
+#ifdef VECCORE_ENABLE_UMESIMD
+TEST_BACKEND(UMESimd);
+TEST_BACKEND_P(UMESimdArray, UMESimdArray<4>);
 #endif
 
 #ifdef VECCORE_ENABLE_STD_SIMD
-  Test<backend::SIMDScalar>("SIMDScalar");
-  Test<backend::SIMDVector<4>>("SIMDVector4");
-  Test<backend::SIMDVector<8>>("SIMDVector8");
-  Test<backend::SIMDVector<16>>("SIMDVector16");
-  Test<backend::SIMDNative>("SIMDNative");
+TEST_BACKEND_P(SIMDScalar, SIMDScalar);
+TEST_BACKEND_P(SIMDVector4, SIMDVector<4>);
+TEST_BACKEND_P(SIMDVector8, SIMDVector<8>);
+TEST_BACKEND_P(SIMDNative, SIMDNative);
 #endif
-
-  return 0;
-}

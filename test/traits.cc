@@ -46,9 +46,3 @@ TEST(TraitTest, TraitTest)
 {
   // if this runs; it passes trivially
 }
-
-int main(int argc, char *argv[])
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
