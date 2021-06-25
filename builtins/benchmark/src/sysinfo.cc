@@ -695,8 +695,8 @@ std::vector<double> GetLoadAvg() {
 }  // end namespace
 
 const CPUInfo& CPUInfo::Get() {
-  static const CPUInfo* info = new CPUInfo();
-  return *info;
+  static const CPUInfo info;
+  return info;
 }
 
 CPUInfo::CPUInfo()
@@ -708,8 +708,8 @@ CPUInfo::CPUInfo()
 
 
 const SystemInfo& SystemInfo::Get() {
-  static const SystemInfo* info = new SystemInfo();
-  return *info;
+  static const SystemInfo info;
+  return info;
 }
 
 SystemInfo::SystemInfo() : name(GetSystemName()) {}
