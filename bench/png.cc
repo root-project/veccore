@@ -101,7 +101,7 @@ void write_png(const char *filename, Color *data, size_t nx, size_t ny)
         return;
     }
 
-    gdImagePtr image = gdImageCreate(nx, ny);
+    gdImagePtr image = gdImageCreateTrueColor(nx, ny);
 
     if (!image) {
         fprintf(stderr, "Error: cannot create image\n");
