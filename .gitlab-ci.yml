@@ -6,7 +6,7 @@ variables:
 before_script:
   - apk update
   - apk upgrade
-  - apk add cmake make clang g++
+  - apk add cmake make patch clang g++
 
 .script: &script
   script:
