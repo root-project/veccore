@@ -10,8 +10,11 @@ TEST_BACKEND_P(VcSimdArray8, VcSimdArray<8>);
 
 #ifdef VECCORE_ENABLE_UMESIMD
 TEST_BACKEND(UMESimd);
+TEST_BACKEND_P(UMESimdArray2, UMESimdArray<2>);
+#ifdef __AVX2__
 TEST_BACKEND_P(UMESimdArray4, UMESimdArray<4>);
 TEST_BACKEND_P(UMESimdArray8, UMESimdArray<8>);
+#endif
 #endif
 
 #ifdef VECCORE_ENABLE_STD_SIMD
