@@ -10,4 +10,5 @@ set(FLAGS_SSE    "/arch:SSE")
 set(FLAGS_SSE2   "/arch:SSE2")
 set(FLAGS_AVX    "/arch:AVX")
 set(FLAGS_AVX2   "/arch:AVX2")
+set(FLAGS_AVX512 "/arch:AVX512")
 
