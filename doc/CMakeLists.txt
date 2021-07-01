@@ -20,6 +20,7 @@ set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
 doxygen_add_docs(doxygen
   ${PROJECT_SOURCE_DIR}/README.md
   ${PROJECT_SOURCE_DIR}/doc/api.md
+  ${PROJECT_SOURCE_DIR}/doc/backends.md
   ${PROJECT_SOURCE_DIR}/doc/publications.md
   ${PROJECT_SOURCE_DIR}/include
 )
