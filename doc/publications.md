@@ -20,5 +20,5 @@ See also articles mentioning VecCore in [INSPIRE](https://inspirehep.net/literat
 
 ### Zenodo
 
-* <a href="https://doi.org/10.5281/zenodo.3275458">https://doi.org/10.5281/zenodo.3275458 <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3275458.svg" /></a>
+* <a href="https://doi.org/10.5281/zenodo.1404726">https://doi.org/10.5281/zenodo.1404726 <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1404726.svg" /></a>
 
