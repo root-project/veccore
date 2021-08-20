@@ -64,8 +64,10 @@ void StoreMask(M const &mask, bool *ptr)
 // Masking
 
 template <typename M>
+VECCORE_ATT_HOST_DEVICE
 bool MaskFull(const M &mask);
 template <typename M>
+VECCORE_ATT_HOST_DEVICE
 bool MaskEmpty(const M &mask);
 
 template <typename M>

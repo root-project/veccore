@@ -209,6 +209,7 @@ void Scatter(T const &v, S *ptr, Index<T> const &idx)
 // Masking
 
 template <typename M>
+VECCORE_ATT_HOST_DEVICE
 bool MaskFull(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
@@ -217,6 +218,7 @@ bool MaskFull(const M &mask)
 }
 
 template <typename M>
+VECCORE_ATT_HOST_DEVICE
 bool MaskEmpty(const M &mask)
 {
   for (size_t i = 0; i < VectorSize<M>(); i++)
