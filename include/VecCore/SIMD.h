@@ -1,12 +1,14 @@
 #ifndef VECCORE_SIMD_H
 #define VECCORE_SIMD_H
 
+#if !defined(__NVCC__)
 #if defined(VECCORE_X64) || defined(VECCORE_X86)
 #  ifdef _MSC_VER
 #    include <intrin.h>
 #  else
 #    include <x86intrin.h>
 #  endif
+#endif
 #endif
 
 #if defined(__AVX512F__) || defined(__MIC__)
