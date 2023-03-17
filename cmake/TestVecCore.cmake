@@ -117,8 +117,14 @@ if(NOT DEFINED MODEL)
   set(MODEL Experimental)
 endif()
 
+ctest_read_custom_files("${CTEST_SOURCE_DIRECTORY}")
+
 ctest_start(${MODEL})
 ctest_configure(OPTIONS "${CMAKE_ARGS}")
+
+ctest_read_custom_files("${CTEST_BINARY_DIRECTORY}")
+list(APPEND CTEST_NOTES_FILES ${CTEST_BINARY_DIRECTORY}/CMakeCache.txt)
+
 ctest_build()
 ctest_test()
 ctest_memcheck()
