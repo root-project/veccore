@@ -1,12 +1,14 @@
 set(CTEST_PROJECT_NAME "VecCore")
 
-set(CTEST_DROP_METHOD "http")
-set(CTEST_DROP_SITE "cdash.cern.ch")
-set(CTEST_DROP_LOCATION "/submit.php?project=VecCore")
-set(CTEST_DROP_SITE_CDASH TRUE)
-
 set(ENV{LANG} "C")
 set(ENV{LC_ALL} "C")
+
+if(CDASH)
+  set(CTEST_DROP_METHOD "http")
+  set(CTEST_DROP_SITE "cdash.cern.ch")
+  set(CTEST_DROP_LOCATION "/submit.php?project=VecCore")
+  set(CTEST_DROP_SITE_CDASH TRUE)
+endif()
 
 set(CTEST_SOURCE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/..")
 set(CTEST_BINARY_DIRECTORY "${CTEST_SOURCE_DIRECTORY}/build")
@@ -86,4 +88,7 @@ ctest_configure(OPTIONS "${CMAKE_ARGS}")
 ctest_build()
 ctest_test()
 ctest_memcheck()
-ctest_submit()
+
+if(CDASH)
+  ctest_submit()
+endif()
