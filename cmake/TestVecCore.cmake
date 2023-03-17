@@ -113,7 +113,11 @@ set(CMAKE_ARGS
   ${CMAKE_ARGS}
 )
 
-ctest_start(Continuous)
+if(NOT DEFINED MODEL)
+  set(MODEL Experimental)
+endif()
+
+ctest_start(${MODEL})
 ctest_configure(OPTIONS "${CMAKE_ARGS}")
 ctest_build()
 ctest_test()
