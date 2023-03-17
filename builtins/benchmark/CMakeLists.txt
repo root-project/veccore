@@ -137,13 +137,8 @@ else()
     add_cxx_compiler_flag(-std=c++0x)
   endif()
 
-  # Turn compiler warnings up to 11
-  add_cxx_compiler_flag(-Wall)
-  add_cxx_compiler_flag(-Wextra)
-  add_cxx_compiler_flag(-Wshadow)
-  add_cxx_compiler_flag(-Werror RELEASE)
-  add_cxx_compiler_flag(-Werror RELWITHDEBINFO)
-  add_cxx_compiler_flag(-Werror MINSIZEREL)
+  # Disable compiler warnings up to 11
+  add_cxx_compiler_flag(-w)
   # Disabled until googletest (gmock) stops emitting variadic macro warnings
   #add_cxx_compiler_flag(-pedantic)
   #add_cxx_compiler_flag(-pedantic-errors)
