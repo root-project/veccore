@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.16...3.25)
+
 set(CTEST_PROJECT_NAME "VecCore")
 
 set(ENV{LANG} "C")
