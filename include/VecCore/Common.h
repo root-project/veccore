@@ -14,7 +14,10 @@
 #endif
 
 #include "CUDA.h"
-#include "SIMD.h"
+
+#ifndef VECCORE_CUDA
+#  include "SIMD.h"
+#endif
 
 #ifdef _MSC_VER
 #define __restrict__ __restrict

@@ -14,9 +14,9 @@
 
 #include "Backend/Scalar.h"
 #include "Backend/ScalarWrapper.h"
-#include "Backend/SIMD.h"
 
 #if !defined(VECCORE_CUDA)
+#include "Backend/SIMD.h"
 #include "Backend/SIMDSizes.h"
 #include "Backend/Vc.h"
 #include "Backend/UMESimd.h"
