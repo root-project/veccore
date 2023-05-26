@@ -84,6 +84,7 @@ if (BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 
+include(CTest)
 enable_testing()
 
 if (BUILD_TESTING)
