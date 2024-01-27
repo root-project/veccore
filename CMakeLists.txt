@@ -1,8 +1,14 @@
-cmake_minimum_required(VERSION 3.16...3.25)
+cmake_minimum_required(VERSION 3.16...3.27)
 
 include(cmake/RecordCmdLine.cmake)
 
-project(VecCore LANGUAGES C CXX VERSION 0.8.1
+option(CUDA    "Enable support for CUDA")
+set(LANGS C CXX)
+if (CUDA)
+    message(STATUS "Compiling with CUDA enabled")
+    set(LANGS C CXX CUDA)
+endif()
+project(VecCore LANGUAGES ${LANGS} VERSION 0.8.1
     DESCRIPTION "C++ Library for Portable SIMD Vectorization")
 
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ ISO Standard")
@@ -10,7 +16,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
-option(CUDA    "Enable support for CUDA")
 option(UMESIMD "Enable UME::SIMD backend")
 option(VC      "Enable Vc backend")
 
@@ -24,10 +29,6 @@ option(BUILD_UMESIMD     "Build UME::SIMD library from source")
 option(BUILD_VC          "Build Vc library from source")
 
 include(CompilerSetup)
-
-if (CUDA)
-  include(CUDA)
-endif()
 
 add_library(VecCore INTERFACE)
 
