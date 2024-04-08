@@ -16,6 +16,9 @@ jobs:
         compiler: [ gcc, clang ]
         target: [ sse4.2, avx2 ]
 
+    env:
+      CC: ${{ matrix.compiler }}
+
     steps:
     - uses: actions/checkout@master
       with:
@@ -28,7 +31,7 @@ jobs:
         sudo apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
 
     - name: CTest Build
-      run: ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
+      run: env CC=${CC} CXX=${CC/g*/g++} ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
 
   macos:
     name: MacOS
