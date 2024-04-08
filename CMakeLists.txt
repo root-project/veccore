@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.25)
+cmake_minimum_required(VERSION 3.16...3.29)
 
 include(cmake/RecordCmdLine.cmake)
 
@@ -26,7 +26,7 @@ option(BUILD_VC          "Build Vc library from source")
 include(CompilerSetup)
 
 if (CUDA)
-  include(CUDA)
+  enable_language(CUDA)
 endif()
 
 add_library(VecCore INTERFACE)
