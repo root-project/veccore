@@ -90,7 +90,6 @@ if(DEFINED ENV{GITHUB_ACTIONS})
   set(CTEST_SITE "GitHub Actions ($ENV{GITHUB_REPOSITORY_OWNER})")
 
   if("$ENV{GITHUB_REPOSITORY_OWNER}" STREQUAL "root-project")
-    set(CDASH TRUE)
     set(MODEL "Continuous")
   endif()
 
