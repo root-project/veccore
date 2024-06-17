@@ -78,7 +78,7 @@ void TestNBody(float* __restrict__ posx, float* __restrict__ posy, float* __rest
     printf("%20s %6llu\n", "Scalar", mean);
 }
 
-#ifdef __AVX2__
+#if defined(__AVX2__) && defined(__FMA__)
 const __m256 vEps2 = _mm256_set1_ps(eps2);
 const __m256 vTimestep = _mm256_broadcast_ss(&timeStep);
 
@@ -251,7 +251,7 @@ int main()
 
     TestNBody(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN);
 
-#ifdef __AVX2__
+#if defined(__AVX2__) && defined(__FMA__)
     TestNBodyAVX2(posx.get(), posy.get(), posz.get(), velx.get(), vely.get(), velz.get(), mass.get(), kN);
 #endif
 

@@ -62,9 +62,13 @@ void mandelbrot_avx2(float xmin, float xmax, size_t nx,
             do {
                 __m256 zr2 = _mm256_mul_ps(zr, zr);
                 __m256 zi2 = _mm256_mul_ps(zi, zi);
-                x = _mm256_add_ps(_mm256_sub_ps(zr2,zi2), cr);
                 __m256 zri = _mm256_mul_ps(zr, zi);
+                x = _mm256_add_ps(_mm256_sub_ps(zr2,zi2), cr);
+#ifdef __FMA__
                 y = _mm256_fmadd_ps(_mm256_set1_ps(2.0f), zri, ci);
+#else
+                y = _mm256_add_ps(_mm256_mul_ps(_mm256_set1_ps(2.0f), zri), ci);
+#endif
                 zr = _mm256_blendv_ps(zr, x, mask);
                 zi = _mm256_blendv_ps(zi, y, mask);
                 kv = _mm256_blendv_epi8(kv, _mm256_set1_epi32(++k), _mm256_castps_si256(mask));
