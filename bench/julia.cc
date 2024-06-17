@@ -102,8 +102,6 @@ int main(int argc, char *argv[])
     size_t nx = 1024, ny = 1024, max_iter = 500;
     double cr = -0.123, ci = 0.754;
 
-    unsigned char *image = new unsigned char[nx*ny];
-
     if (argc > 1) {
         if (argc != 3) {
            fprintf(stderr, "%s: incorrect number of parameters\n\n"
@@ -115,6 +113,8 @@ int main(int argc, char *argv[])
             ci = atof(argv[2]);
         }
     }
+
+    unsigned char *image = new unsigned char[nx*ny];
 
     /* single precision */
 
