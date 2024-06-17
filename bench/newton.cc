@@ -157,7 +157,7 @@ void newton_v(T xmin, T xmax, size_t nx,
                 im -= y * coeff;
                 m = converged_v(re, im, kv, color_index, alphas);
                 Mask<T> notm = !m;
-                MaskedAssign<Index<T>>(kv, (Mask<Index<T>>&)notm, Index<T>(Scalar<Index<T>>(++k)));
+                MaskedAssign<Index<T>>(kv, reinterpret_cast<Mask<Index<T>>&>(notm), Index<T>(Scalar<Index<T>>(++k)));
             }
 
             for (size_t k = 0; k < VectorSize<T>(); ++k) {
