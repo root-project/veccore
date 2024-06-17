@@ -34,13 +34,8 @@ jobs:
       run: env CC=${CC} CXX=${CC/g*/g++} ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
 
   macos:
-    name: MacOS
+    name: MacOS (arm64)
     runs-on: macos-latest
-
-    strategy:
-      fail-fast: true
-      matrix:
-        target: [ sse2, sse4.2 ]
 
     steps:
     - uses: actions/checkout@master
@@ -48,7 +43,7 @@ jobs:
         fetch-depth: 1
 
     - name: CTest Build
-      run: ctest -VV -S cmake/TestVecCore.cmake,${{matrix.target}}
+      run: ctest -VV -S cmake/TestVecCore.cmake
 
   windows:
     name: Windows
