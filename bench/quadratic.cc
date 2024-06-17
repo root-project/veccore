@@ -146,12 +146,12 @@ void QuadSolveSIMD(typename Backend::Float_v const &a, typename Backend::Float_v
 
   MaskedAssign(x1, mask2, root1);
   MaskedAssign(x2, mask2, root2);
-  roots = Blend((IMask&)mask2, Int32_v(2), Int32_v(0));
+  roots = Blend(reinterpret_cast<IMask&>(mask2), Int32_v(2), Int32_v(0));
 
   if (MaskEmpty(mask1)) return;
 
   root1 = Float_v(-0.5f) * b * a_inv;
-  MaskedAssign(roots, (IMask&)mask1, Int32_v(1));
+  MaskedAssign(roots, reinterpret_cast<IMask&>(mask1), Int32_v(1));
   MaskedAssign(x1, mask1, root1);
   MaskedAssign(x2, mask1, root1);
 }
@@ -252,8 +252,12 @@ void TestQuadSolve(const float *__restrict__ a, const float *__restrict__ b, con
   for (size_t n = 0; n < kNruns; n++) {
     timer.Start();
     for (size_t i = 0; i < kN; i += VectorSize<Float_v>())
-      QuadSolveSIMD<Backend>((Float_v &)(a[i]), (Float_v &)(b[i]), (Float_v &)(c[i]), (Float_v &)(x1[i]),
-          (Float_v &)(x2[i]), (Int32_v &)(roots[i]));
+      QuadSolveSIMD<Backend>(reinterpret_cast<const Float_v&>(a[i]),
+                             reinterpret_cast<const Float_v&>(b[i]),
+                             reinterpret_cast<const Float_v&>(c[i]),
+                             reinterpret_cast<Float_v&>(x1[i]),
+                             reinterpret_cast<Float_v&>(x2[i]),
+                             reinterpret_cast<Int32_v&>(roots[i]));
     t[n] = timer.Elapsed();
   }
 
