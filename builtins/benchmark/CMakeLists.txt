@@ -1,18 +1,4 @@
-cmake_minimum_required (VERSION 3.5.1)
-
-foreach(p
-    CMP0048 # OK to clear PROJECT_VERSION on project()
-    CMP0054 # CMake 3.1
-    CMP0056 # export EXE_LINKER_FLAGS to try_run
-    CMP0057 # Support no if() IN_LIST operator
-    CMP0063 # Honor visibility properties for all targets
-    CMP0077 # Allow option() overrides in importing projects
-    )
-  if(POLICY ${p})
-    cmake_policy(SET ${p} NEW)
-  endif()
-endforeach()
-
+cmake_minimum_required (VERSION 3.16...3.29)
 project (benchmark CXX)
 
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
