@@ -191,24 +191,24 @@ void TestNBodySIMD(float* __restrict__ posx, float* __restrict__ posy, float* __
         timer.Start();
 
         for (std::size_t i = 0; i < kN; i += VectorSize<Vec>()) {
-            const Vec piposx = (Vec&)(posx[i]);
-            const Vec piposy = (Vec&)(posy[i]);
-            const Vec piposz = (Vec&)(posz[i]);
-            Vec pivelx = (Vec&)(velx[i]);
-            Vec pively = (Vec&)(vely[i]);
-            Vec pivelz = (Vec&)(velz[i]);
+            const Vec piposx = reinterpret_cast<Vec&>(posx[i]);
+            const Vec piposy = reinterpret_cast<Vec&>(posy[i]);
+            const Vec piposz = reinterpret_cast<Vec&>(posz[i]);
+            Vec pivelx = reinterpret_cast<Vec&>(velx[i]);
+            Vec pively = reinterpret_cast<Vec&>(vely[i]);
+            Vec pivelz = reinterpret_cast<Vec&>(velz[i]);
             for (std::size_t j = 0; j < kN; j++ ) {
                 pPInteractionSIMD(piposx, piposy, piposz, pivelx, pively, pivelz,
                                   Vec(posx[j]), Vec(posy[j]), Vec(posz[j]), Vec(mass[j]));
             }
-            (Vec&)(velx[i]) = pivelx;
-            (Vec&)(vely[i]) = pively;
-            (Vec&)(velz[i]) = pivelz;
+            reinterpret_cast<Vec&>(velx[i]) = pivelx;
+            reinterpret_cast<Vec&>(vely[i]) = pively;
+            reinterpret_cast<Vec&>(velz[i]) = pivelz;
         }
         for (std::size_t i = 0; i < kN; i += VectorSize<Vec>()) {
-             (Vec&)(posx[i]) += (const Vec&)(velx[i]) * timeStep;
-             (Vec&)(posy[i]) += (const Vec&)(vely[i]) * timeStep;
-             (Vec&)(posz[i]) += (const Vec&)(velz[i]) * timeStep;
+             reinterpret_cast<Vec&>(posx[i]) += reinterpret_cast<const Vec&>(velx[i]) * timeStep;
+             reinterpret_cast<Vec&>(posy[i]) += reinterpret_cast<const Vec&>(vely[i]) * timeStep;
+             reinterpret_cast<Vec&>(posz[i]) += reinterpret_cast<const Vec&>(velz[i]) * timeStep;
         }
 
         t[n] = timer.Elapsed();
