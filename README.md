@@ -121,16 +121,16 @@ speedup as the point where the lines cross the axis of the radial plot (right).
 ## Supported Platforms
 
 VecCore supports Linux, Mac OS X, and Windows. To compile software using
-VecCore, you will need a compiler with support for C++11. We recommend using at
+VecCore, you will need a compiler with support for C++17. We recommend using at
 least the following compiler versions:
 
- - GCC 6.5.0
- - Clang 9.0
- - AppleClang 11.0
+ - GCC 11.0
+ - Clang 14.0
+ - AppleClang 15.0
  - Intel® C/C++ Compiler 19.1
  - Microsoft Visual Studio 17 2019
 
-Additionally, you will need CMake 3.9 or later, and you may want to install
+Additionally, you will need CMake 3.16 or later, and you may want to install
 a SIMD library such as
 
  - [Vc](https://github.com/VcDevel/Vc) (version 1.4 or later)
@@ -140,7 +140,7 @@ a SIMD library such as
 
 and/or
 
- - [Nvidia's CUDA SDK](http://developer.nvidia.com/cuda) (version 10.2 or later).
+ - [Nvidia's CUDA SDK](http://developer.nvidia.com/cuda) (version 11.0 or later).
 
 ## Documentation
 
