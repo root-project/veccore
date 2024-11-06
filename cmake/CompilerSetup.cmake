@@ -1,4 +1,4 @@
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple|)Clang|GNU|Intel|MSVC")
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple|)Clang|GNU|Intel|MSVC|NVHPC")
   include(${CMAKE_CXX_COMPILER_ID})
 else()
   message(WARNING "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}")

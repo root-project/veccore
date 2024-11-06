@@ -1,0 +1,5 @@
+set(FLAGS_SSE41  "-msse4.1")
+set(FLAGS_SSE42  "-msse4.2")
+set(FLAGS_AVX2   "-march=x86-64-v3")
+set(FLAGS_AVX512 "-march=x86-64-v4")
+set(FLAGS_NATIVE "-march=native")

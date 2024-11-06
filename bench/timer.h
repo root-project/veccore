@@ -26,7 +26,7 @@ private:
   high_resolution_clock::time_point fStart, fStop;
 };
 
-#if !defined(__CUDA_ARCH__) \
+#if !defined(__CUDA_ARCH__) && !defined(__NVCOMPILER) \
  && (defined(__x86_64__) || defined(_M_X64) \
     || defined(__i386__) || defined(_M_IX86))
 
