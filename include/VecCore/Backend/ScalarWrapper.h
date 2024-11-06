@@ -154,7 +154,7 @@ public:
   WrappedScalar(const T *const val_ptr) : fVal(*val_ptr) {}
 
   VECCORE_ATT_HOST_DEVICE
-  WrappedScalar(const WrappedScalar *const s) : fVal(s->val_ptr) {}
+  WrappedScalar(const WrappedScalar *const s) : fVal(s->fVal) {}
 
   /* allow type conversion from other scalar types at initialization */
   template <typename Type, class = typename std::enable_if<std::is_integral<Type>::value>::type>
