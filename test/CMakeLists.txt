@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
-
 option(DETAILED_TEST_REPORT "Report fine grained test results" OFF)
 
 if (CUDA)

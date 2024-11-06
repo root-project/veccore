@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.29)
+cmake_minimum_required(VERSION 3.16...3.30)
 
 set(CTEST_PROJECT_NAME "VecCore")
 
