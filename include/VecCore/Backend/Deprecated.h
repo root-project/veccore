@@ -49,7 +49,7 @@ VECCORE_ATT_HOST_DEVICE
 T FromPtr(Scalar<T> const *ptr)
 {
   T v;
-  LoadStoreImplementation<T>::template Load(v, ptr);
+  LoadStoreImplementation<T>::Load(v, ptr);
   return v;
 }
 
