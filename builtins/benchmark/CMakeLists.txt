@@ -1,16 +1,17 @@
-cmake_minimum_required (VERSION 3.16...3.29)
-project (benchmark CXX)
+# Require CMake 3.10. If available, use the policies up to CMake 3.22.
+cmake_minimum_required (VERSION 3.10...3.30)
+
+project (benchmark VERSION 1.9.0 LANGUAGES CXX)
 
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
 option(BENCHMARK_ENABLE_EXCEPTIONS "Enable the use of exceptions in the benchmark library." ON)
 option(BENCHMARK_ENABLE_LTO "Enable link time optimisation of the benchmark library." OFF)
 option(BENCHMARK_USE_LIBCXX "Build and test using libc++ as the standard library." OFF)
-if(NOT MSVC)
-  option(BENCHMARK_BUILD_32_BITS "Build a 32 bit version of the library." OFF)
-else()
-  set(BENCHMARK_BUILD_32_BITS OFF CACHE BOOL "Build a 32 bit version of the library - unsupported when using MSVC)" FORCE)
-endif()
-option(BENCHMARK_ENABLE_INSTALL "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)" ON)
+option(BENCHMARK_ENABLE_WERROR "Build Release candidates with -Werror." OFF)
+option(BENCHMARK_FORCE_WERROR "Build Release candidates with -Werror regardless of compiler issues." OFF)
+option(BENCHMARK_ENABLE_INSTALL "Enable installation of benchmark" OFF)
+option(BENCHMARK_ENABLE_DOXYGEN "Build documentation with Doxygen." OFF)
+option(BENCHMARK_INSTALL_DOCS "Enable installation of documentation." OFF)
 
 # Allow unmet dependencies to be met using CMake's ExternalProject mechanics, which
 # may require downloading the source code.
@@ -19,8 +20,24 @@ option(BENCHMARK_DOWNLOAD_DEPENDENCIES "Allow the downloading and in-tree buildi
 # This option can be used to disable building and running unit tests which depend on gtest
 # in cases where it is not possible to build or find a valid version of gtest.
 option(BENCHMARK_ENABLE_GTEST_TESTS "Enable building the unit tests which depend on gtest" OFF)
+option(BENCHMARK_USE_BUNDLED_GTEST "Use bundled GoogleTest. If disabled, the find_package(GTest) will be used." OFF)
+option(BENCHMARK_ENABLE_LIBPFM "Enable performance counters provided by libpfm" OFF)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+# Export only public symbols
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # As of CMake 3.18, CMAKE_SYSTEM_PROCESSOR is not set properly for MSVC and
+    # cross-compilation (e.g. Host=x86_64, target=aarch64) requires using the
+    # undocumented, but working variable.
+    # See https://gitlab.kitware.com/cmake/cmake/-/issues/15170
+    set(CMAKE_SYSTEM_PROCESSOR ${MSVC_CXX_ARCHITECTURE_ID})
+    if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "ARM")
+      set(CMAKE_CROSSCOMPILING TRUE)
+    endif()
+endif()
+
 set(ENABLE_ASSEMBLY_TESTS_DEFAULT OFF)
 function(should_enable_assembly_tests)
   if(CMAKE_BUILD_TYPE)
@@ -31,7 +48,7 @@ function(should_enable_assembly_tests)
       return()
     endif()
   endif()
-  if (MSVC)
+  if (MSVC OR CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
     return()
   elseif(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
     return()
@@ -67,18 +84,31 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(GetGitVersion)
 get_git_version(GIT_VERSION)
 
+set(VERSION "${PROJECT_VERSION}")
+
+# Normalize version: drop "v" prefix, replace first "-" with ".",
+# drop everything after second "-" (including said "-").
+string(STRIP ${VERSION} VERSION)
+if(VERSION MATCHES v[^-]*-)
+   string(REGEX REPLACE "v([^-]*)-([0-9]+)-.*" "\\1.\\2"  NORMALIZED_VERSION ${VERSION})
+else()
+   string(REGEX REPLACE "v(.*)" "\\1" NORMALIZED_VERSION ${VERSION})
+endif()
+
 # Tell the user what versions we are using
-string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" VERSION ${GIT_VERSION})
-message(STATUS "Version: ${VERSION}")
+message(STATUS "Google Benchmark version: ${VERSION}, normalized to ${NORMALIZED_VERSION}")
 
 # The version of the libraries
-set(GENERIC_LIB_VERSION ${VERSION})
-string(SUBSTRING ${VERSION} 0 1 GENERIC_LIB_SOVERSION)
+set(GENERIC_LIB_VERSION ${NORMALIZED_VERSION})
+string(SUBSTRING ${NORMALIZED_VERSION} 0 1 GENERIC_LIB_SOVERSION)
 
 # Import our CMake modules
-include(CheckCXXCompilerFlag)
 include(AddCXXCompilerFlag)
+include(CheckCXXCompilerFlag)
+include(CheckLibraryExists)
 include(CXXFeatureCheck)
+
+check_library_exists(rt shm_open "" HAVE_LIB_RT)
 
 if (BENCHMARK_BUILD_32_BITS)
   add_required_cxx_compiler_flag(-m32)
@@ -116,39 +146,15 @@ if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} /LTCG")
   endif()
 else()
-  # Try and enable C++11. Don't use C++14 because it doesn't work in some
-  # configurations.
-  add_cxx_compiler_flag(-std=c++11)
-  if (NOT HAVE_CXX_FLAG_STD_CXX11)
-    add_cxx_compiler_flag(-std=c++0x)
-  endif()
-
-  # Disable compiler warnings up to 11
+  # Turn on Large-file Support
+  add_definitions(-D_FILE_OFFSET_BITS=64)
+  add_definitions(-D_LARGEFILE64_SOURCE)
+  add_definitions(-D_LARGEFILE_SOURCE)
+  # Turn off compiler warnings
   add_cxx_compiler_flag(-w)
-  # Disabled until googletest (gmock) stops emitting variadic macro warnings
-  #add_cxx_compiler_flag(-pedantic)
-  #add_cxx_compiler_flag(-pedantic-errors)
-  add_cxx_compiler_flag(-Wshorten-64-to-32)
-  add_cxx_compiler_flag(-fstrict-aliasing)
-  # Disable warnings regarding deprecated parts of the library while building
-  # and testing those parts of the library.
-  add_cxx_compiler_flag(-Wno-deprecated-declarations)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    # Intel silently ignores '-Wno-deprecated-declarations',
-    # warning no. 1786 must be explicitly disabled.
-    # See #631 for rationale.
-    add_cxx_compiler_flag(-wd1786)
-  endif()
-  # Disable deprecation warnings for release builds (when -Werror is enabled).
-  add_cxx_compiler_flag(-Wno-deprecated RELEASE)
-  add_cxx_compiler_flag(-Wno-deprecated RELWITHDEBINFO)
-  add_cxx_compiler_flag(-Wno-deprecated MINSIZEREL)
-  if (NOT BENCHMARK_ENABLE_EXCEPTIONS)
-    add_cxx_compiler_flag(-fno-exceptions)
-  endif()
 
   if (HAVE_CXX_FLAG_FSTRICT_ALIASING)
-    if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Intel") #ICC17u2: Many false positives for Wstrict-aliasing
+    if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") #ICC17u2: Many false positives for Wstrict-aliasing
       add_cxx_compiler_flag(-Wstrict-aliasing)
     endif()
   endif()
@@ -157,12 +163,12 @@ else()
   add_cxx_compiler_flag(-wd654)
   add_cxx_compiler_flag(-Wthread-safety)
   if (HAVE_CXX_FLAG_WTHREAD_SAFETY)
-    cxx_feature_check(THREAD_SAFETY_ATTRIBUTES)
+    cxx_feature_check(THREAD_SAFETY_ATTRIBUTES "-DINCLUDE_DIRECTORIES=${PROJECT_SOURCE_DIR}/include")
   endif()
 
   # On most UNIX like platforms g++ and clang++ define _GNU_SOURCE as a
   # predefined macro, which turns on all of the wonderful libc extensions.
-  # However g++ doesn't do this in Cygwin so we have to define it ourselfs
+  # However g++ doesn't do this in Cygwin so we have to define it ourselves
   # since we depend on GNU/POSIX/BSD extensions.
   if (CYGWIN)
     add_definitions(-D_GNU_SOURCE=1)
@@ -213,7 +219,8 @@ if (BENCHMARK_USE_LIBCXX)
   if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     add_cxx_compiler_flag(-stdlib=libc++)
   elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-          "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+          "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" OR
+          "${CMAKE_CXX_COMPILER_ID}" STREQUAL "IntelLLVM")
     add_cxx_compiler_flag(-nostdinc++)
     message(WARNING "libc++ header path must be manually specified using CMAKE_CXX_FLAGS")
     # Adding -nodefaultlibs directly to CMAKE_<TYPE>_LINKER_FLAGS will break
@@ -226,12 +233,6 @@ if (BENCHMARK_USE_LIBCXX)
     message(FATAL_ERROR "-DBENCHMARK_USE_LIBCXX:BOOL=ON is not supported for compiler")
   endif()
 endif(BENCHMARK_USE_LIBCXX)
-
-set(EXTRA_CXX_FLAGS "")
-if (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  # Clang on Windows fails to compile the regex feature check under C++11
-  set(EXTRA_CXX_FLAGS "-DCMAKE_CXX_STANDARD=14")
-endif()
 
 # C++ feature checks
 # Determine the correct regular expression engine to use
@@ -250,6 +251,11 @@ cxx_feature_check(STEADY_CLOCK)
 # Ensure we have pthreads
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+cxx_feature_check(PTHREAD_AFFINITY)
+
+if (BENCHMARK_ENABLE_LIBPFM)
+  find_package(PFM REQUIRED)
+endif()
 
 # Set up directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -262,7 +268,15 @@ if (BENCHMARK_ENABLE_TESTING)
   if (BENCHMARK_ENABLE_GTEST_TESTS AND
       NOT (TARGET gtest AND TARGET gtest_main AND
            TARGET gmock AND TARGET gmock_main))
-    include(GoogleTest)
+    if (BENCHMARK_USE_BUNDLED_GTEST)
+      include(GoogleTest)
+    else()
+      find_package(GTest CONFIG REQUIRED)
+      add_library(gtest ALIAS GTest::gtest)
+      add_library(gtest_main ALIAS GTest::gtest_main)
+      add_library(gmock ALIAS GTest::gmock)
+      add_library(gmock_main ALIAS GTest::gmock_main)
+    endif()
   endif()
   add_subdirectory(test)
 endif()
