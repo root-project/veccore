@@ -38,6 +38,9 @@ jobs:
     name: MacOS (arm64)
     runs-on: macos-latest
 
+    env:
+      CMAKE_ARGS: -DCMAKE_CXX_STANDARD=20
+
     steps:
     - uses: actions/checkout@master
       with:
