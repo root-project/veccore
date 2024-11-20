@@ -5,12 +5,12 @@
 
 #ifndef HAVE_GD
 
-void write_png(const char *filename, Color *data, size_t nx, size_t ny)
+void write_png(const char * /* filename */, Color * /* data */, size_t /* nx */, size_t /* ny */)
 {
    /* empty */
 }
 
-void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny)
+void write_png(const char * /* filename */, unsigned char * /* data */, size_t /* nx */, size_t /* ny */)
 {
    /* empty */
 }
