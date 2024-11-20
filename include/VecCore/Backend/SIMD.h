@@ -73,7 +73,7 @@ using SIMDVector = SIMD<std::experimental::simd_abi::fixed_size<N>>;
 
 template <typename T, class Abi>
 bool MaskEmpty(std::experimental::simd_mask<T, Abi> mask) {
-  for (int i = 0; i < mask.size(); ++i)
+  for (size_t i = 0; i < mask.size(); ++i)
     if (mask[i])
       return false;
   return true;
@@ -81,7 +81,7 @@ bool MaskEmpty(std::experimental::simd_mask<T, Abi> mask) {
 
 template <typename T, class Abi>
 bool MaskFull(std::experimental::simd_mask<T, Abi> mask) {
-  for (int i = 0; i < mask.size(); ++i)
+  for (size_t i = 0; i < mask.size(); ++i)
     if (!mask[i])
       return false;
   return true;
