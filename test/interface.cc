@@ -7,7 +7,7 @@ TYPED_TEST_SUITE_P(VectorInterfaceTest);
 TYPED_TEST_P(VectorInterfaceTest, VectorSize) {
   using Vector_t = typename TestFixture::Vector_t;
 
-  Vector_t v;
+  Vector_t v{};
   Vector_t &vref = v;
 
   EXPECT_TRUE(vecCore::VectorSize(v) > 0);
@@ -21,7 +21,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSize) {
 TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable) {
   using Vector_t = typename TestFixture::Vector_t;
 
-  Vector_t x;
+  Vector_t x{};
 
   EXPECT_TRUE(vecCore::VectorSize(x) > 0);
 }
@@ -29,7 +29,7 @@ TYPED_TEST_P(VectorInterfaceTest, VectorSizeVariable) {
 TYPED_TEST_P(VectorInterfaceTest, EarlyReturnMaxLength) {
   using Vector_t = typename TestFixture::Vector_t;
 
-  Vector_t x;
+  Vector_t x{};
 
   // short vector, should return early if it is allowed
   EXPECT_EQ(vecCore::EarlyReturnAllowed(),

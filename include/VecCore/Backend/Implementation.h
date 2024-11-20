@@ -152,7 +152,7 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Load(Scalar<T> const *ptr)
 {
-  T v;
+  T v{};
   LoadStoreImplementation<T>::Load(v, ptr);
   return v;
 }
@@ -193,7 +193,7 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Gather(S const *ptr, Index<T> const &idx)
 {
-  T v;
+  T v{};
   GatherScatterImplementation<T>::template Gather<S>(v, ptr, idx);
   return v;
 }
@@ -291,7 +291,7 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T Blend(const Mask<T> &mask, const T &src1, const T &src2)
 {
-  T v;
+  T v{};
   MaskingImplementation<T>::Blend(v, mask, src1, src2);
   return v;
 }
