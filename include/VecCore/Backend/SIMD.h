@@ -2,7 +2,7 @@
 #define VECCORE_BACKEND_STD_SIMD_H
 
 #if __cplusplus >= 202002L && defined(__has_include)
-#if __has_include(<experimental/simd>)
+#if __has_include(<experimental/simd>) && !defined(_LIBCPP_VERSION)
 #define VECCORE_ENABLE_STD_SIMD
 #endif
 #endif
