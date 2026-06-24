@@ -45,7 +45,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -y
-        sudo apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
+        sudo apt-get install -y cmake pkg-config libbenchmark-dev libgd-dev libgtest-dev ${{matrix.compiler}}
 
     - name: Build and Test with CTest
       run: env CC=${CC} CXX=${CC/g*/g++} ctest -VV -S ctest.cmake,${{matrix.target}}
@@ -68,7 +68,7 @@ jobs:
       uses: actions/checkout@v7
 
     - name: Install dependencies
-      run: brew install gd
+      run: brew install gd google-benchmark googletest
 
     - name: Build and Test with CTest
       run: ctest -VV -S ctest.cmake
