@@ -40,7 +40,7 @@ struct IteratorImplementation {
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> *End(T &v)
   {
     Scalar<T> *addr = (Scalar<T> *)(&v);
-    return addr + sizeof(v);
+    return addr + VectorSize<T>();
   }
 
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> const *Begin(const T &v)
@@ -52,7 +52,7 @@ struct IteratorImplementation {
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> const *End(const T &v)
   {
     Scalar<T> const *addr = (Scalar<T> *)(&v);
-    return addr + sizeof(v);
+    return addr + VectorSize<T>();
   }
 };
 
