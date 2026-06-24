@@ -1,52 +1,76 @@
 name: GitHub Actions
 
-on: [push, pull_request]
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 env:
-  BUILD_SITE: "GitHub Actions"
+  CDASH: ${{ vars.CDASH }}
+  CMAKE_ARGS: "-DCMAKE_CXX_STANDARD=20"
+  CMAKE_VERBOSE_MAKEFILE: true
+  CTEST_OUTPUT_ON_FAILURE: true
 
 jobs:
   linux:
-    name: Linux
+    name: Linux (${{ matrix.compiler}}, ${{ matrix.target }})
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: true
       matrix:
-        compiler: [ gcc, clang ]
-        target: [ sse4.2, avx2 ]
+        compiler: [ "gcc", "clang" ]
+        target: [ "sse4.2", "avx2", "native" ]
 
     env:
       CC: ${{ matrix.compiler }}
-      CMAKE_ARGS: -DCMAKE_CXX_STANDARD=20
 
     steps:
-    - uses: actions/checkout@master
-      with:
-        fetch-depth: 1
+    - name: Clone repository
+      uses: actions/checkout@v7
 
     - name: Install dependencies
       run: |
-        set -e
         sudo apt-get update -y
         sudo apt-get install -y cmake pkg-config libgd-dev ${{matrix.compiler}}
 
-    - name: CTest Build
+    - name: Build and Test with CTest
       run: env CC=${CC} CXX=${CC/g*/g++} ctest -VV -S ctest.cmake,${{matrix.target}}
 
   macos:
-    name: MacOS (arm64)
-    runs-on: macos-latest
+    name: macOS ${{ matrix.version }}
+    runs-on: macos-${{ matrix.version }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        version: [ "15", "26" ]
 
     env:
-      CMAKE_ARGS: -DCMAKE_CXX_STANDARD=20
+      CC: clang
+      CXX: clang++
 
     steps:
-    - uses: actions/checkout@master
-      with:
-        fetch-depth: 1
+    - name: Clone repository
+      uses: actions/checkout@v4
 
-    - name: CTest Build
+    - name: Install dependencies
+      run: brew install gd
+
+    - name: Build and Test with CTest
       run: ctest -VV -S ctest.cmake
 
   windows:
@@ -59,9 +83,8 @@ jobs:
         target: [ sse2, avx2 ]
 
     steps:
-    - uses: actions/checkout@master
-      with:
-        fetch-depth: 1
+    - name: Clone repository
+      uses: actions/checkout@v7
 
-    - name: CTest Build
+    - name: Build and Test with CTest
       run: ctest -VV -S ctest.cmake,${{matrix.target}}
