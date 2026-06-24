@@ -9,7 +9,3 @@ set(FLAGS_AVX2  "-mavx2;-mfma;-mf16c;-mlzcnt;-mbmi;-mbmi2;${FLAGS_AVX}")
 set(FLAGS_AVX512 "-march=skylake-avx512")
 set(FLAGS_NATIVE "-march=native")
 set(FLAGS_KNL    "-march=knl")
-
-if (APPLE)
-  list(APPEND CMAKE_SHARED_LINKER_FLAGS -dynamiclib)
-endif()
