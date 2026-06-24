@@ -1,7 +1,13 @@
 #ifndef VECCORE_BACKEND_STD_SIMD_H
 #define VECCORE_BACKEND_STD_SIMD_H
 
-#if __cplusplus >= 202002L && defined(__has_include)
+#if defined(_MSVC_LANG)
+#define VECCORE_CPLUSPLUS _MSVC_LANG
+#else
+#define VECCORE_CPLUSPLUS __cplusplus
+#endif
+
+#if VECCORE_CPLUSPLUS >= 202002L && defined(__has_include)
 #if __has_include(<experimental/simd>) && !defined(_LIBCPP_VERSION)
 #define VECCORE_ENABLE_STD_SIMD
 #endif
@@ -72,19 +78,13 @@ using SIMDVector = SIMD<std::experimental::simd_abi::fixed_size<N>>;
 } // namespace backend
 
 template <typename T, class Abi>
-bool MaskEmpty(std::experimental::simd_mask<T, Abi> mask) {
-  for (size_t i = 0; i < mask.size(); ++i)
-    if (mask[i])
-      return false;
-  return true;
+bool MaskEmpty(std::experimental::simd_mask<T, Abi> const &mask) {
+  return std::experimental::none_of(mask);
 }
 
 template <typename T, class Abi>
-bool MaskFull(std::experimental::simd_mask<T, Abi> mask) {
-  for (size_t i = 0; i < mask.size(); ++i)
-    if (!mask[i])
-      return false;
-  return true;
+bool MaskFull(std::experimental::simd_mask<T, Abi> const &mask) {
+  return std::experimental::all_of(mask);
 }
 
 template <typename T, class Abi>
