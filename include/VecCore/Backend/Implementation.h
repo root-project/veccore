@@ -226,40 +226,8 @@ bool MaskEmpty(const M &mask)
   return true;
 }
 
-// Split generic scalar/vector implementations to avoid performance loss
-
-template <typename T, bool>
-struct GenericMaskingImplementation {
-  VECCORE_FORCE_INLINE
-  VECCORE_ATT_HOST_DEVICE
-  static void Assign(T &dst, Mask<T> const &mask, T const &src)
-  {
-    for (size_t i = 0; i < VectorSize<T>(); i++)
-      if (Get(mask, i)) Set(dst, i, Get(src, i));
-  }
-
-  VECCORE_FORCE_INLINE
-  VECCORE_ATT_HOST_DEVICE
-  static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2)
-  {
-    for (size_t i = 0; i < VectorSize<T>(); i++)
-      Set(dst, i, Get(mask, i) ? Get(src1, i) : Get(src2, i));
-  }
-};
-
-template <typename T>
-struct GenericMaskingImplementation<T, true> {
-  VECCORE_FORCE_INLINE
-  VECCORE_ATT_HOST_DEVICE
-  static void Assign(T &dst, Mask<T> const &mask, T const &src)
-  {
-    if (mask) dst = src;
-  }
-
-  VECCORE_FORCE_INLINE
-  VECCORE_ATT_HOST_DEVICE
-  static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2) { dst = mask ? src1 : src2; }
-};
+// Scalar and vector code paths are selected at compile time to avoid
+// performance loss; if constexpr discards the unused branch per type.
 
 template <typename T>
 struct MaskingImplementation {
@@ -267,14 +235,24 @@ struct MaskingImplementation {
   VECCORE_ATT_HOST_DEVICE
   static void Assign(T &dst, Mask<T> const &mask, T const &src)
   {
-    GenericMaskingImplementation<T, std::is_scalar<T>::value>::Assign(dst, mask, src);
+    if constexpr (std::is_scalar_v<T>) {
+      if (mask) dst = src;
+    } else {
+      for (size_t i = 0; i < VectorSize<T>(); i++)
+        if (Get(mask, i)) Set(dst, i, Get(src, i));
+    }
   }
 
   VECCORE_FORCE_INLINE
   VECCORE_ATT_HOST_DEVICE
   static void Blend(T &dst, Mask<T> const &mask, T const &src1, T const &src2)
   {
-    GenericMaskingImplementation<T, std::is_scalar<T>::value>::Blend(dst, mask, src1, src2);
+    if constexpr (std::is_scalar_v<T>) {
+      dst = mask ? src1 : src2;
+    } else {
+      for (size_t i = 0; i < VectorSize<T>(); i++)
+        Set(dst, i, Get(mask, i) ? Get(src1, i) : Get(src2, i));
+    }
   }
 };
 
