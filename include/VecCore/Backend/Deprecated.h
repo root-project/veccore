@@ -14,18 +14,19 @@ namespace vecCore {
 // old interface, scalar was added first, so is different than others...
 
 template <typename T>
-using Mask_v = typename TypeTraits<T>::MaskType;
+using Mask_v [[deprecated("use Mask<T> instead")]] = typename TypeTraits<T>::MaskType;
 template <typename T>
-using Index_v = typename TypeTraits<T>::IndexType;
+using Index_v [[deprecated("use Index<T> instead")]] = typename TypeTraits<T>::IndexType;
 
 template <typename T>
-struct ScalarType {
+struct [[deprecated("use Scalar<T> instead")]] ScalarType {
   using Type = typename TypeTraits<T>::ScalarType;
 };
 
 // Get/Set
 
 template <typename T>
+[[deprecated("use Get() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 Scalar<T> LaneAt(const T &v, size_t i)
@@ -34,6 +35,7 @@ Scalar<T> LaneAt(const T &v, size_t i)
 }
 
 template <typename T>
+[[deprecated("use Set() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void AssignLane(T &v, size_t i, Scalar<T> const val)
@@ -44,6 +46,7 @@ void AssignLane(T &v, size_t i, Scalar<T> const val)
 // Load/Store
 
 template <typename T>
+[[deprecated("use Load<T>() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 T FromPtr(Scalar<T> const *ptr)
@@ -54,6 +57,7 @@ T FromPtr(Scalar<T> const *ptr)
 }
 
 template <typename M>
+[[deprecated("use Store() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void StoreMask(M const &mask, bool *ptr)
@@ -71,6 +75,7 @@ VECCORE_ATT_HOST_DEVICE
 bool MaskEmpty(const M &mask);
 
 template <typename M>
+[[deprecated("use Get() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 bool MaskLaneAt(const M &mask, size_t i)
@@ -79,6 +84,7 @@ bool MaskLaneAt(const M &mask, size_t i)
 }
 
 template <typename T>
+[[deprecated("use Set() instead")]]
 VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 void AssignMaskLane(T &mask, size_t i, bool val)
