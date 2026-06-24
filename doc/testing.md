@@ -11,22 +11,22 @@ A CTest script has been added to the repository to aid testing VecCore in
 many configurations with as minimal effort as possible. It can be run as
 
 ```shell
-$ ctest -VV -S cmake/TestVecCore.cmake
+$ ctest -VV -S ctest.cmake
 ```
 
 In order to test a different compiler, set the `CC` and `CXX` variables
 
 ```shell
-$ CC=clang CXX=clang++ ctest -VV -S cmake/TestVecCore.cmake
+$ CC=clang CXX=clang++ ctest -VV -S ctest.cmake
 ```
 
 To test a specific target microarchitecture, pass it as an argument to the
 CTest script. For example, here is how to test for SSE4.2, AVX2, and AVX512
 
 ```
-$ ctest -VV -S cmake/TestVecCore.cmake,SSE4.2
-$ ctest -VV -S cmake/TestVecCore.cmake,AVX2
-$ ctest -VV -S cmake/TestVecCore.cmake,AVX512
+$ ctest -VV -S ctest.cmake,SSE4.2
+$ ctest -VV -S ctest.cmake,AVX2
+$ ctest -VV -S ctest.cmake,AVX512
 ```
 
 It is also possible to specify `Native` in most cases to test on the native SIMD
@@ -45,7 +45,7 @@ lead to loss of precision.
 Running CTest as shown above will by default upload build and test results to
 [CERN's CDash](https://cdash.cern.ch/index.php?project=VecCore) instance.
 If you do not wish to upload your results, please comment out the CDash settings
-in `cmake/TestVecCore.cmake` before running CTest.
+in `ctest.cmake` before running CTest.
 
 The CTest script also supports a few options to control the build:
 
@@ -65,7 +65,7 @@ variable `CTEST_CONFIGURATION_TYPE` or via the command line, as in the example
 below
 
 ```
-$ ctest -VV -C Release -S cmake/TestVecCore.cmake
+$ ctest -VV -C Release -S ctest.cmake
 ```
 
 All of the CTest commands above should work on Linux, Mac OS, and Windows.

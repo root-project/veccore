@@ -10,7 +10,7 @@ before_script:
 
 .script: &script
   script:
-    - ctest -VV -S cmake/TestVecCore.cmake,SSE3
+    - ctest -VV -S ctest.cmake,SSE3
 
 stages:
   - build
