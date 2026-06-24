@@ -87,6 +87,19 @@ bool MaskFull(std::experimental::simd_mask<T, Abi> const &mask) {
   return std::experimental::all_of(mask);
 }
 
+// The scalar ABI holds a single lane; the generic all_of/none_of reduction
+// is measurably slower here, so reduce directly on the sole element.
+
+template <typename T>
+bool MaskEmpty(std::experimental::simd_mask<T, std::experimental::simd_abi::scalar> const &mask) {
+  return !mask[0];
+}
+
+template <typename T>
+bool MaskFull(std::experimental::simd_mask<T, std::experimental::simd_abi::scalar> const &mask) {
+  return mask[0];
+}
+
 template <typename T, class Abi>
 struct IndexingImplementation<std::experimental::simd<T, Abi>> {
   using V = std::experimental::simd<T, Abi>;
