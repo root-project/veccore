@@ -37,7 +37,7 @@ if (VecCore_FIND_COMPONENTS MATCHES "UMESIMD")
 endif()
 
 if (VecCore_FIND_COMPONENTS MATCHES "Vc")
-  find_dependency(Vc 1.3.3 CONFIG)
+  find_dependency(Vc 1.4 CONFIG)
   if (Vc_FOUND)
     set(VecCore_Vc_FOUND True)
     set(VecCore_Vc_DEFINITIONS -DVECCORE_ENABLE_VC)

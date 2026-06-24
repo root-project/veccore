@@ -42,7 +42,7 @@ target_compile_features(VecCore INTERFACE cxx_std_17)
 include(Builtins)
 
 if (VC)
-  find_package(Vc 1.3.3 REQUIRED)
+  find_package(Vc 1.4 REQUIRED)
 
   # Vc does not come with an imported target, add our own
   if(NOT TARGET Vc::Vc)
