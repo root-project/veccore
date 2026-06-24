@@ -16,7 +16,7 @@ inline bool is_aligned(const void *ptr, size_t align) {
 TYPED_TEST_P(AlignmentTest, Stack) {
   using Vector_t = typename TestFixture::Vector_t;
 
-  Vector_t v;
+  Vector_t v{};
 
   EXPECT_TRUE(is_aligned(&v, alignof(Vector_t)));
 }
