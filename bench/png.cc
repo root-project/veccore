@@ -15,6 +15,11 @@ void write_png(const char * /* filename */, unsigned char * /* data */, size_t /
    /* empty */
 }
 
+void write_png(const char * /* filename */, float * /* data */, size_t /* nx */, size_t /* ny */)
+{
+   /* empty */
+}
+
 #else /* HAVE_GD */
 
 #include <cmath>
@@ -115,6 +120,55 @@ void write_png(const char *filename, Color *data, size_t nx, size_t ny)
           gdImageSetPixel(image, i, j,
                 gdTrueColorAlpha(pixel.red, pixel.green, pixel.blue, pixel.alpha));
        }
+    }
+
+    gdImagePng(image, output);
+    gdImageDestroy(image);
+    fclose(output);
+}
+
+/* Continuous palette for smooth (normalized) escape-time values. Uses a
+ * cosine gradient (after I. Quilez): color(t) = 0.5 + 0.5*cos(2*pi*(t + phase)),
+ * with a distinct phase per channel so the value sweeps smoothly through the
+ * spectrum. Interior points (sentinel < 0) are rendered black. */
+static void smooth_colormap(float nu, int& cr, int& cg, int& cb)
+{
+    if (nu < 0.0f) {
+        cr = cg = cb = 0;
+        return;
+    }
+
+    const double tau = 6.283185307179586;
+    double t = 0.10 * std::sqrt((double)nu); /* sqrt expands the dense boundary detail */
+
+    cr = (int)(255.0 * (0.5 + 0.5 * std::cos(tau * (t + 0.00))));
+    cg = (int)(255.0 * (0.5 + 0.5 * std::cos(tau * (t + 0.33))));
+    cb = (int)(255.0 * (0.5 + 0.5 * std::cos(tau * (t + 0.67))));
+}
+
+void write_png(const char *filename, float *data, size_t nx, size_t ny)
+{
+    FILE *output = fopen(filename, "wb");
+
+    if (!output) {
+        fprintf(stderr, "Error: cannot open file %s\n", filename);
+        return;
+    }
+
+    gdImagePtr image = gdImageCreateTrueColor(nx, ny);
+
+    if (!image) {
+        fprintf(stderr, "Error: cannot create image\n");
+        fclose(output);
+        return;
+    }
+
+    for (size_t i = 0; i < nx; ++i) {
+        for (size_t j = 0; j < ny; ++j) {
+            int r = 0, g = 0, b = 0;
+            smooth_colormap(data[ny*(nx - i - 1) + j], r, g, b);
+            gdImageSetPixel(image, i, j, gdTrueColor(r, g, b));
+        }
     }
 
     gdImagePng(image, output);

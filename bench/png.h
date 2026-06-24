@@ -13,5 +13,6 @@ struct Color {
 
 void write_png(const char *filename, Color *data, size_t nx, size_t ny);
 void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny);
+void write_png(const char *filename, float *data, size_t nx, size_t ny);
 
 #endif

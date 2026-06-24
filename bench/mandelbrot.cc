@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -7,12 +8,24 @@
 
 using namespace vecCore;
 
-extern void write_png(const char *filename, unsigned char *data, size_t nx, size_t ny);
+extern void write_png(const char *filename, float *data, size_t nx, size_t ny);
+
+// Normalized (smooth) iteration count. For an escaped point the fractional
+// part is recovered from how far |z| overshot the bailout radius, which turns
+// the integer escape-time bands into a continuous value suitable for smooth
+// gradient coloring. Interior points (|z| still bounded) get a sentinel < 0.
+static inline float smooth_value(double zr, double zi, long n)
+{
+    double mag2 = zr * zr + zi * zi;
+    if (mag2 < 4.0)
+        return -1.0f;
+    return float(n + 1.0 - std::log2(0.5 * std::log(mag2)));
+}
 
 template<typename T>
 void mandelbrot(T xmin, T xmax, size_t nx,
                 T ymin, T ymax, size_t ny,
-                size_t max_iter, unsigned char *image)
+                size_t max_iter, float *image)
 {
     T dx = (xmax - xmin) / T(nx);
     T dy = (ymax - ymin) / T(ny);
@@ -30,7 +43,7 @@ void mandelbrot(T xmin, T xmax, size_t nx,
                 zi = y;
             } while (++k < max_iter && (zr*zr + zi*zi < T(4.0)));
 
-            image[ny*i + j] = k;
+            image[ny*i + j] = smooth_value(zr, zi, k);
         }
     }
 }
@@ -38,7 +51,7 @@ void mandelbrot(T xmin, T xmax, size_t nx,
 #ifdef __AVX2__
 void mandelbrot_avx2(float xmin, float xmax, size_t nx,
                      float ymin, float ymax, size_t ny,
-                     size_t max_iter, unsigned char *image)
+                     size_t max_iter, float *image)
 {
     __m256 dx  = _mm256_set1_ps((xmax - xmin) / float(nx));
     __m256 dy  = _mm256_set1_ps((ymax - ymin) / float(ny));
@@ -77,7 +90,7 @@ void mandelbrot_avx2(float xmin, float xmax, size_t nx,
             } while (k < max_iter && !_mm256_testz_ps(mask, mask));
 
             for (k = 0; k < 8; ++k)
-                image[ny*i + j + k] = (unsigned char) *((int*)(&kv)+k);
+                image[ny*i + j + k] = smooth_value(((float*)&zr)[k], ((float*)&zi)[k], ((int*)&kv)[k]);
         }
     }
 }
@@ -86,7 +99,7 @@ void mandelbrot_avx2(float xmin, float xmax, size_t nx,
 template<typename T>
 void mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
                   Scalar<T> ymin, Scalar<T> ymax, size_t ny,
-                  Scalar<Index<T>> max_iter, unsigned char *image)
+                  Scalar<Index<T>> max_iter, float *image)
 {
     T iota;
     for (size_t i = 0; i < VectorSize<T>(); ++i)
@@ -114,14 +127,14 @@ void mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
             } while (k < max_iter && !MaskEmpty(m));
 
             for (size_t k = 0; k < VectorSize<T>(); ++k)
-                image[ny*i + j + k] = (unsigned char) Get(kv, k);
+                image[ny*i + j + k] = smooth_value(Get(zr, k), Get(zi, k), Get(kv, k));
         }
     }
 }
 
 template<typename T>
 void bench_mandelbrot(T xmin, T xmax, size_t nx, T ymin, T ymax, size_t ny,
-                      int max_iter, unsigned char *image, const char *backend)
+                      int max_iter, float *image, const char *backend)
 {
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
     Timer<milliseconds> timer;
@@ -133,7 +146,7 @@ void bench_mandelbrot(T xmin, T xmax, size_t nx, T ymin, T ymax, size_t ny,
 #ifdef __AVX2__
 void bench_mandelbrot_avx2(float xmin, float xmax, size_t nx,
                            float ymin, float ymax, size_t ny,
-                           int max_iter, unsigned char *image,
+                           int max_iter, float *image,
                            const char *backend)
 {
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
@@ -147,7 +160,7 @@ void bench_mandelbrot_avx2(float xmin, float xmax, size_t nx,
 template<typename T>
 void bench_mandelbrot_v(Scalar<T> xmin, Scalar<T> xmax, size_t nx,
                         Scalar<T> ymin, Scalar<T> ymax, size_t ny,
-                        int max_iter, unsigned char *image, const char *backend)
+                        int max_iter, float *image, const char *backend)
 {
     std::string filename = "mandelbrot_" + std::string(backend) + ".png";
     Timer<milliseconds> timer;
@@ -162,7 +175,7 @@ int main()
     double ymin = -1.35, ymax = 1.35;
 
     size_t nx = 1024, ny = 864, max_iter = 500;
-    unsigned char *image = new unsigned char[nx*ny];
+    float *image = new float[nx*ny];
 
     /* single precision */
 
