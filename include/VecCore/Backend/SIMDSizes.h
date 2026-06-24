@@ -11,7 +11,7 @@ constexpr size_t SIMDWidth()
 {
   return 1;
 }
-#ifdef __AVX512__
+#if defined(__AVX512F__)
 template <>
 constexpr size_t SIMDWidth<double>()
 {
@@ -42,7 +42,7 @@ constexpr size_t SIMDWidth<Int16_s>()
 {
   return 32;
 }
-#elif __AVX2__
+#elif defined(__AVX2__)
 template <>
 constexpr size_t SIMDWidth<double>()
 {
@@ -73,7 +73,7 @@ constexpr size_t SIMDWidth<Int16_s>()
 {
   return 16;
 }
-#elif __AVX__
+#elif defined(__AVX__)
 template <>
 constexpr size_t SIMDWidth<double>()
 {
@@ -104,7 +104,7 @@ constexpr size_t SIMDWidth<Int16_s>()
 {
   return 16;
 }
-#elif __SSE__
+#elif defined(__SSE__)
 template <>
 constexpr size_t SIMDWidth<double>()
 {
