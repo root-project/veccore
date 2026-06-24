@@ -33,26 +33,22 @@ template <typename T>
 struct IteratorImplementation {
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> *Begin(T &v)
   {
-    Scalar<T> *addr = (Scalar<T> *)(&v);
-    return addr;
+    return reinterpret_cast<Scalar<T> *>(&v);
   }
 
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> *End(T &v)
   {
-    Scalar<T> *addr = (Scalar<T> *)(&v);
-    return addr + VectorSize<T>();
+    return reinterpret_cast<Scalar<T> *>(&v) + VectorSize<T>();
   }
 
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> const *Begin(const T &v)
   {
-    Scalar<T> const *addr = (Scalar<T> *)(&v);
-    return addr;
+    return reinterpret_cast<Scalar<T> const *>(&v);
   }
 
   VECCORE_FORCE_INLINE VECCORE_ATT_HOST_DEVICE static Scalar<T> const *End(const T &v)
   {
-    Scalar<T> const *addr = (Scalar<T> *)(&v);
-    return addr + VectorSize<T>();
+    return reinterpret_cast<Scalar<T> const *>(&v) + VectorSize<T>();
   }
 };
 
