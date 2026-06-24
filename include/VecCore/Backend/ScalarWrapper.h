@@ -157,7 +157,7 @@ public:
   WrappedScalar(const WrappedScalar *const s) : fVal(s->fVal) {}
 
   /* allow type conversion from other scalar types at initialization */
-  template <typename Type, class = typename std::enable_if<std::is_integral<Type>::value>::type>
+  template <typename Type, class = std::enable_if_t<std::is_integral_v<Type>>>
   VECCORE_ATT_HOST_DEVICE
   WrappedScalar(const Type &val) : fVal(static_cast<T>(val))
   {

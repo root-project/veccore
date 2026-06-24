@@ -14,7 +14,7 @@ VECCORE_FORCE_INLINE
 VECCORE_ATT_HOST_DEVICE
 constexpr size_t VectorSize()
 {
-  using V = typename std::decay<T>::type;
+  using V = std::decay_t<T>;
   return TypeTraits<V>::Size;
 }
 
