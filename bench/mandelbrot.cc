@@ -57,7 +57,7 @@ void mandelbrot_avx2(float xmin, float xmax, size_t nx,
             __m256 cr = x, zr = x, ci = y, zi = y;
 
             __m256i kv = _mm256_setzero_si256();
-            __m256 mask = _mm256_andnot_ps(_mm256_setzero_ps(), _mm256_setzero_ps());
+            __m256 mask = _mm256_cmp_ps(_mm256_setzero_ps(), _mm256_setzero_ps(), _CMP_EQ_OQ);
 
             do {
                 __m256 zr2 = _mm256_mul_ps(zr, zr);
