@@ -29,7 +29,15 @@ if (CUDA)
   enable_language(CUDA)
 endif()
 
+include(GNUInstallDirs)
+
 add_library(VecCore INTERFACE)
+
+target_include_directories(VecCore INTERFACE
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+target_compile_features(VecCore INTERFACE cxx_std_17)
 
 include(Builtins)
 
@@ -59,9 +67,6 @@ if (CUDA)
   target_link_libraries(VecCore INTERFACE ${CUDA_LIBRARIES})
 endif()
 
-include_directories(include)
-
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(cmake/VecCoreConfigVersion.cmake
